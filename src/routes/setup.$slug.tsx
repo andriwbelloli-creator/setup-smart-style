@@ -5,6 +5,8 @@ import { Footer } from "@/components/landing/CTA";
 import { findSetup, type Product } from "@/data/setups";
 import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLikes, useSaves } from "@/hooks/use-saved";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/setup/$slug")({
   loader: ({ params }) => {
@@ -40,6 +42,18 @@ function SetupDetail() {
   const { setup } = Route.useLoaderData();
   const [active, setActive] = useState<Product | null>(null);
   const total = setup.products.reduce((sum, p) => sum + p.price, 0);
+  const likes = useLikes();
+  const saves = useSaves();
+  const liked = likes.has(setup.id);
+  const saved = saves.has(setup.id);
+
+  const share = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    try {
+      if (navigator.share) await navigator.share({ title: setup.title, url });
+      else { await navigator.clipboard.writeText(url); toast.success("Link copiado!"); }
+    } catch {}
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,11 +101,15 @@ function SetupDetail() {
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">{setup.description}</p>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button className="gap-2 bg-gradient-hero shadow-elegant"><Heart className="h-4 w-4" /> Curtir ({setup.likes})</Button>
-              <Button variant="outline" className="gap-2"><Bookmark className="h-4 w-4" /> Salvar</Button>
-              <Button variant="outline" className="gap-2"><Share2 className="h-4 w-4" /> Compartilhar</Button>
-              <Button variant="secondary" className="gap-2 bg-coral text-coral-foreground hover:opacity-90">
-                <Sparkles className="h-4 w-4" /> Quero montar parecido
+              <Button onClick={() => likes.toggle(setup.id)} className={`gap-2 shadow-elegant ${liked ? "bg-coral text-coral-foreground hover:opacity-90" : "bg-gradient-hero"}`}>
+                <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} /> {liked ? "Curtido" : "Curtir"} ({setup.likes + (liked ? 1 : 0)})
+              </Button>
+              <Button onClick={() => saves.toggle(setup.id)} variant="outline" className="gap-2">
+                <Bookmark className={`h-4 w-4 ${saved ? "fill-current text-primary" : ""}`} /> {saved ? "Salvo" : "Salvar"}
+              </Button>
+              <Button onClick={share} variant="outline" className="gap-2"><Share2 className="h-4 w-4" /> Compartilhar</Button>
+              <Button asChild variant="secondary" className="gap-2 bg-coral text-coral-foreground hover:opacity-90">
+                <Link to="/orcamento"><Sparkles className="h-4 w-4" /> Quero montar parecido</Link>
               </Button>
             </div>
           </div>

@@ -19,11 +19,14 @@ export function Navbar() {
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
           <Link to="/galeria" className={linkBase} activeProps={{ className: "text-foreground" }}>Galeria</Link>
+          <Link to="/orcamento" className={linkBase} activeProps={{ className: "text-foreground" }}>Orçamentos</Link>
           <Link to="/diagnostico" className={linkBase} activeProps={{ className: "text-foreground" }}>Diagnóstico IA</Link>
           <Link to="/comunidade" className={linkBase} activeProps={{ className: "text-foreground" }}>Comunidade</Link>
         </nav>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex">Entrar</Button>
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+            <Link to="/postar">Postar setup</Link>
+          </Button>
           <Button asChild size="sm" className="bg-gradient-hero shadow-elegant transition-smooth hover:shadow-glow">
             <Link to="/diagnostico">Avaliar meu setup</Link>
           </Button>

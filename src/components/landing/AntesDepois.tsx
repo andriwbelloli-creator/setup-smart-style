@@ -2,6 +2,7 @@ import { useState } from "react";
 import beforeImg from "@/assets/before.jpg";
 import afterImg from "@/assets/after.jpg";
 import { ArrowLeftRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function AntesDepois() {
   const [pos, setPos] = useState(50);
@@ -34,9 +35,9 @@ export function AntesDepois() {
                 <div className="text-xs text-muted-foreground">Investimento médio</div>
               </div>
             </div>
-            <button className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-smooth hover:opacity-90">
+            <Link to="/postar" className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-smooth hover:opacity-90">
               Compartilhar minha transformação
-            </button>
+            </Link>
           </div>
 
           <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-elegant select-none">

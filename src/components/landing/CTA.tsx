@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { Sparkles, ArrowRight } from "lucide-react";
 
 export function CTA() {
@@ -14,9 +15,9 @@ export function CTA() {
             <p className="mt-4 text-lg text-primary-foreground/80">
               Grátis, sem cadastro. Em 30 segundos você tem análise completa e lista de upgrades por preço de Brasil.
             </p>
-            <button className="mt-10 inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-coral transition-smooth hover:scale-105">
+            <Link to="/diagnostico" className="mt-10 inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-coral transition-smooth hover:scale-105">
               Avaliar meu setup agora <ArrowRight className="h-5 w-5" />
-            </button>
+            </Link>
             <p className="mt-4 text-xs text-primary-foreground/60">+12.000 brasileiros já avaliaram</p>
           </div>
         </div>
@@ -31,17 +32,17 @@ export function Footer() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
-            <div className="font-display text-xl font-bold">Setup Lab BR</div>
+            <div className="font-display text-xl font-bold">Deskly</div>
             <p className="mt-1 text-sm text-muted-foreground">
               Feito no Brasil pra quem trabalha de casa. © 2026
             </p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground">Sobre</a>
-            <a href="#" className="hover:text-foreground">Comunidade</a>
-            <a href="#" className="hover:text-foreground">Para marcas</a>
-            <a href="#" className="hover:text-foreground">Termos</a>
-            <a href="#" className="hover:text-foreground">Contato</a>
+            <Link to="/galeria" className="hover:text-foreground">Galeria</Link>
+            <Link to="/diagnostico" className="hover:text-foreground">Diagnóstico</Link>
+            <Link to="/orcamento" className="hover:text-foreground">Orçamentos</Link>
+            <Link to="/comunidade" className="hover:text-foreground">Comunidade</Link>
+            <Link to="/postar" className="hover:text-foreground">Postar setup</Link>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "@tanstack/react-router";
 import { Upload, Star, ArrowRight, Zap } from "lucide-react";
 import heroImg from "@/assets/hero-setup.jpg";
 
@@ -20,12 +21,16 @@ export function Hero() {
             Envie uma foto do seu home office e receba nota de ergonomia, iluminação, organização e estética — com produtos da Amazon BR, Mercado Livre, Kabum e Magalu.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" className="h-14 gap-2 bg-gradient-hero px-8 text-base shadow-elegant transition-smooth hover:shadow-glow">
-              <Upload className="h-5 w-5" />
-              Enviar foto do setup
+            <Button asChild size="lg" className="h-14 gap-2 bg-gradient-hero px-8 text-base shadow-elegant transition-smooth hover:shadow-glow">
+              <Link to="/diagnostico">
+                <Upload className="h-5 w-5" />
+                Enviar foto do setup
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="h-14 gap-2 border-2 px-8 text-base">
-              Explorar galeria <ArrowRight className="h-4 w-4" />
+            <Button asChild size="lg" variant="outline" className="h-14 gap-2 border-2 px-8 text-base">
+              <Link to="/galeria">
+                Explorar galeria <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
           <div className="mt-10 flex flex-wrap items-center gap-8 text-sm text-muted-foreground">

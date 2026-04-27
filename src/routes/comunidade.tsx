@@ -4,6 +4,7 @@ import { Footer } from "@/components/landing/CTA";
 import { SetupCard } from "@/components/setup/SetupCard";
 import { SETUPS } from "@/data/setups";
 import { MessageCircle, Heart, Bookmark, TrendingUp, Users, Trophy } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/comunidade")({
   head: () => ({
@@ -116,9 +117,9 @@ export function Comunidade() {
               <p className="mt-2 text-sm text-primary-foreground/80">
                 Poste seu setup, ganhe selo e desbloqueie a consultoria com IA premium.
               </p>
-              <button className="mt-4 w-full rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition-smooth hover:scale-105">
+              <Link to="/postar" className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition-smooth hover:scale-105">
                 Postar meu setup
-              </button>
+              </Link>
             </div>
           </aside>
         </div>
@@ -127,7 +128,7 @@ export function Comunidade() {
         <section className="mt-16">
           <div className="mb-5 flex items-baseline justify-between">
             <h2 className="font-display text-2xl font-bold">Postados recentemente</h2>
-            <a href="/galeria" className="text-sm font-semibold text-primary">Ver tudo →</a>
+            <Link to="/galeria" className="text-sm font-semibold text-primary">Ver tudo →</Link>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {SETUPS.slice(0, 3).map((s) => <SetupCard key={s.id} s={s} />)}
