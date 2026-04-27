@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OrcamentoRouteImport } from './routes/orcamento'
 import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
 
+const OrcamentoRoute = OrcamentoRouteImport.update({
+  id: '/orcamento',
+  path: '/orcamento',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GaleriaRoute = GaleriaRouteImport.update({
   id: '/galeria',
   path: '/galeria',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
+  '/orcamento': typeof OrcamentoRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
+  '/orcamento': typeof OrcamentoRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesById {
@@ -61,19 +69,33 @@ export interface FileRoutesById {
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
+  '/orcamento': typeof OrcamentoRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/comunidade' | '/diagnostico' | '/galeria' | '/setup/$slug'
+  fullPaths:
+    | '/'
+    | '/comunidade'
+    | '/diagnostico'
+    | '/galeria'
+    | '/orcamento'
+    | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/comunidade' | '/diagnostico' | '/galeria' | '/setup/$slug'
+  to:
+    | '/'
+    | '/comunidade'
+    | '/diagnostico'
+    | '/galeria'
+    | '/orcamento'
+    | '/setup/$slug'
   id:
     | '__root__'
     | '/'
     | '/comunidade'
     | '/diagnostico'
     | '/galeria'
+    | '/orcamento'
     | '/setup/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -82,11 +104,19 @@ export interface RootRouteChildren {
   ComunidadeRoute: typeof ComunidadeRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
   GaleriaRoute: typeof GaleriaRoute
+  OrcamentoRoute: typeof OrcamentoRoute
   SetupSlugRoute: typeof SetupSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/orcamento': {
+      id: '/orcamento'
+      path: '/orcamento'
+      fullPath: '/orcamento'
+      preLoaderRoute: typeof OrcamentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/galeria': {
       id: '/galeria'
       path: '/galeria'
@@ -130,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComunidadeRoute: ComunidadeRoute,
   DiagnosticoRoute: DiagnosticoRoute,
   GaleriaRoute: GaleriaRoute,
+  OrcamentoRoute: OrcamentoRoute,
   SetupSlugRoute: SetupSlugRoute,
 }
 export const routeTree = rootRouteImport
