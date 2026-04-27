@@ -1,4 +1,5 @@
 import { Check, Wallet } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 const orcamentos = [
   {
@@ -85,15 +86,16 @@ export function Orcamento() {
                   </li>
                 ))}
               </ul>
-              <button
-                className={`mt-8 w-full rounded-full px-5 py-3 text-sm font-semibold transition-smooth ${
+              <Link
+                to="/orcamento"
+                className={`mt-8 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition-smooth ${
                   o.destaque
                     ? "bg-accent text-accent-foreground hover:opacity-90"
                     : "bg-foreground text-background hover:opacity-90"
                 }`}
               >
                 Ver lista completa
-              </button>
+              </Link>
             </div>
           ))}
         </div>
