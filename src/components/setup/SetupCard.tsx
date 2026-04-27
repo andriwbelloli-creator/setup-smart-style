@@ -1,8 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, MapPin, Bookmark } from "lucide-react";
 import type { Setup } from "@/data/setups";
+import { useLikes, useSaves } from "@/hooks/use-saved";
 
 export function SetupCard({ s }: { s: Setup }) {
+  const likes = useLikes();
+  const saves = useSaves();
+  const liked = likes.has(s.id);
+  const saved = saves.has(s.id);
   return (
     <Link
       to="/setup/$slug"
@@ -35,8 +40,22 @@ export function SetupCard({ s }: { s: Setup }) {
             <div className="mt-0.5 truncate text-sm text-muted-foreground">{s.author} · {s.authorRole}</div>
           </div>
           <div className="flex flex-col items-end gap-1 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Heart className="h-3.5 w-3.5" /> {s.likes}</span>
-            <span className="flex items-center gap-1"><Bookmark className="h-3.5 w-3.5" /> {s.saves}</span>
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); likes.toggle(s.id); }}
+              className={`flex items-center gap-1 rounded-full px-1.5 py-0.5 transition-smooth hover:text-coral ${liked ? "text-coral" : ""}`}
+              aria-label="Curtir"
+            >
+              <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} /> {s.likes + (liked ? 1 : 0)}
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); saves.toggle(s.id); }}
+              className={`flex items-center gap-1 rounded-full px-1.5 py-0.5 transition-smooth hover:text-primary ${saved ? "text-primary" : ""}`}
+              aria-label="Salvar"
+            >
+              <Bookmark className={`h-3.5 w-3.5 ${saved ? "fill-current" : ""}`} /> {s.saves + (saved ? 1 : 0)}
+            </button>
           </div>
         </div>
         <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
