@@ -10,11 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GaleriaRouteImport } from './routes/galeria'
+import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
+import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
 
 const GaleriaRoute = GaleriaRouteImport.update({
   id: '/galeria',
   path: '/galeria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiagnosticoRoute = DiagnosticoRouteImport.update({
+  id: '/diagnostico',
+  path: '/diagnostico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunidadeRoute = ComunidadeRouteImport.update({
+  id: '/comunidade',
+  path: '/comunidade',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,31 +35,54 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SetupSlugRoute = SetupSlugRouteImport.update({
+  id: '/setup/$slug',
+  path: '/setup/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/comunidade': typeof ComunidadeRoute
+  '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
+  '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/comunidade': typeof ComunidadeRoute
+  '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
+  '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/comunidade': typeof ComunidadeRoute
+  '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
+  '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/galeria'
+  fullPaths: '/' | '/comunidade' | '/diagnostico' | '/galeria' | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/galeria'
-  id: '__root__' | '/' | '/galeria'
+  to: '/' | '/comunidade' | '/diagnostico' | '/galeria' | '/setup/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/comunidade'
+    | '/diagnostico'
+    | '/galeria'
+    | '/setup/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ComunidadeRoute: typeof ComunidadeRoute
+  DiagnosticoRoute: typeof DiagnosticoRoute
   GaleriaRoute: typeof GaleriaRoute
+  SetupSlugRoute: typeof SetupSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +94,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GaleriaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/diagnostico': {
+      id: '/diagnostico'
+      path: '/diagnostico'
+      fullPath: '/diagnostico'
+      preLoaderRoute: typeof DiagnosticoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunidade': {
+      id: '/comunidade'
+      path: '/comunidade'
+      fullPath: '/comunidade'
+      preLoaderRoute: typeof ComunidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +115,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/setup/$slug': {
+      id: '/setup/$slug'
+      path: '/setup/$slug'
+      fullPath: '/setup/$slug'
+      preLoaderRoute: typeof SetupSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ComunidadeRoute: ComunidadeRoute,
+  DiagnosticoRoute: DiagnosticoRoute,
   GaleriaRoute: GaleriaRoute,
+  SetupSlugRoute: SetupSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
