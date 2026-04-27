@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PostarRouteImport } from './routes/postar'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
 import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
@@ -16,6 +17,11 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
 
+const PostarRoute = PostarRouteImport.update({
+  id: '/postar',
+  path: '/postar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrcamentoRoute = OrcamentoRouteImport.update({
   id: '/orcamento',
   path: '/orcamento',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/postar': typeof PostarRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/postar': typeof PostarRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/postar': typeof PostarRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/galeria'
     | '/orcamento'
+    | '/postar'
     | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/galeria'
     | '/orcamento'
+    | '/postar'
     | '/setup/$slug'
   id:
     | '__root__'
@@ -96,6 +107,7 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/galeria'
     | '/orcamento'
+    | '/postar'
     | '/setup/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -105,11 +117,19 @@ export interface RootRouteChildren {
   DiagnosticoRoute: typeof DiagnosticoRoute
   GaleriaRoute: typeof GaleriaRoute
   OrcamentoRoute: typeof OrcamentoRoute
+  PostarRoute: typeof PostarRoute
   SetupSlugRoute: typeof SetupSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/postar': {
+      id: '/postar'
+      path: '/postar'
+      fullPath: '/postar'
+      preLoaderRoute: typeof PostarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orcamento': {
       id: '/orcamento'
       path: '/orcamento'
@@ -161,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiagnosticoRoute: DiagnosticoRoute,
   GaleriaRoute: GaleriaRoute,
   OrcamentoRoute: OrcamentoRoute,
+  PostarRoute: PostarRoute,
   SetupSlugRoute: SetupSlugRoute,
 }
 export const routeTree = rootRouteImport
