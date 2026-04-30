@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
-import { findSetup, type Product } from "@/data/setups";
+import { findSetup, type Product, type Setup } from "@/data/setups";
 import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
@@ -39,9 +39,9 @@ export const Route = createFileRoute("/setup/$slug")({
 });
 
 function SetupDetail() {
-  const { setup } = Route.useLoaderData();
+  const { setup } = Route.useLoaderData() as { setup: Setup };
   const [active, setActive] = useState<Product | null>(null);
-  const total = setup.products.reduce((sum, p) => sum + p.price, 0);
+  const total = setup.products.reduce((sum: number, p: Product) => sum + p.price, 0);
   const likes = useLikes();
   const saves = useSaves();
   const liked = likes.has(setup.id);
