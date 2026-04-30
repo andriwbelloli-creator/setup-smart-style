@@ -1,133 +1,63 @@
+## Objetivo
 
-# Plano: Deskly 100% funcional
+Aprimorar a seção de comentários em `/setup/$slug` com **realtime** (novos comentários aparecem sem refresh) e **paginação** (carregar mais conforme necessário). A postagem e listagem básica já existem — vamos completar o fluxo.
 
-Manter exatamente o layout, cores, tipografia e componentes visuais que já existem. Trocar apenas a "alma" por trás: dados reais, login real, IA real, persistência real.
+## Estado atual
 
-> Se você quis mesmo trocar o projeto para "Cuidadores Connect", me responda "trocar projeto" e eu refaço o plano. Caso contrário, sigo com Deskly.
+`src/routes/setup.$slug.tsx` já tem:
+- Form de postagem (com auth check)
+- Listagem inicial via `supabase.from("comments").select(...)`
+- RLS configurada (read public, insert own, update/delete own)
 
----
+Faltam: realtime, paginação, deletar próprio comentário, contagem total real.
 
-## 1. Backend: ativar Lovable Cloud
+## Mudanças
 
-Ativar Lovable Cloud (Supabase gerenciado) para ter:
-- Postgres com RLS
-- Auth nativo (email/senha + Google)
-- Storage de imagens (setups, antes/depois, avatares)
-- Server functions com `createServerFn`
-
-## 2. Modelo de dados (Postgres + RLS)
-
-```text
-profiles            id (uuid, FK auth.users), username, display_name, avatar_url, bio, role (dev/design/pm/creator), created_at
-user_roles          user_id, role (admin|moderator|user)   -- separado, com has_role()
-setups              id, owner_id, slug, title, description, style, role, budget_brl, cover_url, status (draft|published), likes_count, created_at
-setup_images       id, setup_id, url, position, is_before, is_after
-setup_products      id, setup_id, x, y, category, name, brand, price_brl, affiliate_url, store (amazon|ml|kabum|magalu)
-product_alternatives id, product_id, name, price_brl, affiliate_url, store
-likes               user_id, setup_id, created_at        (PK composta)
-saves               user_id, setup_id, created_at        (PK composta)
-comments            id, setup_id, author_id, body, created_at
-ai_analyses         id, setup_id (nullable), owner_id, image_url, scores jsonb, tips jsonb, created_at
+### 1. Migração SQL — habilitar Realtime na tabela `comments`
+```sql
+ALTER TABLE public.comments REPLICA IDENTITY FULL;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.comments;
 ```
 
-RLS:
-- `setups`: leitura pública para `status='published'`; escrita só pelo `owner_id`.
-- `likes`/`saves`/`comments`: leitura pública; escrita só `auth.uid() = user_id`.
-- `profiles`: leitura pública; update só do dono.
-- `user_roles`: checada via função `has_role(uid, role)` `SECURITY DEFINER`.
+### 2. Novo hook `src/hooks/use-comments.tsx`
+Encapsula toda a lógica de comentários para `setup.$slug.tsx` ficar enxuto:
+- Estado: `comments`, `total`, `loading`, `hasMore`, `posting`
+- `fetch(page)` — usa `.range(from, to)` do Supabase com `count: "exact"` para paginar (10 por página, ordem desc)
+- `loadMore()` — incrementa página e concatena resultados
+- `post(body)` — insere comentário e devolve com join no autor
+- `remove(id)` — deleta (somente do próprio usuário, validado por RLS)
+- `subscribe()` — canal Supabase Realtime escutando `INSERT` e `DELETE` na tabela `comments` filtrado por `setup_id`. Para INSERTs vindos de outros usuários, busca o autor via profiles e adiciona ao topo (deduplicando IDs já presentes para evitar conflito com o próprio post otimista). Para DELETEs, remove pelo id.
+- Cleanup do canal no unmount
 
-Triggers:
-- `handle_new_user()`: cria profile automático no signup.
-- `setups.likes_count` atualizado por trigger nas inserts/deletes de `likes`.
+### 3. Atualizar `src/routes/setup.$slug.tsx`
+- Trocar lógica inline pelo `useComments(setup.id, fromDb)`
+- Botão "Carregar mais comentários" quando `hasMore`
+- Mostrar `total` real no cabeçalho ("Comentários (N)")
+- Botão de deletar (ícone trash) ao lado de cada comentário próprio
+- Indicador "ao vivo" sutil quando subscription ativa
+- Avatar do autor (usar `Avatar` shadcn) com fallback nas iniciais
+- Limite de 500 chars já existe; adicionar contador visual
 
-## 3. Autenticação
-
-- Páginas novas: `/auth` (login + signup em tabs) e `/reset-password`.
-- Email/senha + Google.
-- `useAuth()` hook com `onAuthStateChange` montado **antes** de `getSession`.
-- `Navbar` ganha estado: deslogado mostra "Entrar"; logado mostra avatar + menu (Meu perfil, Meus setups, Salvos, Sair).
-- Rotas protegidas: `/postar`, `/perfil`, `/meus-setups`. Redirecionam para `/auth` se não logado.
-
-## 4. Migrar features de localStorage para banco
-
-- `use-saved.tsx`: passa a ler/gravar em `likes` e `saves` via server functions; mantém a mesma API para os componentes (não quebra layout).
-- Otimismo: atualização imediata no UI + rollback em erro.
-- Contadores reais nos cards (likes_count do banco).
-
-## 5. `/postar` — submissão real
-
-- Upload de até 6 imagens para Storage (`setups/{user_id}/{setup_id}/...`).
-- Form com título, descrição, estilo, role, orçamento, capa.
-- Editor de **hotspots de produto**: clicar na imagem cria um marcador (x,y%), abre modal para nome, categoria, preço, link de afiliado, loja, alternativa mais barata.
-- Salva como `draft` ou `published`.
-
-## 6. `/galeria` — dados reais
-
-- Lista paginada de `setups` published, com filtros (estilo, role, faixa de orçamento, busca).
-- Server function `listSetups({ filters, cursor })` com paginação cursor-based.
-- Skeletons enquanto carrega; empty state quando nada bate.
-
-## 7. `/setup/$slug` — dados reais
-
-- Carrega setup + imagens + hotspots + alternativas via server function.
-- Like/Save persistem no banco.
-- Comentários reais (lista + form, requer login).
-- Compartilhar via Web Share API (já existe).
-- Botão "Editar" só para o `owner_id`.
-
-## 8. `/diagnostico` — IA real (Lovable AI Gateway)
-
-- Upload da imagem para Storage.
-- Server function `analyzeSetup({ imageUrl })` chama Lovable AI Gateway com modelo de visão (Gemini 2.5 Flash, grátis durante o período promocional).
-- Prompt estruturado pede JSON: `{ scores: {ergonomics, lighting, organization, cables, posture, aesthetics}, tips: [{category, severity, text}] }`.
-- Salva em `ai_analyses`. Se logado, oferece "Anexar a um setup meu".
-- Mantém exatamente o visual atual da seção de scores.
-
-## 9. `/comunidade` — funcional
-
-- Feed de últimos setups + últimos comentários (joins simples).
-- Leaderboard: top usuários por soma de likes nos últimos 30d.
-- Threads de discussão: tabela `discussions` (id, author_id, title, body, created_at) + `discussion_replies`. Mantém o visual atual.
-
-## 10. `/orcamento` — dinâmico
-
-- Tiers (Essencial / Equilibrado / Premium) deixam de ser hardcoded. Vêm de uma view que agrega produtos por categoria respeitando o teto de cada tier.
-- Botão "Ver setups nessa faixa" leva para `/galeria?budget=...`.
-
-## 11. Perfil e meus setups
-
-- `/perfil/$username` público: bio, setups publicados, likes recebidos.
-- `/meus-setups` (privado): lista drafts + published, ações editar/despublicar/excluir.
-
-## 12. Qualidade
-
-- Toaster (`sonner`) em todas operações de escrita (sucesso/erro).
-- Estados de loading e erro em todas as queries.
-- `errorComponent` e `notFoundComponent` em todas as rotas com loader.
-- Validação Zod em todos os inputs de server functions.
-
----
+### 4. Validação
+Validar `body` com zod (trim, min 1, max 500) antes do insert para evitar comentários vazios/longos demais.
 
 ## Detalhes técnicos
 
-- **Stack**: TanStack Start + `createServerFn` (não Edge Functions). Auth via `requireSupabaseAuth` middleware. Admin client só para triggers de manutenção.
-- **Storage**: bucket `setups` público para leitura, escrita só autenticado no próprio prefixo `{user_id}/`.
-- **AI**: Lovable AI Gateway, modelo `google/gemini-2.5-flash` (visão, free tier ativo).
-- **Paginação**: cursor por `created_at + id`.
-- **Roles de admin**: tabela `user_roles` separada + função `has_role()` `SECURITY DEFINER` (nunca no profile).
-- **Layout intocado**: nenhum componente em `src/components/landing/` muda visualmente. Mudam só fonte de dados, handlers e estados.
+- **Paginação**: `PAGE_SIZE = 10`. Query: `.select("*, author:profiles!comments_author_id_fkey(...)", { count: "exact" }).eq("setup_id", id).order("created_at", { ascending: false }).range(page*PAGE_SIZE, (page+1)*PAGE_SIZE - 1)`
+- **Realtime dedup**: ao receber INSERT via canal, checar se `id` já existe no estado (caso o próprio usuário postou e já recebeu via response do insert). Se existir, ignorar.
+- **Realtime author lookup**: o payload do canal contém só os campos da tabela `comments` (sem join). Fazer `supabase.from("profiles").select(...).eq("id", payload.new.author_id).maybeSingle()` antes de inserir no estado.
+- **Canal único por setup**: `supabase.channel(`comments:${setupId}`)` com filter `setup_id=eq.${setupId}`.
+- **Não roda em SSR**: hook só ativa fetch/subscribe em `useEffect`, nada no loader.
 
-## Ordem de implementação
+## Arquivos
 
-1. Ativar Lovable Cloud + migrations (schema + RLS + triggers).
-2. Auth (`/auth`, `/reset-password`, hook, navbar).
-3. Server functions de setups/likes/saves + migrar `use-saved`.
-4. `/postar` com upload e hotspots.
-5. `/galeria` e `/setup/$slug` com dados reais.
-6. `/diagnostico` com IA real.
-7. `/comunidade` (feed + threads + leaderboard).
-8. `/orcamento` dinâmico.
-9. `/perfil` e `/meus-setups`.
-10. Polish: erros, loading, toasts, seed inicial de dados demo.
+- `supabase/migrations/<timestamp>_realtime_comments.sql` (novo)
+- `src/hooks/use-comments.tsx` (novo)
+- `src/routes/setup.$slug.tsx` (refatorar seção de comentários)
 
-Aprovando, eu já começo pela ativação do Cloud e pelas migrations.
+## Fora de escopo
+
+- Respostas aninhadas (threads)
+- Edição de comentários
+- Reações/likes em comentários
+- Notificações ao dono do setup

@@ -1,14 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { findSetup, type Product, type Setup } from "@/data/setups";
 import { fetchSetupBySlug } from "@/lib/setups-db";
-import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2 } from "lucide-react";
+import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
 import { useAuth } from "@/hooks/use-auth";
-import { supabase } from "@/integrations/supabase/client";
+import { useComments } from "@/hooks/use-comments";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/setup/$slug")({
@@ -52,8 +52,6 @@ export const Route = createFileRoute("/setup/$slug")({
   component: SetupDetail,
 });
 
-type Comment = { id: string; body: string; created_at: string; author_id: string; author?: { username: string; display_name: string; avatar_url: string | null } };
-
 function SetupDetail() {
   const { setup, fromDb } = Route.useLoaderData() as { setup: Setup; fromDb: boolean };
   const [active, setActive] = useState<Product | null>(null);
@@ -63,36 +61,21 @@ function SetupDetail() {
   const liked = likes.has(setup.id);
   const saved = saves.has(setup.id);
   const { user } = useAuth();
-  const [comments, setComments] = useState<Comment[]>([]);
+  const cmt = useComments(setup.id, fromDb);
   const [commentBody, setCommentBody] = useState("");
-  const [posting, setPosting] = useState(false);
-
-  useEffect(() => {
-    if (!fromDb) return;
-    (async () => {
-      const { data } = await supabase
-        .from("comments")
-        .select("*, author:profiles!comments_author_id_fkey(username, display_name, avatar_url)")
-        .eq("setup_id", setup.id)
-        .order("created_at", { ascending: false });
-      setComments((data as any) || []);
-    })();
-  }, [setup.id, fromDb]);
 
   const postComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) { toast.error("Faça login para comentar"); return; }
-    if (!commentBody.trim()) return;
-    setPosting(true);
-    const { data, error } = await supabase
-      .from("comments")
-      .insert({ setup_id: setup.id, author_id: user.id, body: commentBody.trim() })
-      .select("*, author:profiles!comments_author_id_fkey(username, display_name, avatar_url)")
-      .single();
-    setPosting(false);
-    if (error) { toast.error(error.message); return; }
-    setComments((prev) => [data as any, ...prev]);
+    const res = await cmt.post(commentBody, user.id);
+    if ("error" in res && res.error) { toast.error(res.error); return; }
     setCommentBody("");
+  };
+
+  const deleteComment = async (id: string) => {
+    const res = await cmt.remove(id);
+    if ("error" in res && res.error) { toast.error(res.error); return; }
+    toast.success("Comentário removido");
   };
 
   const share = async () => {
@@ -157,27 +140,75 @@ function SetupDetail() {
             {/* Comments */}
             {fromDb && (
               <section className="mt-12">
-                <h2 className="font-display text-2xl font-bold">Comentários ({comments.length})</h2>
-                <form onSubmit={postComment} className="mt-4 flex gap-2">
-                  <input value={commentBody} onChange={(e) => setCommentBody(e.target.value)}
-                    placeholder={user ? "Escreva um comentário..." : "Faça login para comentar"}
-                    disabled={!user || posting} maxLength={500}
-                    className="h-12 flex-1 rounded-2xl border border-border bg-card px-4 text-sm focus:border-primary focus:outline-none disabled:opacity-50" />
-                  <Button type="submit" disabled={!user || !commentBody.trim() || posting} className="gap-2 bg-foreground text-background">
-                    {posting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                  </Button>
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="font-display text-2xl font-bold">Comentários ({cmt.total})</h2>
+                  {cmt.live && (
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                      <Radio className="h-3.5 w-3.5 animate-pulse" /> ao vivo
+                    </span>
+                  )}
+                </div>
+                <form onSubmit={postComment} className="mt-4">
+                  <div className="flex gap-2">
+                    <input value={commentBody} onChange={(e) => setCommentBody(e.target.value)}
+                      placeholder={user ? "Escreva um comentário..." : "Faça login para comentar"}
+                      disabled={!user || cmt.posting} maxLength={500}
+                      className="h-12 flex-1 rounded-2xl border border-border bg-card px-4 text-sm focus:border-primary focus:outline-none disabled:opacity-50" />
+                    <Button type="submit" disabled={!user || !commentBody.trim() || cmt.posting} className="gap-2 bg-foreground text-background">
+                      {cmt.posting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  {user && (
+                    <div className="mt-1 text-right text-[10px] text-muted-foreground">
+                      {commentBody.length}/500
+                    </div>
+                  )}
                 </form>
                 <div className="mt-6 space-y-4">
-                  {comments.length === 0 && <p className="text-sm text-muted-foreground">Seja o primeiro a comentar.</p>}
-                  {comments.map((c) => (
-                    <div key={c.id} className="rounded-2xl border border-border bg-card p-4">
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="font-semibold text-foreground">@{c.author?.username || "user"}</span>
-                        <span>· {new Date(c.created_at).toLocaleDateString("pt-BR")}</span>
+                  {cmt.comments.length === 0 && !cmt.loading && (
+                    <p className="text-sm text-muted-foreground">Seja o primeiro a comentar.</p>
+                  )}
+                  {cmt.comments.map((c) => {
+                    const initials = (c.author?.display_name || c.author?.username || "U").slice(0, 2).toUpperCase();
+                    const isOwn = user?.id === c.author_id;
+                    return (
+                      <div key={c.id} className="group rounded-2xl border border-border bg-card p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-2.5">
+                            {c.author?.avatar_url ? (
+                              <img src={c.author.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover" />
+                            ) : (
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-secondary-foreground">
+                                {initials}
+                              </div>
+                            )}
+                            <div className="text-xs text-muted-foreground">
+                              <span className="font-semibold text-foreground">@{c.author?.username || "user"}</span>
+                              <span> · {new Date(c.created_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}</span>
+                            </div>
+                          </div>
+                          {isOwn && (
+                            <button
+                              onClick={() => deleteComment(c.id)}
+                              className="text-muted-foreground opacity-0 transition-smooth hover:text-destructive group-hover:opacity-100"
+                              aria-label="Excluir comentário"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          )}
+                        </div>
+                        <p className="mt-2 whitespace-pre-wrap text-sm">{c.body}</p>
                       </div>
-                      <p className="mt-2 text-sm">{c.body}</p>
+                    );
+                  })}
+                  {cmt.hasMore && (
+                    <div className="pt-2 text-center">
+                      <Button onClick={cmt.loadMore} disabled={cmt.loading} variant="outline" className="gap-2">
+                        {cmt.loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                        Carregar mais ({cmt.total - cmt.comments.length})
+                      </Button>
                     </div>
-                  ))}
+                  )}
                 </div>
               </section>
             )}
