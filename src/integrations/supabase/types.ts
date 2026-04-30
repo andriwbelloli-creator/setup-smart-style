@@ -14,16 +14,401 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_analyses: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          overall_score: number | null
+          owner_id: string | null
+          scores: Json
+          setup_id: string | null
+          tips: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          overall_score?: number | null
+          owner_id?: string | null
+          scores?: Json
+          setup_id?: string | null
+          tips?: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          overall_score?: number | null
+          owner_id?: string | null
+          scores?: Json
+          setup_id?: string | null
+          tips?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_analyses_setup_id_fkey"
+            columns: ["setup_id"]
+            isOneToOne: false
+            referencedRelation: "setups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comments: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          setup_id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          setup_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          setup_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_setup_id_fkey"
+            columns: ["setup_id"]
+            isOneToOne: false
+            referencedRelation: "setups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      likes: {
+        Row: {
+          created_at: string
+          setup_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          setup_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          setup_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_setup_id_fkey"
+            columns: ["setup_id"]
+            isOneToOne: false
+            referencedRelation: "setups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_alternatives: {
+        Row: {
+          affiliate_url: string | null
+          created_at: string
+          id: string
+          name: string
+          price_brl: number
+          product_id: string
+          store: Database["public"]["Enums"]["product_store"]
+        }
+        Insert: {
+          affiliate_url?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          price_brl?: number
+          product_id: string
+          store?: Database["public"]["Enums"]["product_store"]
+        }
+        Update: {
+          affiliate_url?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          price_brl?: number
+          product_id?: string
+          store?: Database["public"]["Enums"]["product_store"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_alternatives_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "setup_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          career: Database["public"]["Enums"]["user_career"] | null
+          city: string | null
+          created_at: string
+          display_name: string
+          id: string
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          career?: Database["public"]["Enums"]["user_career"] | null
+          city?: string | null
+          created_at?: string
+          display_name: string
+          id: string
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          career?: Database["public"]["Enums"]["user_career"] | null
+          city?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          updated_at?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      saves: {
+        Row: {
+          created_at: string
+          setup_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          setup_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          setup_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saves_setup_id_fkey"
+            columns: ["setup_id"]
+            isOneToOne: false
+            referencedRelation: "setups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      setup_images: {
+        Row: {
+          created_at: string
+          id: string
+          is_after: boolean
+          is_before: boolean
+          position: number
+          setup_id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_after?: boolean
+          is_before?: boolean
+          position?: number
+          setup_id: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_after?: boolean
+          is_before?: boolean
+          position?: number
+          setup_id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "setup_images_setup_id_fkey"
+            columns: ["setup_id"]
+            isOneToOne: false
+            referencedRelation: "setups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      setup_products: {
+        Row: {
+          affiliate_url: string | null
+          brand: string | null
+          category: string
+          created_at: string
+          id: string
+          name: string
+          position: number
+          price_brl: number
+          rating: number | null
+          setup_id: string
+          store: Database["public"]["Enums"]["product_store"]
+          x: number
+          y: number
+        }
+        Insert: {
+          affiliate_url?: string | null
+          brand?: string | null
+          category: string
+          created_at?: string
+          id?: string
+          name: string
+          position?: number
+          price_brl?: number
+          rating?: number | null
+          setup_id: string
+          store?: Database["public"]["Enums"]["product_store"]
+          x?: number
+          y?: number
+        }
+        Update: {
+          affiliate_url?: string | null
+          brand?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          price_brl?: number
+          rating?: number | null
+          setup_id?: string
+          store?: Database["public"]["Enums"]["product_store"]
+          x?: number
+          y?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "setup_products_setup_id_fkey"
+            columns: ["setup_id"]
+            isOneToOne: false
+            referencedRelation: "setups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      setups: {
+        Row: {
+          ai_score: number | null
+          budget_brl: number
+          career: Database["public"]["Enums"]["user_career"] | null
+          city: string | null
+          cover_url: string | null
+          created_at: string
+          description: string
+          id: string
+          likes_count: number
+          owner_id: string
+          saves_count: number
+          slug: string
+          status: Database["public"]["Enums"]["setup_status"]
+          styles: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ai_score?: number | null
+          budget_brl?: number
+          career?: Database["public"]["Enums"]["user_career"] | null
+          city?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          likes_count?: number
+          owner_id: string
+          saves_count?: number
+          slug: string
+          status?: Database["public"]["Enums"]["setup_status"]
+          styles?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ai_score?: number | null
+          budget_brl?: number
+          career?: Database["public"]["Enums"]["user_career"] | null
+          city?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          likes_count?: number
+          owner_id?: string
+          saves_count?: number
+          slug?: string
+          status?: Database["public"]["Enums"]["setup_status"]
+          styles?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      product_store:
+        | "amazon_br"
+        | "mercado_livre"
+        | "kabum"
+        | "magalu"
+        | "pichau"
+        | "outro"
+      setup_status: "draft" | "published"
+      user_career: "dev" | "designer" | "pm" | "creator" | "remoto" | "outro"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +535,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      product_store: [
+        "amazon_br",
+        "mercado_livre",
+        "kabum",
+        "magalu",
+        "pichau",
+        "outro",
+      ],
+      setup_status: ["draft", "published"],
+      user_career: ["dev", "designer", "pm", "creator", "remoto", "outro"],
+    },
   },
 } as const
