@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { SetupCard } from "@/components/setup/SetupCard";
-import { SETUPS, STYLES, ROLES } from "@/data/setups";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { SETUPS, STYLES, ROLES, type Setup } from "@/data/setups";
+import { fetchPublishedSetups } from "@/lib/setups-db";
+import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/galeria")({
   head: () => ({
@@ -23,8 +24,19 @@ function Galeria() {
   const [role, setRole] = useState<string>("Todos");
   const [budget, setBudget] = useState<string>("Todos");
   const [q, setQ] = useState("");
+  const [dbSetups, setDbSetups] = useState<Setup[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = SETUPS.filter((s) => {
+  useEffect(() => {
+    fetchPublishedSetups()
+      .then((rows) => setDbSetups(rows))
+      .catch(() => setDbSetups([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const all: Setup[] = [...dbSetups, ...SETUPS];
+
+  const filtered = all.filter((s) => {
     if (style !== "Todos" && !s.styles.includes(style)) return false;
     if (role !== "Todos" && s.authorRole !== role) return false;
     if (budget === "<2k" && s.budget >= 2000) return false;
