@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PostarRouteImport } from './routes/postar'
+import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
 import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
@@ -21,6 +22,11 @@ import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
 const PostarRoute = PostarRouteImport.update({
   id: '/postar',
   path: '/postar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilRoute = PerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrcamentoRoute = OrcamentoRouteImport.update({
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
+  '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/galeria'
     | '/orcamento'
+    | '/perfil'
     | '/postar'
     | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/galeria'
     | '/orcamento'
+    | '/perfil'
     | '/postar'
     | '/setup/$slug'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/galeria'
     | '/orcamento'
+    | '/perfil'
     | '/postar'
     | '/setup/$slug'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   DiagnosticoRoute: typeof DiagnosticoRoute
   GaleriaRoute: typeof GaleriaRoute
   OrcamentoRoute: typeof OrcamentoRoute
+  PerfilRoute: typeof PerfilRoute
   PostarRoute: typeof PostarRoute
   SetupSlugRoute: typeof SetupSlugRoute
 }
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/postar'
       fullPath: '/postar'
       preLoaderRoute: typeof PostarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil': {
+      id: '/perfil'
+      path: '/perfil'
+      fullPath: '/perfil'
+      preLoaderRoute: typeof PerfilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orcamento': {
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiagnosticoRoute: DiagnosticoRoute,
   GaleriaRoute: GaleriaRoute,
   OrcamentoRoute: OrcamentoRoute,
+  PerfilRoute: PerfilRoute,
   PostarRoute: PostarRoute,
   SetupSlugRoute: SetupSlugRoute,
 }
