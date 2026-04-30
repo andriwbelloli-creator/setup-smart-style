@@ -59,7 +59,7 @@ function Galeria() {
             Descubra setups por estilo
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
-            {SETUPS.length} setups reais de devs, designers e remotos brasileiros. Filtre, salve e clone os que combinam com você.
+            {all.length} setups de devs, designers e remotos brasileiros. Filtre, salve e clone os que combinam com você.
           </p>
         </div>
 
@@ -97,7 +97,9 @@ function Galeria() {
         <div className="mt-8 mb-4 text-sm text-muted-foreground">
           {filtered.length} {filtered.length === 1 ? "setup encontrado" : "setups encontrados"}
         </div>
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+        ) : filtered.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center text-muted-foreground">
             Nenhum setup encontrado. Tenta limpar os filtros.
           </div>
