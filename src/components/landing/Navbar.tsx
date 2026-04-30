@@ -57,6 +57,9 @@ export function Navbar() {
                   <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
+                    <Link to="/perfil">Meu perfil</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/postar">Postar setup</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
