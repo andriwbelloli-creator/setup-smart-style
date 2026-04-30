@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Crit = { icon: typeof Upload; label: string; score: number; tip: string; color: string };
 
@@ -13,36 +15,77 @@ const baseCriterios: Crit[] = [
   { icon: Activity, label: "Produtividade", score: 7.9, color: "text-primary", tip: "Adicione segundo monitor pra +15% de eficiência." },
 ];
 
-function analyze(_file: File): Crit[] {
-  // Simulação: gera variação leve baseada no tamanho do arquivo
-  return baseCriterios.map((c) => {
-    const jitter = (Math.random() - 0.5) * 1.6;
-    const score = Math.max(5, Math.min(10, +(c.score + jitter).toFixed(1)));
-    return { ...c, score };
+const SCORE_KEY_MAP: Record<string, string> = {
+  Ergonomia: "ergonomia",
+  Iluminação: "iluminacao",
+  Cabos: "cabos",
+  Organização: "organizacao",
+  Estética: "estetica",
+  Produtividade: "produtividade",
+};
+
+const fileToDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
-}
 
 export function AnaliseIA() {
   const [preview, setPreview] = useState<string | null>(null);
   const [criterios, setCriterios] = useState<Crit[]>(baseCriterios);
   const [analyzed, setAnalyzed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [aiTip, setAiTip] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
 
-  const handleFile = (file?: File) => {
+  const handleFile = async (file?: File) => {
     if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Imagem muito grande (máx 10MB).");
+      return;
+    }
     setPreview(URL.createObjectURL(file));
     setLoading(true);
     setAnalyzed(false);
-    setTimeout(() => {
-      setCriterios(analyze(file));
+    setAiTip(null);
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      const { data, error } = await supabase.functions.invoke("analyze-setup", {
+        body: { imageBase64: dataUrl },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      const next = baseCriterios.map((c) => {
+        const key = SCORE_KEY_MAP[c.label];
+        const score = Number(data.scores?.[key]);
+        const tipObj = (data.tips as Array<{ category: string; text: string }>)?.find(
+          (t) => t.category === key,
+        );
+        return {
+          ...c,
+          score: Number.isFinite(score) ? +score.toFixed(1) : c.score,
+          tip: tipObj?.text ?? c.tip,
+        };
+      });
+      setCriterios(next);
+      const overallTipObj = (data.tips as Array<{ severity: string; text: string }>)?.find(
+        (t) => t.severity === "alta",
+      ) ?? data.tips?.[0];
+      setAiTip(overallTipObj?.text ?? data.summary ?? null);
       setAnalyzed(true);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Erro ao analisar imagem";
+      toast.error(msg);
+      setPreview(null);
+    } finally {
       setLoading(false);
-    }, 1200);
+    }
   };
 
-  const reset = () => { setPreview(null); setAnalyzed(false); setCriterios(baseCriterios); };
+  const reset = () => { setPreview(null); setAnalyzed(false); setCriterios(baseCriterios); setAiTip(null); };
 
   const overall = +(criterios.reduce((a, c) => a + c.score, 0) / criterios.length).toFixed(1);
   const worst = [...criterios].sort((a, b) => a.score - b.score)[0];
@@ -143,7 +186,9 @@ export function AnaliseIA() {
             <div className="mt-6 rounded-2xl border-l-4 border-coral bg-coral/10 p-4">
               <div className="text-xs font-semibold uppercase tracking-wider text-coral-foreground/80">Sugestão da IA</div>
               <p className="mt-1 text-sm text-foreground">
-                {analyzed ? `${worst.label} é o ponto fraco (${worst.score}). ${worst.tip}` : "Seus cabos estão à mostra. Um organizador adesivo (~R$ 35 no Mercado Livre) sobe sua nota geral pra 8.9."}
+                {analyzed
+                  ? aiTip ?? `${worst.label} é o ponto fraco (${worst.score}). ${worst.tip}`
+                  : "Envie uma foto do seu setup acima e a IA brasileira analisa em segundos."}
               </p>
             </div>
             {analyzed && (
