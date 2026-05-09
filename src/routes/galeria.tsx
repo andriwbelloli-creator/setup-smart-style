@@ -5,7 +5,9 @@ import { Footer } from "@/components/landing/CTA";
 import { SetupCard } from "@/components/setup/SetupCard";
 import { SETUPS, STYLES, ROLES, type Setup } from "@/data/setups";
 import { fetchPublishedSetups } from "@/lib/setups-db";
-import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
+import { Search, SlidersHorizontal, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+
+const PAGE_SIZE = 9;
 
 export const Route = createFileRoute("/galeria")({
   head: () => ({
@@ -26,6 +28,7 @@ function Galeria() {
   const [q, setQ] = useState("");
   const [dbSetups, setDbSetups] = useState<Setup[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchPublishedSetups()
@@ -46,6 +49,14 @@ function Galeria() {
     if (q && !`${s.title} ${s.author} ${s.city} ${s.styles.join(" ")}`.toLowerCase().includes(q.toLowerCase())) return false;
     return true;
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [style, role, budget, q]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -104,9 +115,45 @@ function Galeria() {
             Nenhum setup encontrado. Tenta limpar os filtros.
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((s) => <SetupCard key={s.id} s={s} />)}
-          </div>
+          <>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {pageItems.map((s) => <SetupCard key={s.id} s={s} />)}
+            </div>
+            {totalPages > 1 && (
+              <div className="mt-12 flex flex-wrap items-center justify-center gap-2">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="inline-flex h-10 items-center gap-1 rounded-full border border-border bg-background px-4 text-sm font-medium transition-smooth hover:border-foreground disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Página anterior"
+                >
+                  <ChevronLeft className="h-4 w-4" /> Anterior
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setPage(n)}
+                    className={`h-10 w-10 rounded-full text-sm font-semibold transition-smooth ${
+                      n === currentPage
+                        ? "bg-foreground text-background"
+                        : "border border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground"
+                    }`}
+                    aria-current={n === currentPage ? "page" : undefined}
+                  >
+                    {n}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="inline-flex h-10 items-center gap-1 rounded-full border border-border bg-background px-4 text-sm font-medium transition-smooth hover:border-foreground disabled:cursor-not-allowed disabled:opacity-40"
+                  aria-label="Próxima página"
+                >
+                  Próxima <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </main>
       <Footer />

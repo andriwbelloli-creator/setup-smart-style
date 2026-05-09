@@ -1,0 +1,449 @@
+export type SeedUser = {
+  email: string;
+  password: string;
+  username: string;
+  display_name: string;
+  bio: string;
+  career: "dev" | "designer" | "pm" | "creator" | "remoto" | "outro";
+  city: string;
+  avatar_url: string;
+};
+
+export type SeedProduct = {
+  category: string;
+  name: string;
+  brand: string;
+  price_brl: number;
+  store: "amazon_br" | "mercado_livre" | "kabum" | "magalu" | "pichau" | "outro";
+  affiliate_url: string;
+  x: number;
+  y: number;
+  position: number;
+  rating?: number;
+};
+
+export type SeedComment = {
+  setupSlug: string;
+  authorEmail: string;
+  body: string;
+};
+
+export type SeedSetup = {
+  ownerEmail: string;
+  slug: string;
+  title: string;
+  description: string;
+  styles: string[];
+  career: "dev" | "designer" | "pm" | "creator" | "remoto" | "outro";
+  budget_brl: number;
+  city: string;
+  cover_url: string;
+  ai_score: number;
+  products: SeedProduct[];
+};
+
+export const SEED_USERS: SeedUser[] = [
+  {
+    email: "dev@deskly.test",
+    password: "DesklySeed!2026",
+    username: "rafa_dev",
+    display_name: "Rafael Souza",
+    bio: "Backend dev em RJ, fã de teclados mecânicos e luz quente.",
+    career: "dev",
+    city: "Rio de Janeiro, RJ",
+    avatar_url: "https://i.pravatar.cc/200?img=12",
+  },
+  {
+    email: "designer@deskly.test",
+    password: "DesklySeed!2026",
+    username: "ju_designer",
+    display_name: "Juliana Lima",
+    bio: "Product designer remota, paleta minimalista e plantas.",
+    career: "designer",
+    city: "Florianópolis, SC",
+    avatar_url: "https://i.pravatar.cc/200?img=47",
+  },
+  {
+    email: "creator@deskly.test",
+    password: "DesklySeed!2026",
+    username: "leo_creator",
+    display_name: "Leonardo Castro",
+    bio: "Criador de conteúdo de tech, foco em produtividade e gear.",
+    career: "creator",
+    city: "São Paulo, SP",
+    avatar_url: "https://i.pravatar.cc/200?img=33",
+  },
+  {
+    email: "estudante@deskly.test",
+    password: "DesklySeed!2026",
+    username: "mari_estudante",
+    display_name: "Mariana Costa",
+    bio: "Estudante de eng. de software. Aprendendo a montar setup decente sem quebrar a banca.",
+    career: "outro",
+    city: "Belo Horizonte, MG",
+    avatar_url: "https://i.pravatar.cc/200?img=45",
+  },
+  {
+    email: "arquiteto@deskly.test",
+    password: "DesklySeed!2026",
+    username: "pedro_arq",
+    display_name: "Pedro Almeida",
+    bio: "Arquiteto e ilustrador, vive no AutoCAD e Procreate.",
+    career: "designer",
+    city: "Curitiba, PR",
+    avatar_url: "https://i.pravatar.cc/200?img=68",
+  },
+  {
+    email: "executivo@deskly.test",
+    password: "DesklySeed!2026",
+    username: "carlos_exec",
+    display_name: "Carlos Mendes",
+    bio: "Diretor financeiro. Setup para reuniões e relatórios.",
+    career: "outro",
+    city: "São Paulo, SP",
+    avatar_url: "https://i.pravatar.cc/200?img=11",
+  },
+  {
+    email: "casal@deskly.test",
+    password: "DesklySeed!2026",
+    username: "ana_e_bruno",
+    display_name: "Ana & Bruno",
+    bio: "Trabalhamos juntos em casa. Dividimos um quarto/escritório.",
+    career: "remoto",
+    city: "Porto Alegre, RS",
+    avatar_url: "https://i.pravatar.cc/200?img=20",
+  },
+  {
+    email: "pm@deskly.test",
+    password: "DesklySeed!2026",
+    username: "isa_pm",
+    display_name: "Isabela Ferraz",
+    bio: "Product Manager remota. Vivo em chamadas — luz e câmera são prioridade.",
+    career: "pm",
+    city: "Recife, PE",
+    avatar_url: "https://i.pravatar.cc/200?img=49",
+  },
+];
+
+export const SEED_SETUPS: SeedSetup[] = [
+  {
+    ownerEmail: "dev@deskly.test",
+    slug: "setup-dev-minimalista-madeira",
+    title: "Setup dev minimalista em madeira",
+    description: "Foco total no código com mesa de madeira maciça, ultrawide e teclado mecânico silencioso.",
+    styles: ["minimalista", "madeira", "ergonômico"],
+    career: "dev",
+    budget_brl: 8500,
+    city: "Rio de Janeiro, RJ",
+    cover_url: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1600&q=80",
+    ai_score: 8.7,
+    products: [
+      { category: "Monitor", name: "LG Ultrawide 34WP65C", brand: "LG", price_brl: 2799, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/lg-ultrawide", x: 50, y: 30, position: 1, rating: 4.8 },
+      { category: "Teclado", name: "Keychron K2 V2", brand: "Keychron", price_brl: 899, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/keychron-k2", x: 45, y: 70, position: 2, rating: 4.7 },
+      { category: "Mouse", name: "Logitech MX Master 3S", brand: "Logitech", price_brl: 749, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/mx-master-3s", x: 65, y: 72, position: 3, rating: 4.9 },
+      { category: "Cadeira", name: "ThunderX3 Yama1", brand: "ThunderX3", price_brl: 1899, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/thunderx3-yama1", x: 30, y: 85, position: 4, rating: 4.5 },
+    ],
+  },
+  {
+    ownerEmail: "dev@deskly.test",
+    slug: "home-office-dev-dual-monitor",
+    title: "Dual monitor 27\" com luz quente",
+    description: "Dois monitores 27\" lado a lado, ideal pra full-stack. Iluminação de canto cria atmosfera relaxada.",
+    styles: ["dual-monitor", "warm-light", "dev"],
+    career: "dev",
+    budget_brl: 12000,
+    city: "Rio de Janeiro, RJ",
+    cover_url: "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=1600&q=80",
+    ai_score: 9.1,
+    products: [
+      { category: "Monitor", name: "Dell U2723QE 4K", brand: "Dell", price_brl: 4299, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/dell-u2723qe", x: 35, y: 35, position: 1, rating: 4.8 },
+      { category: "Suporte", name: "Suporte duplo VESA articulado", brand: "ELG", price_brl: 459, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/suporte-vesa-elg", x: 50, y: 25, position: 2, rating: 4.6 },
+      { category: "Iluminação", name: "Philips Hue Play Bar", brand: "Philips", price_brl: 899, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/philips-hue", x: 80, y: 40, position: 3, rating: 4.7 },
+    ],
+  },
+  {
+    ownerEmail: "designer@deskly.test",
+    slug: "designer-minimal-branco-plantas",
+    title: "Mesa branca com plantas — designer remoto",
+    description: "Estética clean, plantas, tablet de desenho e monitor único. Mesa pequena que cabe em apartamento.",
+    styles: ["minimalista", "white", "plantas", "remoto"],
+    career: "designer",
+    budget_brl: 6500,
+    city: "Florianópolis, SC",
+    cover_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600&q=80",
+    ai_score: 8.9,
+    products: [
+      { category: "Tablet", name: "Wacom Intuos Pro M", brand: "Wacom", price_brl: 2499, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/wacom-intuos-pro", x: 60, y: 65, position: 1, rating: 4.8 },
+      { category: "Monitor", name: "BenQ PD2705U 4K", brand: "BenQ", price_brl: 3899, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/benq-pd2705u", x: 45, y: 30, position: 2, rating: 4.7 },
+      { category: "Cadeira", name: "Herman Miller Sayl", brand: "Herman Miller", price_brl: 5499, store: "outro", affiliate_url: "https://hermanmiller.com.br/sayl", x: 25, y: 80, position: 3, rating: 4.9 },
+    ],
+  },
+  {
+    ownerEmail: "designer@deskly.test",
+    slug: "cantinho-criativo-cores-pasteis",
+    title: "Cantinho criativo em tons pastéis",
+    description: "Pequeno espaço otimizado, cor pastel e luz natural. Para quem trabalha em apê pequeno.",
+    styles: ["pastel", "cozy", "small-space"],
+    career: "designer",
+    budget_brl: 3800,
+    city: "Florianópolis, SC",
+    cover_url: "https://images.unsplash.com/photo-1542435503-956c469947f6?w=1600&q=80",
+    ai_score: 8.2,
+    products: [
+      { category: "Mesa", name: "Mesa Madesa Lyon 90cm", brand: "Madesa", price_brl: 449, store: "magalu", affiliate_url: "https://www.magazineluiza.com.br/mesa-madesa", x: 50, y: 60, position: 1, rating: 4.4 },
+      { category: "Cadeira", name: "Cadeira Tok&Stok Karim", brand: "Tok&Stok", price_brl: 999, store: "outro", affiliate_url: "https://www.tokstok.com.br/karim", x: 30, y: 80, position: 2, rating: 4.5 },
+      { category: "Iluminação", name: "Luminária IKEA Ranarp", brand: "IKEA", price_brl: 349, store: "outro", affiliate_url: "https://ikea.com/br/ranarp", x: 70, y: 35, position: 3, rating: 4.6 },
+    ],
+  },
+  {
+    ownerEmail: "creator@deskly.test",
+    slug: "studio-creator-tech-rgb",
+    title: "Studio creator com RGB e câmera 4K",
+    description: "Setup pra YouTube/Twitch: ring light, câmera Sony, microfone Shure e iluminação RGB Govee.",
+    styles: ["rgb", "creator", "youtube", "streamer"],
+    career: "creator",
+    budget_brl: 18500,
+    city: "São Paulo, SP",
+    cover_url: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=1600&q=80",
+    ai_score: 9.3,
+    products: [
+      { category: "Câmera", name: "Sony ZV-E10 + lente 16-50mm", brand: "Sony", price_brl: 6499, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/sony-zv-e10", x: 50, y: 25, position: 1, rating: 4.8 },
+      { category: "Microfone", name: "Shure MV7", brand: "Shure", price_brl: 2299, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/shure-mv7", x: 30, y: 40, position: 2, rating: 4.9 },
+      { category: "Iluminação", name: "Govee LED Strip + Ring Light", brand: "Govee", price_brl: 599, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/govee-led", x: 75, y: 30, position: 3, rating: 4.6 },
+      { category: "Mesa", name: "Mesa Gamer ELG ARENA", brand: "ELG", price_brl: 1199, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/elg-arena", x: 50, y: 75, position: 4, rating: 4.5 },
+    ],
+  },
+  {
+    ownerEmail: "creator@deskly.test",
+    slug: "cantinho-podcast-acustico",
+    title: "Cantinho de podcast com tratamento acústico",
+    description: "Espuma acústica, mic dinâmico, monitor compacto. Custo baixo, qualidade profissional.",
+    styles: ["podcast", "acustico", "compacto"],
+    career: "creator",
+    budget_brl: 4200,
+    city: "São Paulo, SP",
+    cover_url: "https://images.unsplash.com/photo-1581905764498-f1b60bae941a?w=1600&q=80",
+    ai_score: 8.5,
+    products: [
+      { category: "Microfone", name: "Behringer XM8500", brand: "Behringer", price_brl: 249, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/behringer-xm8500", x: 50, y: 50, position: 1, rating: 4.5 },
+      { category: "Interface", name: "Focusrite Scarlett Solo 3rd Gen", brand: "Focusrite", price_brl: 1399, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/scarlett-solo", x: 65, y: 60, position: 2, rating: 4.8 },
+      { category: "Acústica", name: "Espuma acústica perfilada (kit 8)", brand: "Generic", price_brl: 199, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/espuma-acustica", x: 20, y: 30, position: 3, rating: 4.3 },
+    ],
+  },
+  {
+    ownerEmail: "dev@deskly.test",
+    slug: "gamer-rgb-triple-monitor",
+    title: "Gamer RGB com 3 monitores",
+    description: "Setup gamer high-end: 3 monitores 240Hz, RTX 4080, RGB sincronizado e cadeira gamer top.",
+    styles: ["gamer", "rgb", "triple-monitor", "high-end"],
+    career: "dev",
+    budget_brl: 32000,
+    city: "Rio de Janeiro, RJ",
+    cover_url: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1600&q=80",
+    ai_score: 9.4,
+    products: [
+      { category: "Monitor", name: "AOC Agon Pro 27\" 240Hz (x3)", brand: "AOC", price_brl: 8997, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/aoc-agon-pro", x: 50, y: 30, position: 1, rating: 4.7 },
+      { category: "PC", name: "PC Gamer RTX 4080 + i9-14900K", brand: "Pichau", price_brl: 18999, store: "pichau", affiliate_url: "https://www.pichau.com.br/pc-gamer-rtx-4080", x: 25, y: 60, position: 2, rating: 4.8 },
+      { category: "Cadeira", name: "DXRacer Master Series", brand: "DXRacer", price_brl: 3499, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/dxracer-master", x: 30, y: 85, position: 3, rating: 4.6 },
+      { category: "Iluminação", name: "Govee Glide RGB Wall Lights", brand: "Govee", price_brl: 1199, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/govee-glide", x: 75, y: 25, position: 4, rating: 4.7 },
+      { category: "Teclado", name: "Razer Huntsman V3 Pro", brand: "Razer", price_brl: 2299, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/razer-huntsman", x: 50, y: 75, position: 5, rating: 4.8 },
+    ],
+  },
+  {
+    ownerEmail: "estudante@deskly.test",
+    slug: "setup-estudante-orcamento-1500",
+    title: "Setup estudante por R$ 1.500",
+    description: "Setup completo pra quem tá começando: notebook + monitor extra + cadeira decente, tudo dentro de R$ 1.500.",
+    styles: ["compacto", "barato", "estudante"],
+    career: "outro",
+    budget_brl: 1500,
+    city: "Belo Horizonte, MG",
+    cover_url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=80",
+    ai_score: 7.8,
+    products: [
+      { category: "Monitor", name: "Monitor AOC 22\" Full HD", brand: "AOC", price_brl: 599, store: "magalu", affiliate_url: "https://www.magazineluiza.com.br/monitor-aoc-22", x: 50, y: 30, position: 1, rating: 4.4 },
+      { category: "Cadeira", name: "Cadeira Best Office", brand: "Best Office", price_brl: 449, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/best-office", x: 25, y: 85, position: 2, rating: 4.2 },
+      { category: "Suporte", name: "Suporte de notebook ajustável", brand: "Generic", price_brl: 89, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/suporte-notebook", x: 65, y: 50, position: 3, rating: 4.5 },
+      { category: "Iluminação", name: "Luminária LED Taschibra", brand: "Taschibra", price_brl: 79, store: "magalu", affiliate_url: "https://www.magazineluiza.com.br/luminaria-taschibra", x: 80, y: 35, position: 4, rating: 4.3 },
+    ],
+  },
+  {
+    ownerEmail: "designer@deskly.test",
+    slug: "standing-desk-ergonomico",
+    title: "Standing desk com mesa eletrônica",
+    description: "Mesa que sobe e desce com motor elétrico, tapete antifadiga e monitor em altura ideal. Adeus dor lombar.",
+    styles: ["standing-desk", "ergonomico", "saude"],
+    career: "designer",
+    budget_brl: 9800,
+    city: "Florianópolis, SC",
+    cover_url: "https://images.unsplash.com/photo-1517292987719-0369a794ec0f?w=1600&q=80",
+    ai_score: 9.0,
+    products: [
+      { category: "Mesa", name: "Mesa eletrônica FlexiSpot E7 1.40m", brand: "FlexiSpot", price_brl: 4299, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/flexispot-e7", x: 50, y: 60, position: 1, rating: 4.8 },
+      { category: "Tapete", name: "Tapete antifadiga ergonômico", brand: "Topo", price_brl: 449, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/tapete-topo", x: 35, y: 90, position: 2, rating: 4.7 },
+      { category: "Monitor", name: "LG UltraFine 27\" 4K", brand: "LG", price_brl: 3199, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/lg-ultrafine", x: 50, y: 25, position: 3, rating: 4.7 },
+      { category: "Cadeira", name: "Flexform Bionic", brand: "Flexform", price_brl: 1899, store: "outro", affiliate_url: "https://flexform.com.br/bionic", x: 25, y: 80, position: 4, rating: 4.6 },
+    ],
+  },
+  {
+    ownerEmail: "arquiteto@deskly.test",
+    slug: "arquiteto-monitor-vertical-cintiq",
+    title: "Arquiteto com Cintiq + monitor vertical",
+    description: "Wacom Cintiq Pro pro desenho à mão livre, monitor vertical pra ler plantas e código. Setup pesado e preciso.",
+    styles: ["arquitetura", "ilustracao", "vertical-monitor"],
+    career: "designer",
+    budget_brl: 22000,
+    city: "Curitiba, PR",
+    cover_url: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80",
+    ai_score: 9.1,
+    products: [
+      { category: "Tablet", name: "Wacom Cintiq Pro 24\"", brand: "Wacom", price_brl: 14999, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/wacom-cintiq-pro-24", x: 45, y: 55, position: 1, rating: 4.9 },
+      { category: "Monitor", name: "Dell U2723QE em modo retrato", brand: "Dell", price_brl: 4299, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/dell-u2723qe", x: 75, y: 30, position: 2, rating: 4.8 },
+      { category: "Suporte", name: "Suporte VESA pivotante 90°", brand: "ELG", price_brl: 379, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/suporte-pivotante", x: 80, y: 20, position: 3, rating: 4.5 },
+      { category: "Cadeira", name: "Herman Miller Aeron B", brand: "Herman Miller", price_brl: 13999, store: "outro", affiliate_url: "https://hermanmiller.com.br/aeron", x: 25, y: 85, position: 4, rating: 4.9 },
+    ],
+  },
+  {
+    ownerEmail: "executivo@deskly.test",
+    slug: "executivo-classico-mogno-couro",
+    title: "Executivo clássico em mogno e couro",
+    description: "Estética corporativa: mesa de mogno escura, cadeira de couro legítima, abajur metal e luz quente. Pra reuniões importantes.",
+    styles: ["executivo", "classico", "madeira-escura", "couro"],
+    career: "outro",
+    budget_brl: 16500,
+    city: "São Paulo, SP",
+    cover_url: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1600&q=80",
+    ai_score: 8.6,
+    products: [
+      { category: "Mesa", name: "Mesa de escritório em mogno 1.80m", brand: "Bentwood", price_brl: 5499, store: "outro", affiliate_url: "https://bentwood.com.br/mesa-mogno", x: 50, y: 65, position: 1, rating: 4.7 },
+      { category: "Cadeira", name: "Cadeira presidente couro legítimo", brand: "Frisokar", price_brl: 3899, store: "magalu", affiliate_url: "https://www.magazineluiza.com.br/cadeira-presidente-frisokar", x: 30, y: 85, position: 2, rating: 4.6 },
+      { category: "Iluminação", name: "Abajur Bauhaus metal preto", brand: "Tok&Stok", price_brl: 599, store: "outro", affiliate_url: "https://www.tokstok.com.br/abajur-bauhaus", x: 80, y: 40, position: 3, rating: 4.5 },
+      { category: "Monitor", name: "Dell P2723D QHD", brand: "Dell", price_brl: 2299, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/dell-p2723d", x: 50, y: 35, position: 4, rating: 4.7 },
+    ],
+  },
+  {
+    ownerEmail: "casal@deskly.test",
+    slug: "setup-duplo-casal-home-office",
+    title: "Setup duplo lado a lado pra casal",
+    description: "Duas estações no mesmo cômodo, sem atrapalhar um ao outro. Mesa em L compartilhada, cabeamento limpo, divisória acústica.",
+    styles: ["casal", "duplo", "compartilhado", "remoto"],
+    career: "remoto",
+    budget_brl: 14000,
+    city: "Porto Alegre, RS",
+    cover_url: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1600&q=80",
+    ai_score: 8.4,
+    products: [
+      { category: "Mesa", name: "Mesa em L Madesa 1.60m", brand: "Madesa", price_brl: 1199, store: "magalu", affiliate_url: "https://www.magazineluiza.com.br/mesa-l-madesa", x: 50, y: 60, position: 1, rating: 4.5 },
+      { category: "Cadeira", name: "Cadeira escritório DT3 Vita (x2)", brand: "DT3", price_brl: 2398, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/dt3-vita", x: 30, y: 80, position: 2, rating: 4.7 },
+      { category: "Monitor", name: "AOC 24\" IPS Full HD (x2)", brand: "AOC", price_brl: 1798, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/aoc-24-ips", x: 50, y: 30, position: 3, rating: 4.6 },
+      { category: "Acústica", name: "Painel divisor acústico", brand: "Sonex", price_brl: 549, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/sonex-divisor", x: 50, y: 45, position: 4, rating: 4.4 },
+    ],
+  },
+  {
+    ownerEmail: "designer@deskly.test",
+    slug: "apartamento-minusculo-mesa-dobravel",
+    title: "Apto minúsculo com mesa dobrável",
+    description: "Pra quem mora em studio: mesa dobrável de parede, cadeira que guarda na vertical, organização extrema.",
+    styles: ["compacto", "studio", "dobravel", "small-space"],
+    career: "designer",
+    budget_brl: 2200,
+    city: "Florianópolis, SC",
+    cover_url: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1600&q=80",
+    ai_score: 8.1,
+    products: [
+      { category: "Mesa", name: "Mesa dobrável de parede Tramontina", brand: "Tramontina", price_brl: 489, store: "magalu", affiliate_url: "https://www.magazineluiza.com.br/mesa-dobravel-tramontina", x: 50, y: 60, position: 1, rating: 4.4 },
+      { category: "Cadeira", name: "Cadeira dobrável estofada IKEA", brand: "IKEA", price_brl: 399, store: "outro", affiliate_url: "https://ikea.com/br/cadeira-dobravel", x: 30, y: 80, position: 2, rating: 4.5 },
+      { category: "Monitor", name: "Monitor portátil 15.6\" USB-C", brand: "Mountain", price_brl: 899, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/monitor-portatil-mountain", x: 50, y: 35, position: 3, rating: 4.6 },
+      { category: "Organização", name: "Painel pegboard parede", brand: "Generic", price_brl: 199, store: "mercado_livre", affiliate_url: "https://produto.mercadolivre.com.br/pegboard", x: 80, y: 25, position: 4, rating: 4.3 },
+    ],
+  },
+  {
+    ownerEmail: "pm@deskly.test",
+    slug: "pm-camera-4k-iluminacao-zoom",
+    title: "PM com câmera 4K e iluminação pra Zoom",
+    description: "Setup focado em apresentações: câmera Sony 4K, ring light frontal, microfone direcional, mesa limpa, fundo neutro.",
+    styles: ["pm", "video", "chamadas", "profissional"],
+    career: "pm",
+    budget_brl: 11500,
+    city: "Recife, PE",
+    cover_url: "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=1600&q=80",
+    ai_score: 9.0,
+    products: [
+      { category: "Câmera", name: "Sony ZV-1F 4K", brand: "Sony", price_brl: 4299, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/sony-zv-1f", x: 50, y: 25, position: 1, rating: 4.8 },
+      { category: "Iluminação", name: "Ring light Elgato Key Light Air", brand: "Elgato", price_brl: 1799, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/elgato-key-light-air", x: 75, y: 30, position: 2, rating: 4.9 },
+      { category: "Microfone", name: "Rode NT-USB Mini", brand: "Rode", price_brl: 1299, store: "amazon_br", affiliate_url: "https://www.amazon.com.br/rode-nt-usb-mini", x: 30, y: 45, position: 3, rating: 4.8 },
+      { category: "Monitor", name: "Dell P2422H Full HD", brand: "Dell", price_brl: 1499, store: "kabum", affiliate_url: "https://www.kabum.com.br/produto/dell-p2422h", x: 50, y: 40, position: 4, rating: 4.7 },
+      { category: "Cadeira", name: "Cadeira Flexform Atos", brand: "Flexform", price_brl: 2599, store: "outro", affiliate_url: "https://flexform.com.br/atos", x: 25, y: 85, position: 5, rating: 4.6 },
+    ],
+  },
+];
+
+export const SEED_COMMENTS: SeedComment[] = [
+  // setup-dev-minimalista-madeira
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "designer@deskly.test", body: "Esse tom de madeira tá perfeito! Onde comprou?" },
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "creator@deskly.test", body: "Keychron K2 é meu também, melhor compra do ano." },
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "pm@deskly.test", body: "Quanto ficou no total esse setup?" },
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "dev@deskly.test", body: "@isa_pm uns R$ 8.500 com a cadeira nova. Mesa eu já tinha." },
+
+  // home-office-dev-dual-monitor
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "estudante@deskly.test", body: "Sonho ter dois 4K assim 😍" },
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "arquiteto@deskly.test", body: "O Philips Hue compensa mesmo? Tô em dúvida." },
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "dev@deskly.test", body: "@pedro_arq compensa, mas configura no app que faz diferença na vibe." },
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "casal@deskly.test", body: "Excelente organização de cabos. Inveja!" },
+
+  // designer-minimal-branco-plantas
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "pm@deskly.test", body: "As plantas dão outra vida no espaço, amei." },
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "executivo@deskly.test", body: "Wacom Intuos Pro vale o investimento? Quero começar a desenhar." },
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "designer@deskly.test", body: "@carlos_exec super vale, peso ergonomia + sensibilidade. Recomendo." },
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "creator@deskly.test", body: "Setup limpíssimo. Que monitor é esse?" },
+
+  // cantinho-criativo-cores-pasteis
+  { setupSlug: "cantinho-criativo-cores-pasteis", authorEmail: "estudante@deskly.test", body: "Adorei a paleta pastel! Cabe num quarto pequeno?" },
+  { setupSlug: "cantinho-criativo-cores-pasteis", authorEmail: "designer@deskly.test", body: "@mari_estudante cabe sim, mesa tem só 90cm. 😉" },
+
+  // studio-creator-tech-rgb
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "dev@deskly.test", body: "Que iluminação maravilhosa! Govee mesmo?" },
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "pm@deskly.test", body: "A Sony ZV-E10 é referência pra creator iniciante, ótima escolha." },
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "casal@deskly.test", body: "Esse setup deve render uns vídeos lindos." },
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "creator@deskly.test", body: "@ana_e_bruno valeu! Em breve tutorial completo no canal." },
+
+  // cantinho-podcast-acustico
+  { setupSlug: "cantinho-podcast-acustico", authorEmail: "arquiteto@deskly.test", body: "A espuma fez muita diferença na qualidade do som?" },
+  { setupSlug: "cantinho-podcast-acustico", authorEmail: "creator@deskly.test", body: "@pedro_arq absurda. Antes eco horrível, agora som limpo." },
+
+  // gamer-rgb-triple-monitor
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "estudante@deskly.test", body: "Daqui uns 5 anos chego nesse nível 🥲" },
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "creator@deskly.test", body: "Mano, isso aí é o sonho. Quanto FPS no Cyberpunk?" },
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "dev@deskly.test", body: "@leo_creator 144fps tranquilo no Ultra. RTX 4080 dá conta." },
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "pm@deskly.test", body: "Como vc consegue se concentrar com tanto RGB? hahaha" },
+
+  // setup-estudante-orcamento-1500
+  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "designer@deskly.test", body: "Setup honesto e funcional, parabéns! Começa assim mesmo." },
+  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "casal@deskly.test", body: "Adorei a dica do suporte de notebook, vou comprar." },
+  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "estudante@deskly.test", body: "@ana_e_bruno vale muito a pena, melhora muito a postura!" },
+
+  // standing-desk-ergonomico
+  { setupSlug: "standing-desk-ergonomico", authorEmail: "executivo@deskly.test", body: "Vale o investimento na FlexiSpot? Tenho problema de coluna." },
+  { setupSlug: "standing-desk-ergonomico", authorEmail: "designer@deskly.test", body: "@carlos_exec absolutamente vale, em 1 mês minha lombar já agradeceu." },
+  { setupSlug: "standing-desk-ergonomico", authorEmail: "pm@deskly.test", body: "Passei 1h em pé hoje, mudei o jogo." },
+
+  // arquiteto-monitor-vertical-cintiq
+  { setupSlug: "arquiteto-monitor-vertical-cintiq", authorEmail: "designer@deskly.test", body: "Cintiq Pro é caro mas é outro patamar. Inveja boa." },
+  { setupSlug: "arquiteto-monitor-vertical-cintiq", authorEmail: "dev@deskly.test", body: "Curiosidade: o monitor vertical ajuda mesmo no AutoCAD?" },
+
+  // executivo-classico-mogno-couro
+  { setupSlug: "executivo-classico-mogno-couro", authorEmail: "pm@deskly.test", body: "Estética muito profissional. Perfeita pra reuniões importantes." },
+  { setupSlug: "executivo-classico-mogno-couro", authorEmail: "creator@deskly.test", body: "Setup raro nessa galeria. Bem clássico, gostei." },
+
+  // setup-duplo-casal-home-office
+  { setupSlug: "setup-duplo-casal-home-office", authorEmail: "designer@deskly.test", body: "Como vocês fazem com chamadas simultâneas?" },
+  { setupSlug: "setup-duplo-casal-home-office", authorEmail: "casal@deskly.test", body: "@ju_designer fone com cancelamento de ruído pra cada um, salva." },
+
+  // apartamento-minusculo-mesa-dobravel
+  { setupSlug: "apartamento-minusculo-mesa-dobravel", authorEmail: "estudante@deskly.test", body: "Genial! Moro num studio e isso é exatamente o que preciso." },
+
+  // pm-camera-4k-iluminacao-zoom
+  { setupSlug: "pm-camera-4k-iluminacao-zoom", authorEmail: "executivo@deskly.test", body: "A diferença que uma boa câmera faz nas calls é absurda." },
+  { setupSlug: "pm-camera-4k-iluminacao-zoom", authorEmail: "creator@deskly.test", body: "Elgato Key Light Air é top, uso a versão grande aqui." },
+];
+

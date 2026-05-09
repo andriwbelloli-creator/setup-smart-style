@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 type Crit = { icon: typeof Upload; label: string; score: number; tip: string; color: string };
@@ -40,9 +41,16 @@ export function AnaliseIA() {
   const [aiTip, setAiTip] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleFile = async (file?: File) => {
     if (!file) return;
+    if (!user) {
+      toast.error("Faça login para analisar seu setup.");
+      navigate({ to: "/auth" });
+      return;
+    }
     if (file.size > 10 * 1024 * 1024) {
       toast.error("Imagem muito grande (máx 10MB).");
       return;

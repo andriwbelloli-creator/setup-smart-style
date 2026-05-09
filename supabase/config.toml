@@ -1,4 +1,4 @@
-project_id = "ntrzznofpeuaandhvbrz"
+project_id = "icwgkbvwehkjmkuiecuj"
 
 [functions.analyze-setup]
-verify_jwt = false
+verify_jwt = true
