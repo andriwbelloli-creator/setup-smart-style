@@ -94,6 +94,10 @@ export const Route = createFileRoute("/setup/$slug")({
 
 function SetupDetail() {
   const { setup, fromDb } = Route.useLoaderData() as { setup: Setup; fromDb: boolean };
+  const gallery: string[] = (setup as any).gallery ?? [];
+  const allImages = [setup.image, ...gallery].filter(Boolean);
+  const [heroIdx, setHeroIdx] = useState(0);
+  const heroImage = allImages[heroIdx] ?? setup.image;
   const [active, setActive] = useState<Product | null>(null);
   const total = setup.products.reduce((sum: number, p: Product) => sum + p.price, 0);
   const likes = useLikes();
@@ -170,8 +174,8 @@ function SetupDetail() {
           <div>
             <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
               <div className="relative aspect-[16/11]">
-                <img src={setup.image} alt={setup.title} className="h-full w-full object-cover" />
-                {setup.products.map((p) => (
+                <img src={heroImage} alt={setup.title} className="h-full w-full object-cover transition-opacity duration-300" />
+                {heroIdx === 0 && setup.products.map((p) => (
                   <button key={p.id} onClick={() => setActive(p)} style={{ left: `${p.x}%`, top: `${p.y}%` }}
                     className="group absolute -translate-x-1/2 -translate-y-1/2" aria-label={`Ver produto ${p.name}`}>
                     <span className="absolute inset-0 -m-1 animate-ping rounded-full bg-accent/60" />
@@ -182,6 +186,22 @@ function SetupDetail() {
                 ))}
               </div>
             </div>
+            {allImages.length > 1 && (
+              <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6">
+                {allImages.map((url, i) => (
+                  <button
+                    key={`${url}-${i}`}
+                    onClick={() => setHeroIdx(i)}
+                    className={`aspect-[4/3] overflow-hidden rounded-xl border transition-smooth ${
+                      heroIdx === i ? "border-primary ring-2 ring-primary/30" : "border-border opacity-70 hover:opacity-100"
+                    }`}
+                    aria-label={`Imagem ${i + 1}`}
+                  >
+                    <img src={url} alt={`${setup.title} - ${i + 1}`} className="h-full w-full object-cover" loading="lazy" />
+                  </button>
+                ))}
+              </div>
+            )}
 
             {setup.description && <p className="mt-6 text-base leading-relaxed text-muted-foreground">{setup.description}</p>}
 
