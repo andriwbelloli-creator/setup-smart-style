@@ -48,7 +48,7 @@ export function trackAffiliateClick(input: {
  * Each partner has slightly different conventions; this normalizes them.
  */
 const TAG_BY_STORE: Partial<Record<Store, { param: string; value: string }>> = {
-  amazon_br: { param: "tag", value: "deskly-20" },
+  amazon_br: { param: "tag", value: "deskly02-20" },
   mercado_livre: { param: "tracking_id", value: "deskly" },
   // others use generic utm_source
 };

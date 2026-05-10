@@ -5,7 +5,7 @@ describe("decorateAffiliateUrl", () => {
   it("adds Amazon tag and UTM params", () => {
     const out = decorateAffiliateUrl("https://www.amazon.com.br/dp/B0123456", "amazon_br");
     const u = new URL(out);
-    expect(u.searchParams.get("tag")).toBe("deskly-20");
+    expect(u.searchParams.get("tag")).toBe("deskly02-20");
     expect(u.searchParams.get("utm_source")).toBe("deskly");
     expect(u.searchParams.get("utm_medium")).toBe("affiliate");
   });
