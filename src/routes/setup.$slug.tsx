@@ -20,18 +20,57 @@ export const Route = createFileRoute("/setup/$slug")({
     if (!local) throw notFound();
     return { setup: local, fromDb: false };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.setup.title} — ${loaderData.setup.author} · Deskly` },
-          { name: "description", content: loaderData.setup.description || `Setup de ${loaderData.setup.author}` },
-          { property: "og:title", content: `${loaderData.setup.title} — Setup brasileiro` },
-          { property: "og:description", content: loaderData.setup.description || "" },
-          { property: "og:image", content: loaderData.setup.image },
-          { property: "twitter:image", content: loaderData.setup.image },
-        ]
-      : [],
-  }),
+  head: ({ loaderData }) => {
+    if (!loaderData) return { meta: [] };
+    const s = loaderData.setup;
+    const ldjson = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: s.title,
+      description: s.description || `Setup de ${s.author}`,
+      image: s.image,
+      url: `https://deskly.life/setup/${s.slug || s.id}`,
+      itemListElement: (s.products || []).map((p: Product, i: number) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Product",
+          name: p.name,
+          brand: { "@type": "Brand", name: p.brand },
+          category: p.category,
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "BRL",
+            price: p.price,
+            availability: "https://schema.org/InStock",
+            seller: { "@type": "Organization", name: p.store },
+            url: p.affiliateUrl,
+          },
+          aggregateRating: p.rating
+            ? { "@type": "AggregateRating", ratingValue: p.rating, ratingCount: 50 }
+            : undefined,
+        },
+      })),
+    };
+    return {
+      meta: [
+        { title: `${s.title} — ${s.author} · Deskly` },
+        { name: "description", content: s.description || `Setup de ${s.author}` },
+        { property: "og:title", content: `${s.title} — Setup brasileiro` },
+        { property: "og:description", content: s.description || "" },
+        { property: "og:image", content: s.image },
+        { property: "og:type", content: "article" },
+        { property: "twitter:image", content: s.image },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(ldjson),
+        },
+      ],
+    };
+  },
   notFoundComponent: () => (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -79,12 +118,33 @@ function SetupDetail() {
     toast.success("Comentário removido");
   };
 
+  const [shareOpen, setShareOpen] = useState(false);
   const share = async () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: setup.title, url });
+      } catch {}
+      return;
+    }
+    setShareOpen((v) => !v);
+  };
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareText = `${setup.title} — vi esse setup no Deskly e amei`;
+  const shareLinks = {
+    whatsapp: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+    telegram: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+  };
+  const copyLink = async () => {
     try {
-      if (navigator.share) await navigator.share({ title: setup.title, url });
-      else { await navigator.clipboard.writeText(url); toast.success("Link copiado!"); }
-    } catch {}
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Link copiado!");
+      setShareOpen(false);
+    } catch {
+      toast.error("Não consegui copiar — copie manualmente da barra.");
+    }
   };
 
   return (
@@ -132,7 +192,28 @@ function SetupDetail() {
               <Button onClick={() => saves.toggle(setup.id)} variant="outline" className="gap-2">
                 <Bookmark className={`h-4 w-4 ${saved ? "fill-current text-primary" : ""}`} /> {saved ? "Salvo" : "Salvar"}
               </Button>
-              <Button onClick={share} variant="outline" className="gap-2"><Share2 className="h-4 w-4" /> Compartilhar</Button>
+              <div className="relative">
+                <Button onClick={share} variant="outline" className="gap-2"><Share2 className="h-4 w-4" /> Compartilhar</Button>
+                {shareOpen && (
+                  <div className="absolute left-0 top-full z-30 mt-2 w-56 rounded-2xl border border-border bg-card p-2 shadow-elegant">
+                    <a href={shareLinks.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                      <span className="text-lg">💬</span> WhatsApp
+                    </a>
+                    <a href={shareLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                      <span className="text-lg">𝕏</span> Twitter
+                    </a>
+                    <a href={shareLinks.telegram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                      <span className="text-lg">✈️</span> Telegram
+                    </a>
+                    <a href={shareLinks.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                      <span className="text-lg">📘</span> Facebook
+                    </a>
+                    <button onClick={copyLink} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm hover:bg-secondary">
+                      <span className="text-lg">🔗</span> Copiar link
+                    </button>
+                  </div>
+                )}
+              </div>
               <Button asChild variant="secondary" className="gap-2 bg-coral text-coral-foreground hover:opacity-90">
                 <Link to="/orcamento"><Sparkles className="h-4 w-4" /> Quero montar parecido</Link>
               </Button>
