@@ -13,7 +13,7 @@ describe("decorateAffiliateUrl", () => {
   it("adds ML tracking_id", () => {
     const out = decorateAffiliateUrl("https://produto.mercadolivre.com.br/MLB-1234", "mercado_livre");
     const u = new URL(out);
-    expect(u.searchParams.get("tracking_id")).toBe("deskly");
+    expect(u.searchParams.get("tracking_id")).toBe("belloliandriw");
   });
 
   it("only adds UTM for stores without specific tag", () => {

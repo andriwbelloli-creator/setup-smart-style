@@ -49,7 +49,7 @@ export function trackAffiliateClick(input: {
  */
 const TAG_BY_STORE: Partial<Record<Store, { param: string; value: string }>> = {
   amazon_br: { param: "tag", value: "deskly02-20" },
-  mercado_livre: { param: "tracking_id", value: "deskly" },
+  mercado_livre: { param: "tracking_id", value: "belloliandriw" },
   // magalu uses path rewrite, not query param — see below
 };
 
