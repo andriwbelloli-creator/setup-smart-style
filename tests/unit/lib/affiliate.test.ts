@@ -23,6 +23,14 @@ describe("decorateAffiliateUrl", () => {
     expect(u.searchParams.get("tag")).toBeNull();
   });
 
+  it("rewrites Magalu URL through influencer channel", () => {
+    const out = decorateAffiliateUrl("https://www.magazineluiza.com.br/cadeira-x/p/12345/", "magalu");
+    const u = new URL(out);
+    expect(u.hostname).toBe("www.magazinevoce.com.br");
+    expect(u.pathname).toBe("/magazinedesklylife/cadeira-x/p/12345/");
+    expect(u.searchParams.get("utm_source")).toBe("deskly");
+  });
+
   it("does not override existing params", () => {
     const out = decorateAffiliateUrl("https://www.amazon.com.br/dp/X?tag=other&utm_source=x", "amazon_br");
     const u = new URL(out);

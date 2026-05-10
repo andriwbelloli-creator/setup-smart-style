@@ -50,12 +50,22 @@ export function trackAffiliateClick(input: {
 const TAG_BY_STORE: Partial<Record<Store, { param: string; value: string }>> = {
   amazon_br: { param: "tag", value: "deskly02-20" },
   mercado_livre: { param: "tracking_id", value: "deskly" },
-  // others use generic utm_source
+  // magalu uses path rewrite, not query param — see below
 };
+
+const MAGALU_CHANNEL = "magazinedesklylife";
 
 export function decorateAffiliateUrl(url: string, store: Store): string {
   try {
     const u = new URL(url);
+
+    // Magalu: rewrite magazineluiza.com.br → magazinevoce.com.br/<channel>
+    if (store === "magalu" && /(^|\.)magazineluiza\.com\.br$/i.test(u.hostname)) {
+      u.hostname = "www.magazinevoce.com.br";
+      const path = u.pathname.startsWith("/") ? u.pathname : `/${u.pathname}`;
+      u.pathname = `/${MAGALU_CHANNEL}${path}`;
+    }
+
     const partner = TAG_BY_STORE[store];
     if (partner && !u.searchParams.has(partner.param)) {
       u.searchParams.set(partner.param, partner.value);
