@@ -27,7 +27,8 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [mode, setMode] = useState<"auth" | "forgot">("auth");
+  const [mode, setMode] = useState<"auth" | "forgot" | "verify">("auth");
+  const [pendingEmail, setPendingEmail] = useState("");
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/" });
@@ -39,7 +40,15 @@ function AuthPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setSubmitting(false);
     if (error) {
-      toast.error(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message);
+      if (error.message === "Invalid login credentials") {
+        toast.error("E-mail ou senha incorretos.");
+      } else if (error.message.toLowerCase().includes("email not confirmed")) {
+        toast.error("Confirme seu e-mail antes de entrar.");
+        setPendingEmail(email);
+        setMode("verify");
+      } else {
+        toast.error(error.message);
+      }
       return;
     }
     toast.success("Bem-vindo de volta!");
@@ -49,7 +58,7 @@ function AuthPage() {
   const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -63,8 +72,33 @@ function AuthPage() {
       else toast.error(error.message);
       return;
     }
-    toast.success("Conta criada! Verifique seu e-mail se a confirmação estiver ativada.");
+    // If session is null, email confirmation is required
+    if (!data.session) {
+      setPendingEmail(email);
+      setMode("verify");
+      setPassword("");
+      return;
+    }
+    toast.success("Conta criada!");
     navigate({ to: "/" });
+  };
+
+  const resendVerification = async () => {
+    if (!pendingEmail) return;
+    setSubmitting(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: pendingEmail,
+      options: {
+        emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+      },
+    });
+    setSubmitting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("E-mail reenviado!");
   };
 
   const forgotPassword = async (e: React.FormEvent) => {
@@ -100,6 +134,35 @@ function AuthPage() {
               <p className="text-xs text-muted-foreground">Comunidade brasileira de home offices</p>
             </div>
           </div>
+
+          {mode === "verify" && (
+            <div className="space-y-4 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-3xl">📬</div>
+              <h2 className="font-display text-lg font-bold">Confirme seu e-mail</h2>
+              <p className="text-sm text-muted-foreground">
+                Enviamos um link de confirmação pra <strong className="text-foreground">{pendingEmail}</strong>.
+                Clique nele pra ativar sua conta.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Não chegou? Olha a caixa de spam ou{" "}
+                <button
+                  type="button"
+                  onClick={resendVerification}
+                  disabled={submitting}
+                  className="font-medium text-primary hover:underline disabled:opacity-50"
+                >
+                  reenvie o link
+                </button>.
+              </p>
+              <button
+                type="button"
+                onClick={() => { setMode("auth"); setPendingEmail(""); }}
+                className="block w-full text-center text-xs text-muted-foreground hover:text-foreground"
+              >
+                ← Voltar
+              </button>
+            </div>
+          )}
 
           {mode === "forgot" && (
             <form onSubmit={forgotPassword} className="space-y-4">
