@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PostarRouteImport } from './routes/postar'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
@@ -23,6 +24,11 @@ import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostarRoute = PostarRouteImport.update({
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
+  '/premium': typeof PremiumRoute
   '/reset-password': typeof ResetPasswordRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
+  '/premium': typeof PremiumRoute
   '/reset-password': typeof ResetPasswordRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
+  '/premium': typeof PremiumRoute
   '/reset-password': typeof ResetPasswordRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/perfil'
     | '/postar'
+    | '/premium'
     | '/reset-password'
     | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/perfil'
     | '/postar'
+    | '/premium'
     | '/reset-password'
     | '/setup/$slug'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/perfil'
     | '/postar'
+    | '/premium'
     | '/reset-password'
     | '/setup/$slug'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   OrcamentoRoute: typeof OrcamentoRoute
   PerfilRoute: typeof PerfilRoute
   PostarRoute: typeof PostarRoute
+  PremiumRoute: typeof PremiumRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SetupSlugRoute: typeof SetupSlugRoute
 }
@@ -167,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/postar': {
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrcamentoRoute: OrcamentoRoute,
   PerfilRoute: PerfilRoute,
   PostarRoute: PostarRoute,
+  PremiumRoute: PremiumRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SetupSlugRoute: SetupSlugRoute,
 }

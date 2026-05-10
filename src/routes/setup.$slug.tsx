@@ -4,6 +4,7 @@ import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { findSetup, type Product, type Setup } from "@/data/setups";
 import { fetchSetupBySlug } from "@/lib/setups-db";
+import { trackAffiliateClick, decorateAffiliateUrl, normalizeStore } from "@/lib/affiliate";
 import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
@@ -278,7 +279,18 @@ function SetupDetail() {
               )}
               <div className="mt-4 flex gap-2">
                 <Button asChild className="flex-1 gap-2 bg-gradient-hero">
-                  <a href={active.affiliateUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={decorateAffiliateUrl(active.affiliateUrl, normalizeStore(active.store))}
+                    target="_blank"
+                    rel="sponsored noopener noreferrer"
+                    onClick={() =>
+                      trackAffiliateClick({
+                        productId: active.id,
+                        setupId: setup.id,
+                        store: normalizeStore(active.store),
+                      })
+                    }
+                  >
                     Ver na loja <ExternalLink className="h-4 w-4" />
                   </a>
                 </Button>

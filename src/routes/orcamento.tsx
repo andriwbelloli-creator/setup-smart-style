@@ -5,6 +5,7 @@ import { Footer } from "@/components/landing/CTA";
 import { Wallet, Check, Sparkles, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { trackAffiliateClick, decorateAffiliateUrl, normalizeStore } from "@/lib/affiliate";
 
 export const Route = createFileRoute("/orcamento")({
   head: () => ({
@@ -18,7 +19,15 @@ export const Route = createFileRoute("/orcamento")({
   component: Orcamento,
 });
 
-type Item = { cat: string; name: string; price: number; store: string; url: string };
+type Item = {
+  id: string;
+  cat: string;
+  name: string;
+  price: number;
+  store: string;
+  storeRaw: string;
+  url: string;
+};
 type Tier = { id: string; nome: string; valor: number; desc: string; slug: string; destaque?: boolean };
 
 const STORE_LABEL: Record<string, string> = {
@@ -69,14 +78,16 @@ function Orcamento() {
           if (!setup) return [t.id, [] as Item[]] as const;
           const { data: prods } = await supabase
             .from("setup_products")
-            .select("category, name, price_brl, store, affiliate_url")
+            .select("id, category, name, price_brl, store, affiliate_url")
             .eq("setup_id", setup.id)
             .order("position", { ascending: true });
           const items: Item[] = (prods || []).map((p: any) => ({
+            id: p.id,
             cat: p.category,
             name: p.name,
             price: p.price_brl,
             store: STORE_LABEL[p.store] ?? p.store,
+            storeRaw: p.store,
             url: p.affiliate_url || "#",
           }));
           return [t.id, items] as const;
@@ -163,7 +174,17 @@ function Orcamento() {
                       </div>
                       <div className="font-display text-base font-bold">R$ {it.price.toLocaleString("pt-BR")}</div>
                       <Button asChild size="sm" variant="outline" className="gap-1">
-                        <a href={it.url} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={decorateAffiliateUrl(it.url, normalizeStore(it.storeRaw))}
+                          target="_blank"
+                          rel="sponsored noopener noreferrer"
+                          onClick={() =>
+                            trackAffiliateClick({
+                              productId: it.id,
+                              store: normalizeStore(it.storeRaw),
+                            })
+                          }
+                        >
                           Loja <ExternalLink className="h-3 w-3" />
                         </a>
                       </Button>
