@@ -42,7 +42,9 @@ export function Footer() {
             <Link to="/diagnostico" className="hover:text-foreground">Diagnóstico</Link>
             <Link to="/orcamento" className="hover:text-foreground">Orçamentos</Link>
             <Link to="/comunidade" className="hover:text-foreground">Comunidade</Link>
-            <Link to="/postar" className="hover:text-foreground">Postar setup</Link>
+            <Link to="/premium" className="hover:text-foreground">Premium</Link>
+            <Link to="/termos" className="hover:text-foreground">Termos</Link>
+            <Link to="/privacidade" className="hover:text-foreground">Privacidade</Link>
           </div>
         </div>
       </div>

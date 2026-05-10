@@ -72,7 +72,9 @@ function Premium() {
     };
   }, []);
 
-  const handleSubscribe = (tier: Plan["tier"]) => {
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const handleSubscribe = async (tier: Plan["tier"]) => {
     if (!user) {
       toast.error("Faça login pra assinar.");
       return;
@@ -85,8 +87,29 @@ function Premium() {
       toast.message("Pra fazer downgrade, contate suporte temporariamente.");
       return;
     }
-    // TODO: replace with Stripe Checkout once VITE_STRIPE_PUBLISHABLE_KEY is set
-    toast.info("Checkout em construção. Em breve aceitamos cartão e PIX!");
+    setCheckoutLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+        body: {
+          tier,
+          userId: user.id,
+          email: user.email,
+          returnUrl: typeof window !== "undefined" ? window.location.origin : undefined,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("Checkout URL não retornada");
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Erro ao criar checkout";
+      toast.error(msg);
+    } finally {
+      setCheckoutLoading(false);
+    }
   };
 
   return (
@@ -163,8 +186,12 @@ function Premium() {
                         </Button>
                       )
                     ) : (
-                      <Button onClick={() => handleSubscribe(plan.tier)} className="w-full bg-gradient-hero shadow-elegant">
-                        Assinar {plan.name}
+                      <Button
+                        onClick={() => handleSubscribe(plan.tier)}
+                        disabled={checkoutLoading}
+                        className="w-full bg-gradient-hero shadow-elegant"
+                      >
+                        {checkoutLoading ? "Abrindo..." : `Assinar ${plan.name}`}
                       </Button>
                     )}
                   </div>
