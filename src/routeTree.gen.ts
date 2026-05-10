@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PostarRouteImport } from './routes/postar'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
@@ -19,6 +20,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PostarRoute = PostarRouteImport.update({
   id: '/postar',
   path: '/postar',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/perfil'
     | '/postar'
+    | '/reset-password'
     | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/perfil'
     | '/postar'
+    | '/reset-password'
     | '/setup/$slug'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/orcamento'
     | '/perfil'
     | '/postar'
+    | '/reset-password'
     | '/setup/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -144,11 +156,19 @@ export interface RootRouteChildren {
   OrcamentoRoute: typeof OrcamentoRoute
   PerfilRoute: typeof PerfilRoute
   PostarRoute: typeof PostarRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SetupSlugRoute: typeof SetupSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/postar': {
       id: '/postar'
       path: '/postar'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrcamentoRoute: OrcamentoRoute,
   PerfilRoute: PerfilRoute,
   PostarRoute: PostarRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SetupSlugRoute: SetupSlugRoute,
 }
 export const routeTree = rootRouteImport

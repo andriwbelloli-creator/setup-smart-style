@@ -27,6 +27,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [mode, setMode] = useState<"auth" | "forgot">("auth");
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/" });
@@ -66,6 +67,25 @@ function AuthPage() {
     navigate({ to: "/" });
   };
 
+  const forgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Informe seu e-mail.");
+      return;
+    }
+    setSubmitting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: typeof window !== "undefined" ? `${window.location.origin}/reset-password` : undefined,
+    });
+    setSubmitting(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Link de recuperação enviado! Cheque seu e-mail.");
+    setMode("auth");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -81,6 +101,32 @@ function AuthPage() {
             </div>
           </div>
 
+          {mode === "forgot" && (
+            <form onSubmit={forgotPassword} className="space-y-4">
+              <div>
+                <h2 className="font-display text-lg font-bold">Recuperar senha</h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Vamos enviar um link de redefinição pro seu e-mail.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email-forgot">E-mail cadastrado</Label>
+                <Input id="email-forgot" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
+              <Button type="submit" disabled={submitting} className="w-full bg-gradient-hero shadow-elegant">
+                {submitting ? "Enviando..." : "Enviar link"}
+              </Button>
+              <button
+                type="button"
+                onClick={() => setMode("auth")}
+                className="block w-full text-center text-xs text-muted-foreground hover:text-foreground"
+              >
+                ← Voltar ao login
+              </button>
+            </form>
+          )}
+
+          {mode === "auth" && (
           <Tabs defaultValue="signin">
             <TabsList className="mb-4 grid w-full grid-cols-2">
               <TabsTrigger value="signin">Entrar</TabsTrigger>
@@ -94,7 +140,16 @@ function AuthPage() {
                   <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Senha</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Senha</Label>
+                    <button
+                      type="button"
+                      onClick={() => setMode("forgot")}
+                      className="text-xs font-medium text-primary hover:underline"
+                    >
+                      Esqueci minha senha
+                    </button>
+                  </div>
                   <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <Button type="submit" disabled={submitting} className="w-full bg-gradient-hero shadow-elegant">
@@ -123,6 +178,7 @@ function AuthPage() {
               </form>
             </TabsContent>
           </Tabs>
+          )}
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
             Voltar para a <Link to="/" className="text-primary hover:underline">página inicial</Link>
