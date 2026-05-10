@@ -84,6 +84,19 @@ export function AnaliseIA() {
       ) ?? data.tips?.[0];
       setAiTip(overallTipObj?.text ?? data.summary ?? null);
       setAnalyzed(true);
+
+      // persist analysis (fire-and-forget, don't block UI)
+      supabase
+        .from("ai_analyses")
+        .insert({
+          owner_id: user.id,
+          scores: data.scores,
+          tips: data.tips,
+          overall_score: data.overall,
+        })
+        .then(({ error: persistErr }) => {
+          if (persistErr) console.warn("ai_analyses persist failed:", persistErr.message);
+        });
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Erro ao analisar imagem";
       toast.error(msg);
