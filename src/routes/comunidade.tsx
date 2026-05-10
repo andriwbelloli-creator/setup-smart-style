@@ -31,7 +31,7 @@ const top = [
   { user: "@ana.designer", points: 1980, badge: "Curadora de luz" },
 ];
 
-export function Comunidade() {
+function Comunidade() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
