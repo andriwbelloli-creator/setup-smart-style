@@ -45,7 +45,7 @@ const TIERS: Tier[] = [
     nome: "Essencial",
     valor: 1500,
     desc: "Pra começar bem sem quebrar a poupança",
-    slug: "setup-estudante-orcamento-1500",
+    slug: "ape-32m2",
   },
   {
     id: "equilibrado",
@@ -53,14 +53,14 @@ const TIERS: Tier[] = [
     valor: 3800,
     desc: "Sweet spot pra quem trabalha 8h/dia",
     destaque: true,
-    slug: "cantinho-criativo-cores-pasteis",
+    slug: "estudante-pequeno-foco-39",
   },
   {
     id: "premium",
     nome: "Premium",
     valor: 12000,
     desc: "Pra quem leva o home office a sério",
-    slug: "home-office-dev-dual-monitor",
+    slug: "cyber-cave",
   },
 ];
 
