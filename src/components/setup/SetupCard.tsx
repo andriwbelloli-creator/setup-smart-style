@@ -1,9 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, MapPin, Bookmark } from "lucide-react";
+import { Heart, MapPin, Bookmark, ArrowRight } from "lucide-react";
 import type { Setup } from "@/data/setups";
 import { useLikes, useSaves } from "@/hooks/use-saved";
 
-export function SetupCard({ s }: { s: Setup }) {
+export function SetupCard({ s, featured = false }: { s: Setup; featured?: boolean }) {
   const likes = useLikes();
   const saves = useSaves();
   const liked = likes.has(s.id);
@@ -12,7 +12,9 @@ export function SetupCard({ s }: { s: Setup }) {
     <Link
       to="/setup/$slug"
       params={{ slug: s.slug }}
-      className="group block overflow-hidden rounded-3xl border border-border bg-card shadow-soft transition-smooth hover:-translate-y-1 hover:shadow-elegant"
+      className={`group block overflow-hidden rounded-3xl border bg-card shadow-soft transition-smooth hover:-translate-y-1 hover:shadow-elegant ${
+        featured ? "border-primary/40 ring-2 ring-primary/20" : "border-border"
+      }`}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
@@ -61,6 +63,11 @@ export function SetupCard({ s }: { s: Setup }) {
         <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
           <MapPin className="h-3 w-3" /> {s.city}
         </div>
+        {featured && (
+          <div className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-hero px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth group-hover:scale-[1.02]">
+            Ver setup completo <ArrowRight className="h-4 w-4" />
+          </div>
+        )}
       </div>
     </Link>
   );
