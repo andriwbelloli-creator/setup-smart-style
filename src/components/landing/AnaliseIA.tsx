@@ -188,9 +188,14 @@ export function AnaliseIA() {
                 >
                   <RotateCcw className="h-3 w-3" /> Trocar
                 </button>
-                <div className="relative z-10 mt-auto self-start text-left text-background">
+                <div className="relative z-10 mt-auto w-full self-start text-left text-background">
                   <div className="text-[10px] font-semibold uppercase tracking-wider opacity-80">{loading ? "Analisando..." : analyzed ? "Pronto" : "Aguarde"}</div>
                   <div className="font-display text-2xl font-bold">{loading ? "IA processando" : "Resultados ao lado →"}</div>
+                  {loading && (
+                    <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-background/20">
+                      <div className="h-full w-2/5 animate-pulse rounded-full bg-gradient-hero" />
+                    </div>
+                  )}
                 </div>
               </>
             ) : (

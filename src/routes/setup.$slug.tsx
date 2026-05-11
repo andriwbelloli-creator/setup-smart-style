@@ -174,7 +174,7 @@ function SetupDetail() {
           <div>
             <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
               <div className="relative aspect-[16/11]">
-                <img src={heroImage} alt={setup.title} className="h-full w-full object-cover transition-opacity duration-300" />
+                <img src={heroImage} alt={`Setup completo de ${setup.author}: ${setup.title}`} className="h-full w-full object-cover transition-opacity duration-300" fetchPriority="high" decoding="async" />
                 {heroIdx === 0 && setup.products.map((p) => (
                   <button key={p.id} onClick={() => setActive(p)} style={{ left: `${p.x}%`, top: `${p.y}%` }}
                     className="group absolute -translate-x-1/2 -translate-y-1/2" aria-label={`Ver produto ${p.name}`}>
@@ -197,7 +197,7 @@ function SetupDetail() {
                     }`}
                     aria-label={`Imagem ${i + 1}`}
                   >
-                    <img src={url} alt={`${setup.title} - ${i + 1}`} className="h-full w-full object-cover" loading="lazy" />
+                    <img src={url} alt={`${setup.title} — foto ${i + 1}`} className="h-full w-full object-cover" loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>
@@ -278,7 +278,7 @@ function SetupDetail() {
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-2.5">
                             {c.author?.avatar_url ? (
-                              <img src={c.author.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover" />
+                              <img src={c.author.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover" loading="lazy" decoding="async" />
                             ) : (
                               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-secondary-foreground">
                                 {initials}

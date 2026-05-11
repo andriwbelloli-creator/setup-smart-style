@@ -18,6 +18,28 @@ export function normalizeStore(raw: string): Store {
 }
 
 /**
+ * Comissão média estimada por loja, usada nos cálculos do dashboard.
+ * Valores baseados nas faixas oficiais 2026 (eletrônicos/periféricos).
+ */
+const COMMISSION_RATE: Record<Store, number> = {
+  amazon_br: 0.04,
+  mercado_livre: 0.05,
+  kabum: 0.053,
+  magalu: 0.04,
+  pichau: 0.063,
+  outro: 0.03,
+};
+
+export function commissionForStore(store: Store, priceCents: number): number {
+  const rate = COMMISSION_RATE[store] ?? 0.03;
+  return Math.round(priceCents * rate);
+}
+
+export function commissionRate(store: Store): number {
+  return COMMISSION_RATE[store] ?? 0.03;
+}
+
+/**
  * Track an outbound click on a product affiliate link.
  * Fire-and-forget; never throws, never blocks navigation.
  */
