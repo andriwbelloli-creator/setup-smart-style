@@ -3,6 +3,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
+import { CookieBanner } from "@/components/CookieBanner";
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/600.css";
@@ -82,6 +83,7 @@ function RootComponent() {
     <AuthProvider>
       <Outlet />
       <Toaster />
+      <CookieBanner />
     </AuthProvider>
   );
 }

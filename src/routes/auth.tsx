@@ -29,6 +29,8 @@ function AuthPage() {
   const [displayName, setDisplayName] = useState("");
   const [mode, setMode] = useState<"auth" | "forgot" | "verify">("auth");
   const [pendingEmail, setPendingEmail] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const POLICY_VERSION = "2026-05-10";
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/" });
@@ -57,13 +59,21 @@ function AuthPage() {
 
   const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptedTerms) {
+      toast.error("Aceite os Termos e a Política de Privacidade pra continuar.");
+      return;
+    }
     setSubmitting(true);
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
-        data: { display_name: displayName || email.split("@")[0] },
+        data: {
+          display_name: displayName || email.split("@")[0],
+          consent_terms_version: POLICY_VERSION,
+          consent_terms_at: new Date().toISOString(),
+        },
       },
     });
     setSubmitting(false);
@@ -267,7 +277,22 @@ function AuthPage() {
                   <Label htmlFor="password2">Senha</Label>
                   <Input id="password2" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres" />
                 </div>
-                <Button type="submit" disabled={submitting} className="w-full bg-gradient-hero shadow-elegant">
+                <label className="flex items-start gap-2 text-xs text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 cursor-pointer accent-primary"
+                    required
+                  />
+                  <span>
+                    Li e aceito os{" "}
+                    <Link to="/termos" target="_blank" className="text-primary hover:underline">Termos de Uso</Link>
+                    {" "}e a{" "}
+                    <Link to="/privacidade" target="_blank" className="text-primary hover:underline">Política de Privacidade</Link>.
+                  </span>
+                </label>
+                <Button type="submit" disabled={submitting || !acceptedTerms} className="w-full bg-gradient-hero shadow-elegant">
                   {submitting ? "Criando..." : "Criar conta"}
                 </Button>
               </form>

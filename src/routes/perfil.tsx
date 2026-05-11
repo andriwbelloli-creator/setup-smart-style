@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchPublishedSetups, rowToSetup } from "@/lib/setups-db";
 import { SetupCard } from "@/components/setup/SetupCard";
 import type { Setup } from "@/data/setups";
-import { Loader2, Upload, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Upload, Pencil, Trash2, Download, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/perfil")({
@@ -73,6 +73,48 @@ function Perfil() {
     if (error) { toast.error(error.message); return; }
     setMySetups((prev) => prev.filter((s) => s.id !== id));
     toast.success("Setup removido");
+  };
+
+  const exportData = async () => {
+    if (!user) return;
+    toast.info("Preparando seus dados...");
+    const [{ data: prof }, { data: setups }, { data: comments }, { data: likes }, { data: saves }] = await Promise.all([
+      supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+      supabase.from("setups").select("*, setup_images(*), setup_products(*)").eq("owner_id", user.id),
+      supabase.from("comments").select("*").eq("author_id", user.id),
+      supabase.from("likes").select("*").eq("user_id", user.id),
+      supabase.from("saves").select("*").eq("user_id", user.id),
+    ]);
+    const payload = {
+      exported_at: new Date().toISOString(),
+      account: { id: user.id, email: user.email, created_at: user.created_at },
+      profile: prof,
+      setups, comments, likes, saves,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `deskly-meus-dados-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Dados baixados!");
+  };
+
+  const deleteAccount = async () => {
+    if (!user) return;
+    const typed = prompt(`Para confirmar a exclusão permanente da sua conta e de todos os seus dados, digite seu e-mail (${user.email}):`);
+    if (typed !== user.email) {
+      if (typed !== null) toast.error("E-mail não confere. Cancelado.");
+      return;
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { toast.error("Sessão expirada. Faça login novamente."); return; }
+    const { error } = await supabase.functions.invoke("delete-account");
+    if (error) { toast.error("Falha ao excluir conta: " + error.message); return; }
+    toast.success("Conta excluída. Adeus!");
+    await supabase.auth.signOut();
+    navigate({ to: "/" });
   };
 
   if (authLoading || !user) return <div className="min-h-screen bg-background"><Navbar /><div className="container py-32 text-center"><Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" /></div></div>;
@@ -144,6 +186,28 @@ function Perfil() {
                 className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none" />
             </Field>
             <Button onClick={saveProfile} className="mt-4 gap-2 bg-gradient-hero"><Pencil className="h-4 w-4" /> Salvar alterações</Button>
+
+            <div className="mt-10 border-t border-border pt-6">
+              <h3 className="font-display text-base font-bold">Privacidade e dados (LGPD)</h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Você pode baixar todos os dados que mantemos sobre você, ou excluir sua conta permanentemente.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button variant="outline" onClick={exportData} className="gap-2">
+                  <Download className="h-4 w-4" /> Baixar meus dados (JSON)
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={deleteAccount}
+                  className="gap-2 border-coral/40 text-coral hover:bg-coral/5 hover:text-coral"
+                >
+                  <AlertTriangle className="h-4 w-4" /> Excluir minha conta
+                </Button>
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">
+                A exclusão é permanente e remove seus setups, comentários, curtidas e saves em até 30 dias (alguns logs técnicos podem ser retidos por exigência fiscal).
+              </p>
+            </div>
           </div>
         )}
       </main>
