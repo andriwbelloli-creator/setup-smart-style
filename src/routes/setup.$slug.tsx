@@ -332,22 +332,35 @@ function SetupDetail() {
                   </p>
                 )}
                 {setup.products.map((p) => (
-                  <button key={p.id} onClick={() => setActive(p)}
+                  <div key={p.id}
                     className={`flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-smooth ${
                       active?.id === p.id ? "border-accent bg-accent/5" : "border-border bg-background hover:border-foreground/30"
                     }`}>
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-secondary text-xs font-bold">
-                      {p.category[0]}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{p.category}</div>
-                      <div className="truncate text-sm font-semibold">{p.name}</div>
-                      <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="font-bold text-foreground">R$ {p.price.toLocaleString("pt-BR")}</span>
-                        <span>· {p.store}</span>
+                    <button onClick={() => setActive(p)} className="flex flex-1 items-start gap-3 text-left min-w-0">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-secondary text-xs font-bold">
+                        {p.category[0]}
                       </div>
-                    </div>
-                  </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{p.category}</div>
+                        <div className="truncate text-sm font-semibold">{p.name}</div>
+                        <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                          <span className="font-bold text-foreground">R$ {p.price.toLocaleString("pt-BR")}</span>
+                          <span>· {p.store}</span>
+                        </div>
+                      </div>
+                    </button>
+                    <a
+                      href={decorateAffiliateUrl(p.affiliateUrl, normalizeStore(p.store))}
+                      target="_blank"
+                      rel="sponsored noopener noreferrer"
+                      onClick={() => trackAffiliateClick({ productId: p.id, setupId: setup.id, store: normalizeStore(p.store) })}
+                      className="flex h-9 w-9 flex-shrink-0 items-center justify-center self-center rounded-full bg-foreground text-background transition-smooth hover:bg-foreground/85"
+                      aria-label={`Comprar ${p.name}`}
+                      title="Abrir na loja"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </div>
                 ))}
               </div>
             </div>
