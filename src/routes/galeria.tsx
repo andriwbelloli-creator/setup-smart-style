@@ -45,7 +45,8 @@ function Galeria() {
     if (budget === "<2k" && s.budget >= 2000) return false;
     if (budget === "2-5k" && (s.budget < 2000 || s.budget > 5000)) return false;
     if (budget === "5-10k" && (s.budget < 5000 || s.budget > 10000)) return false;
-    if (budget === "10k+" && s.budget < 10000) return false;
+    if (budget === "10-20k" && (s.budget < 10000 || s.budget > 20000)) return false;
+    if (budget === "20k+" && s.budget < 20000) return false;
     if (q && !`${s.title} ${s.author} ${s.city} ${s.styles.join(" ")}`.toLowerCase().includes(q.toLowerCase())) return false;
     return true;
   });
@@ -98,8 +99,13 @@ function Galeria() {
               label="Orçamento"
               value={budget}
               setValue={setBudget}
-              options={["Todos", "<2k", "2-5k", "5-10k", "10k+"]}
-              format={(o) => (o === "Todos" ? o : o === "<2k" ? "Até R$ 2k" : `R$ ${o}`)}
+              options={["Todos", "<2k", "2-5k", "5-10k", "10-20k", "20k+"]}
+              format={(o) =>
+                o === "Todos" ? o :
+                o === "<2k" ? "Até R$ 2k" :
+                o === "20k+" ? "R$ 20k+" :
+                `R$ ${o}`
+              }
             />
           </div>
         </div>
