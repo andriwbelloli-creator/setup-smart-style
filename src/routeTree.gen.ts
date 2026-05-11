@@ -22,6 +22,7 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -88,10 +89,15 @@ const SetupSlugRoute = SetupSlugRouteImport.update({
   path: '/setup/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
@@ -102,11 +108,12 @@ export interface FileRoutesByFullPath {
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
@@ -117,12 +124,13 @@ export interface FileRoutesByTo {
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/galeria': typeof GaleriaRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/privacidade': typeof PrivacidadeRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/reset-password'
     | '/termos'
+    | '/auth/callback'
     | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/reset-password'
     | '/termos'
+    | '/auth/callback'
     | '/setup/$slug'
   id:
     | '__root__'
@@ -180,12 +191,13 @@ export interface FileRouteTypes {
     | '/privacidade'
     | '/reset-password'
     | '/termos'
+    | '/auth/callback'
     | '/setup/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   ComunidadeRoute: typeof ComunidadeRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
   GaleriaRoute: typeof GaleriaRoute
@@ -292,12 +304,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   ComunidadeRoute: ComunidadeRoute,
   DiagnosticoRoute: DiagnosticoRoute,
   GaleriaRoute: GaleriaRoute,
