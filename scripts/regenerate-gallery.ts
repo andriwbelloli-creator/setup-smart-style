@@ -17,29 +17,16 @@ const admin = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-// Conservative pool — only photos I'm highly confident show complete
-// home-office workstations (desk + monitor + chair + room context).
-// User flagged that previous pool had close-ups and lifestyle shots,
-// so trimmed to ~18 most reliable workspace photos.
+// ULTRA conservative pool — only the 6 photos directly matching the
+// reference images the user explicitly approved. Repetition across
+// setups is acceptable; off-brand content is not.
 const POOL = [
-  "photo-1497366216548-37526070297c", // iMac with geometric wall
-  "photo-1518373714866-3f1478910cc0", // clean iMac minimalist + chair
-  "photo-1593642632559-0c6d3fc62b89", // wood minimalist workspace
-  "photo-1517292987719-0369a794ec0f", // standing desk light wood
-  "photo-1547082299-de196ea013d6",    // dual monitor warm light
-  "photo-1611606063065-ee7946f0787a", // overhead workspace clean
-  "photo-1574629810360-7efbbe195018", // creative workspace + chair
-  "photo-1600585154340-be6161a56a0c", // ergonomic chair + desk view
-  "photo-1542744094-3a31f272c490",    // dual monitor home office
-  "photo-1542744095-291d1f67b221",    // workspace with chair angle
-  "photo-1502672023488-70e25813eb80", // home office room context
-  "photo-1518972559570-7cc1309f3229", // minimalist designer desk
-  "photo-1568992687947-868a62a9f521", // executive dark wood + chair
-  "photo-1542751371-adc38448a05e",    // gaming setup full room
-  "photo-1606857521015-7f9fcf423740", // PM zoom-ready desk
-  "photo-1605379399642-870262d3d051", // dark dev cave with shelf
-  "photo-1497366754035-f200968a6e72", // double workspace shared
-  "photo-1611224923853-80b023f02d71", // corner desk workspace
+  "photo-1497366216548-37526070297c", // reference 1: iMac with geometric wall
+  "photo-1518373714866-3f1478910cc0", // reference 3: white iMac minimalist + chair
+  "photo-1517292987719-0369a794ec0f", // reference 4: standing desk + chair + window
+  "photo-1547082299-de196ea013d6",    // reference 2: dual monitor with plants
+  "photo-1593642632559-0c6d3fc62b89", // wood minimalist (similar to refs)
+  "photo-1600585154340-be6161a56a0c", // ergonomic chair + desk (similar to refs)
 ];
 
 function urlFor(id: string, w = 1600): string {
@@ -56,14 +43,17 @@ function hashSeed(s: string): number {
   return Math.abs(h);
 }
 
-// Pick 4 distinct pool indices for this setup, deterministic by setup id
+// Pick 4 pool indices for this setup, deterministic by setup id.
+// Allows repetition when pool is smaller than 4 (still rotates which
+// duplicate is used so it doesn't look identical between setups).
 function pickFour(setupId: string): string[] {
   const seed = hashSeed(setupId);
-  const idxs = new Set<number>();
-  for (let i = 0; idxs.size < 4 && i < 50; i++) {
-    idxs.add((seed + i * 7 + i * i) % POOL.length);
+  const picked: string[] = [];
+  for (let i = 0; i < 4; i++) {
+    const idx = (seed + i * 31 + i * i * 7) % POOL.length;
+    picked.push(urlFor(POOL[idx]));
   }
-  return Array.from(idxs).map((i) => urlFor(POOL[i]));
+  return picked;
 }
 
 async function main() {
