@@ -22,6 +22,7 @@ import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
+import { Route as DashboardAfiliadosRouteImport } from './routes/dashboard.afiliados'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
 const TermosRoute = TermosRouteImport.update({
@@ -89,6 +90,11 @@ const SetupSlugRoute = SetupSlugRouteImport.update({
   path: '/setup/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardAfiliadosRoute = DashboardAfiliadosRouteImport.update({
+  id: '/dashboard/afiliados',
+  path: '/dashboard/afiliados',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/callback',
   path: '/callback',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/afiliados': typeof DashboardAfiliadosRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesByTo {
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/afiliados': typeof DashboardAfiliadosRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRoutesById {
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/dashboard/afiliados': typeof DashboardAfiliadosRoute
   '/setup/$slug': typeof SetupSlugRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/termos'
     | '/auth/callback'
+    | '/dashboard/afiliados'
     | '/setup/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/termos'
     | '/auth/callback'
+    | '/dashboard/afiliados'
     | '/setup/$slug'
   id:
     | '__root__'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/termos'
     | '/auth/callback'
+    | '/dashboard/afiliados'
     | '/setup/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -208,6 +220,7 @@ export interface RootRouteChildren {
   PrivacidadeRoute: typeof PrivacidadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermosRoute: typeof TermosRoute
+  DashboardAfiliadosRoute: typeof DashboardAfiliadosRoute
   SetupSlugRoute: typeof SetupSlugRoute
 }
 
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/afiliados': {
+      id: '/dashboard/afiliados'
+      path: '/dashboard/afiliados'
+      fullPath: '/dashboard/afiliados'
+      preLoaderRoute: typeof DashboardAfiliadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/callback'
@@ -337,6 +357,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacidadeRoute: PrivacidadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermosRoute: TermosRoute,
+  DashboardAfiliadosRoute: DashboardAfiliadosRoute,
   SetupSlugRoute: SetupSlugRoute,
 }
 export const routeTree = rootRouteImport

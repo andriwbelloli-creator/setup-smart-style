@@ -1,9 +1,12 @@
 import { useRef, useState } from "react";
-import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw } from "lucide-react";
+import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useSubscription } from "@/hooks/use-subscription";
 import { toast } from "sonner";
+
+const FREE_ANALYSES_PER_MONTH = 1;
 
 type Crit = { icon: typeof Upload; label: string; score: number; tip: string; color: string };
 
@@ -42,7 +45,9 @@ export function AnaliseIA() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+  const subscription = useSubscription();
   const navigate = useNavigate();
+  const [limitReached, setLimitReached] = useState(false);
 
   const handleFile = async (file?: File) => {
     if (!file) return;
@@ -54,6 +59,21 @@ export function AnaliseIA() {
     if (file.size > 10 * 1024 * 1024) {
       toast.error("Imagem muito grande (máx 10MB).");
       return;
+    }
+    // Free tier: 1 análise por mês. Premium/Pro: ilimitado.
+    if (!subscription.canUse("unlimited_analysis")) {
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+      const { count } = await supabase
+        .from("ai_analyses")
+        .select("id", { count: "exact", head: true })
+        .eq("owner_id", user.id)
+        .gte("created_at", startOfMonth.toISOString());
+      if ((count ?? 0) >= FREE_ANALYSES_PER_MONTH) {
+        setLimitReached(true);
+        return;
+      }
     }
     setPreview(URL.createObjectURL(file));
     setLoading(true);
@@ -113,6 +133,28 @@ export function AnaliseIA() {
 
   return (
     <section id="analise" className="border-y border-border/60 bg-cream py-24 md:py-32">
+      {limitReached && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 px-4" onClick={() => setLimitReached(false)}>
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl bg-card p-8 shadow-elegant">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-hero text-primary-foreground">
+              <Crown className="h-6 w-6" />
+            </div>
+            <h3 className="text-center font-display text-2xl font-bold">Você bateu o limite do plano Gratuito</h3>
+            <p className="mt-3 text-center text-sm text-muted-foreground">
+              O plano Gratuito inclui <strong>1 análise por mês</strong>. Pra continuar avaliando setups
+              ilimitadamente, faça upgrade pro Premium (R$ 9,90/mês) ou Pro (R$ 19,90/mês).
+            </p>
+            <div className="mt-6 flex flex-col gap-3">
+              <Link to="/premium" onClick={() => setLimitReached(false)} className="block rounded-full bg-gradient-hero px-5 py-3 text-center text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth hover:opacity-90">
+                Ver planos Premium e Pro →
+              </Link>
+              <button type="button" onClick={() => setLimitReached(false)} className="text-xs text-muted-foreground hover:text-foreground">
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
