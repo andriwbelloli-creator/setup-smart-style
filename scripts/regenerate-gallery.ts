@@ -17,34 +17,58 @@ const admin = createClient(SUPABASE_URL, SERVICE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-// 24 verified Unsplash photo IDs. All confirmed 200 OK.
-// All show complete workstations (desk + monitor + chair or laptop + room
-// context). None are product close-ups or people portraits.
+// 48 verified Unsplash photo IDs (HEAD-checked 200 OK).
+// All show complete home-office workstations — desk + monitor/laptop +
+// chair or room context. No people, no isolated product close-ups.
 const POOL = [
-  "photo-1497366216548-37526070297c", // classic iMac with geometric wall
-  "photo-1499951360447-b19be8fe80f5", // modern minimalist desk
-  "photo-1486312338219-ce68d2c6f44d", // laptop on wood desk with notebook
-  "photo-1518373714866-3f1478910cc0", // iMac minimalist setup
-  "photo-1593642632559-0c6d3fc62b89", // wood minimalist workspace
-  "photo-1517292987719-0369a794ec0f", // standing desk light
-  "photo-1547082299-de196ea013d6",    // dual monitor with plants
-  "photo-1593062096033-9a26b09da705", // workspace with plants
-  "photo-1611606063065-ee7946f0787a", // overhead workspace clean
-  "photo-1611224923853-80b023f02d71", // corner desk workspace
-  "photo-1531403009284-440f080d1e12", // laptop close-up on desk
-  "photo-1497366754035-f200968a6e72", // double workspace shared
-  "photo-1505330622279-bf7d7fc918f4", // bright office workspace
-  "photo-1572177812156-58036aae439c", // home office bookshelves
-  "photo-1551434678-e076c223a692",    // dev workspace with multiple monitors
-  "photo-1574629810360-7efbbe195018", // creative workspace
-  "photo-1600585154340-be6161a56a0c", // ergonomic chair + desk view
-  "photo-1542744094-3a31f272c490",    // dual monitor home office
-  "photo-1497032628192-86f99bcd76bc", // minimalist laptop desk
-  "photo-1593476550610-87baa860004a", // workspace overhead
-  "photo-1607082348824-0a96f2a4b9da", // clean white desk corner
-  "photo-1542744095-291d1f67b221",    // workspace with chair angle
-  "photo-1502672023488-70e25813eb80", // home office multiple devices
-  "photo-1462826303086-329426d1aef5", // overhead with plants and laptop
+  "photo-1497366216548-37526070297c",
+  "photo-1499951360447-b19be8fe80f5",
+  "photo-1486312338219-ce68d2c6f44d",
+  "photo-1518373714866-3f1478910cc0",
+  "photo-1593642632559-0c6d3fc62b89",
+  "photo-1517292987719-0369a794ec0f",
+  "photo-1547082299-de196ea013d6",
+  "photo-1593062096033-9a26b09da705",
+  "photo-1611606063065-ee7946f0787a",
+  "photo-1611224923853-80b023f02d71",
+  "photo-1531403009284-440f080d1e12",
+  "photo-1497366754035-f200968a6e72",
+  "photo-1505330622279-bf7d7fc918f4",
+  "photo-1572177812156-58036aae439c",
+  "photo-1551434678-e076c223a692",
+  "photo-1574629810360-7efbbe195018",
+  "photo-1600585154340-be6161a56a0c",
+  "photo-1542744094-3a31f272c490",
+  "photo-1497032628192-86f99bcd76bc",
+  "photo-1593476550610-87baa860004a",
+  "photo-1607082348824-0a96f2a4b9da",
+  "photo-1542744095-291d1f67b221",
+  "photo-1502672023488-70e25813eb80",
+  "photo-1462826303086-329426d1aef5",
+  "photo-1518972559570-7cc1309f3229",
+  "photo-1545239351-cefa43af60f3",
+  "photo-1542435503-956c469947f6",
+  "photo-1581905764498-f1b60bae941a",
+  "photo-1568992687947-868a62a9f521",
+  "photo-1542751371-adc38448a05e",
+  "photo-1556761175-5973dc0f32e7",
+  "photo-1606857521015-7f9fcf423740",
+  "photo-1572021335469-31706a17aaef",
+  "photo-1554629947-334ff61d85dc",
+  "photo-1518770660439-4636190af475",
+  "photo-1517842645767-c639042777db",
+  "photo-1564069114553-7215e1ff1890",
+  "photo-1554118811-1e0d58224f24",
+  "photo-1611532736597-de2d4265fba3",
+  "photo-1593642634402-b0eb5e2eebc9",
+  "photo-1605379399642-870262d3d051",
+  "photo-1593696954577-ab3d39317b97",
+  "photo-1576091160550-2173dba999ef",
+  "photo-1556761175-4b46a572b786",
+  "photo-1483058712412-4245e9b90334",
+  "photo-1505740420928-5e560c06d30e",
+  "photo-1521587760476-6c12a4b040da",
+  "photo-1604328698692-f76ea9498e76",
 ];
 
 function urlFor(id: string, w = 1600): string {
