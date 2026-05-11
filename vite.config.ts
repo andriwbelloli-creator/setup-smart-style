@@ -7,6 +7,6 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
-  cloudflare: true,
-  tanstackStart: { target: "cloudflare-pages" },
+  cloudflare: false,
+  tanstackStart: { target: "vercel" },
 });
