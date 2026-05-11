@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: deskly
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: |
+      curl -fsSL https://bun.sh/install | bash
+      export PATH=$HOME/.bun/bin:$PATH
+      bun install
+      bun run build
+    startCommand: node start.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22
