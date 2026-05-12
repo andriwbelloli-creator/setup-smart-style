@@ -256,11 +256,22 @@ async function handleHoneypot(req, res) {
 <body><h1>Carregando...</h1><p>Aguarde.</p></body></html>`);
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 async function handleAffiliateRedirect(req, res, productId) {
   if (!SUPABASE_URL || !SUPABASE_ANON) {
     res.statusCode = 503;
     res.setHeader("Content-Type", "text/plain; charset=utf-8");
     res.end("Affiliate redirect not configured.");
+    return;
+  }
+  // Valida o formato ANTES de chamar o Supabase — UUID inválido gera erro
+  // de tipo no postgres que o catch interpreta como 502. Retornamos 404
+  // como deveria ser pra um recurso inexistente.
+  if (!UUID_RE.test(productId)) {
+    res.statusCode = 404;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.end("Produto não encontrado.");
     return;
   }
   try {

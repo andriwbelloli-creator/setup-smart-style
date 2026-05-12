@@ -7,6 +7,7 @@ import { SetupCardSkeletonGrid } from "@/components/setup/SetupCardSkeleton";
 import { SETUPS, STYLES, ROLES, type Setup } from "@/data/setups";
 import { fetchPublishedSetups } from "@/lib/setups-db";
 import { supabase } from "@/integrations/supabase/client";
+import { trackPageView, track } from "@/lib/track";
 import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, Flame, Sparkles, Star, Wallet, ImageOff } from "lucide-react";
 
 type SortKey = "popular" | "recent" | "score" | "budget_asc";
@@ -44,11 +45,18 @@ function Galeria() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    trackPageView("inspiration", { route: "galeria" });
     fetchPublishedSetups()
       .then((rows) => setDbSetups(rows))
       .catch(() => setDbSetups([]))
       .finally(() => setLoading(false));
   }, []);
+
+  // Trackeia mudanças de filtro pra entender o que o usuário busca
+  useEffect(() => {
+    if (style === "Todos" && role === "Todos" && budget === "Todos" && !q) return;
+    track("inspiration_filter", "inspiration", { style, role, budget, query: q || null, sort });
+  }, [style, role, budget, q, sort]);
 
   // Carrega contagem de cliques por setup pra ordenação "Mais clicados".
   // Pega últimos 30 dias pra evitar bias dos primeiros setups da plataforma.

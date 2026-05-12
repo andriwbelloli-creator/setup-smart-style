@@ -53,48 +53,59 @@ export function slugify(s: string) {
     .slice(0, 60);
 }
 
+// setups.owner_id referencia auth.users(id), não public.profiles(id).
+// Por isso o embed `profiles!setups_owner_id_fkey(...)` dá 400 no PostgREST.
+// Solução: lookup separado por owner_id em profiles (profiles.id = auth.users.id).
+async function hydrateOwners(rows: DbSetupRow[]): Promise<DbSetupRow[]> {
+  if (rows.length === 0) return rows;
+  const ownerIds = Array.from(new Set(rows.map((r) => r.owner_id).filter(Boolean)));
+  if (ownerIds.length === 0) return rows;
+  const { data: profs } = await supabase
+    .from("profiles")
+    .select("id, username, display_name, avatar_url")
+    .in("id", ownerIds);
+  const byId = new Map<string, DbSetupRow["profiles"]>(
+    ((profs as any[]) || []).map((p) => [
+      p.id as string,
+      { username: p.username, display_name: p.display_name, avatar_url: p.avatar_url },
+    ]),
+  );
+  return rows.map((r) => ({ ...r, profiles: byId.get(r.owner_id) ?? null }));
+}
+
 export async function fetchMySetups(ownerId: string): Promise<Setup[]> {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("setups")
-    .select("*, profiles!setups_owner_id_fkey(username, display_name, avatar_url)")
+    .select("*")
     .eq("owner_id", ownerId)
     .order("created_at", { ascending: false });
-  if (error) {
-    const r = await supabase.from("setups").select("*").eq("owner_id", ownerId).order("created_at", { ascending: false });
-    return (r.data || []).map((row: any) => rowToSetup(row));
-  }
-  return (data || []).map((row: any) => rowToSetup(row));
+  const rows = await hydrateOwners(((data as any[]) || []) as DbSetupRow[]);
+  return rows.map((row) => rowToSetup(row));
 }
 
 export async function fetchPublishedSetups(): Promise<Setup[]> {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("setups")
-    .select("*, profiles!setups_owner_id_fkey(username, display_name, avatar_url)")
+    .select("*")
     .eq("status", "published")
     .order("created_at", { ascending: false });
-  if (error) {
-    // fallback: try without join
-    const r = await supabase.from("setups").select("*").eq("status", "published").order("created_at", { ascending: false });
-    return (r.data || []).map((row: any) => rowToSetup(row));
-  }
-  return (data || []).map((row: any) => rowToSetup(row));
+  const rows = await hydrateOwners(((data as any[]) || []) as DbSetupRow[]);
+  return rows.map((row) => rowToSetup(row));
 }
 
 export async function fetchSetupBySlug(slug: string): Promise<Setup | null> {
   const { data: setup } = await supabase
     .from("setups")
-    .select("*, profiles!setups_owner_id_fkey(username, display_name, avatar_url)")
+    .select("*")
     .eq("slug", slug)
     .maybeSingle();
-  const row = setup
-    ? (setup as any)
-    : (await supabase.from("setups").select("*").eq("slug", slug).maybeSingle()).data;
-  if (!row) return null;
+  if (!setup) return null;
+  const [hydrated] = await hydrateOwners([setup as DbSetupRow]);
   const [products, gallery] = await Promise.all([
-    fetchProducts(row.id),
-    fetchGallery(row.id),
+    fetchProducts(hydrated.id),
+    fetchGallery(hydrated.id),
   ]);
-  const built = rowToSetup(row, products);
+  const built = rowToSetup(hydrated, products);
   (built as any).gallery = gallery;
   return built;
 }

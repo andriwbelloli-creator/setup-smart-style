@@ -25,8 +25,25 @@ const bodySchema = z
   .min(1, "Comentário vazio")
   .max(500, "Máximo 500 caracteres");
 
-const AUTHOR_SELECT =
-  "*, author:profiles!comments_author_id_fkey(username, display_name, avatar_url)";
+// comments.author_id referencia auth.users(id), não public.profiles(id).
+// Por isso o embed via PostgREST (profiles!comments_author_id_fkey) dá 400.
+// Solução: lookup separado em profiles (profiles.id = auth.users.id).
+async function hydrateAuthors(rows: Comment[]): Promise<Comment[]> {
+  if (rows.length === 0) return rows;
+  const ids = Array.from(new Set(rows.map((r) => r.author_id).filter(Boolean)));
+  if (ids.length === 0) return rows;
+  const { data: profs } = await supabase
+    .from("profiles")
+    .select("id, username, display_name, avatar_url")
+    .in("id", ids);
+  const byId = new Map<string, CommentAuthor>(
+    ((profs as any[]) || []).map((p) => [
+      p.id as string,
+      { username: p.username, display_name: p.display_name, avatar_url: p.avatar_url },
+    ]),
+  );
+  return rows.map((r) => ({ ...r, author: byId.get(r.author_id) ?? null }));
+}
 
 export function useComments(setupId: string, enabled: boolean) {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -44,13 +61,17 @@ export function useComments(setupId: string, enabled: boolean) {
       const to = from + PAGE_SIZE - 1;
       const { data, error, count } = await supabase
         .from("comments")
-        .select(AUTHOR_SELECT, { count: "exact" })
+        .select("*", { count: "exact" })
         .eq("setup_id", setupId)
         .order("created_at", { ascending: false })
         .range(from, to);
+      if (error) {
+        setLoading(false);
+        return { error };
+      }
+      const baseRows = (data as any as Comment[]) || [];
+      const rows = await hydrateAuthors(baseRows);
       setLoading(false);
-      if (error) return { error };
-      const rows = (data as any as Comment[]) || [];
       rows.forEach((r) => seenIds.current.add(r.id));
       setTotal(count ?? 0);
       setComments((prev) => (pageIndex === 0 ? rows : [...prev, ...rows]));
@@ -84,7 +105,6 @@ export function useComments(setupId: string, enabled: boolean) {
           const row = payload.new as Comment;
           if (seenIds.current.has(row.id)) return;
           seenIds.current.add(row.id);
-          // fetch author
           const { data: author } = await supabase
             .from("profiles")
             .select("username, display_name, avatar_url")
@@ -136,14 +156,17 @@ export function useComments(setupId: string, enabled: boolean) {
       const { data, error } = await supabase
         .from("comments")
         .insert({ setup_id: setupId, author_id: authorId, body: parsed.data })
-        .select(AUTHOR_SELECT)
+        .select("*")
         .single();
+      if (error) {
+        setPosting(false);
+        return { error: error.message };
+      }
+      const [withAuthor] = await hydrateAuthors([data as any as Comment]);
       setPosting(false);
-      if (error) return { error: error.message };
-      const row = data as any as Comment;
-      if (!seenIds.current.has(row.id)) {
-        seenIds.current.add(row.id);
-        setComments((prev) => [row, ...prev]);
+      if (!seenIds.current.has(withAuthor.id)) {
+        seenIds.current.add(withAuthor.id);
+        setComments((prev) => [withAuthor, ...prev]);
         setTotal((t) => t + 1);
       }
       return { ok: true };

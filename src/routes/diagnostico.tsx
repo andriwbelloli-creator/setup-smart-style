@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { AnaliseIA } from "@/components/landing/AnaliseIA";
+import { trackPageView } from "@/lib/track";
 import { Sparkles, ShieldCheck, Zap, ListChecks, Info, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/diagnostico")({
@@ -17,6 +19,10 @@ export const Route = createFileRoute("/diagnostico")({
 });
 
 function Diagnostico() {
+  useEffect(() => {
+    trackPageView("ia", { route: "diagnostico" });
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

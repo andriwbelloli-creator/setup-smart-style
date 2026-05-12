@@ -72,6 +72,9 @@ export function Hero() {
               alt="Setup home office com mesa de madeira, monitor ultrawide e parede turquesa"
               width={1600}
               height={1100}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
             {/* Floating product tag */}

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { Button } from "@/components/ui/button";
-import { Upload, Image as ImageIcon, Plus, X, Loader2 } from "lucide-react";
+import { Upload, Image as ImageIcon, Plus, X, Loader2, Wand2 } from "lucide-react";
 import { STYLES, ROLES } from "@/data/setups";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -100,6 +100,58 @@ function Postar() {
   const removeProduct = (id: string) => {
     setProducts(prev => prev.filter(p => p.id !== id));
     if (editingProduct?.id === id) setEditingProduct(null);
+  };
+
+  // Detecta x/y dos produtos via Gemini Vision. Requer que o usuário tenha
+  // ao menos 1 produto declarado (com nome e categoria) — a IA precisa saber
+  // o que procurar. Filtra confidence >= 85 no servidor.
+  const [detecting, setDetecting] = useState(false);
+  const detectTouchpointsViaAI = async () => {
+    if (!file || products.length === 0) {
+      toast.error("Adicione ao menos 1 produto (nome + categoria) antes de detectar.");
+      return;
+    }
+    const named = products.filter((p) => p.name?.trim());
+    if (named.length === 0) {
+      toast.error("Produtos precisam ter nome preenchido para a IA buscar.");
+      return;
+    }
+    setDetecting(true);
+    try {
+      const reader = new FileReader();
+      const imageBase64: string = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const knownProducts = named.map((p) => ({ category: p.category, name: p.name }));
+      const { data, error } = await supabase.functions.invoke("detect-touchpoints", {
+        body: { imageBase64, knownProducts },
+      });
+      if (error) throw error;
+
+      const detected = (data?.products || []) as Array<{
+        name: string; category: string; x: number; y: number; confidence: number;
+      }>;
+      if (detected.length === 0) {
+        toast.info("IA não conseguiu localizar nenhum produto com certeza. Marque manualmente.");
+        return;
+      }
+      // Match por (category, name) — atualiza x/y só nos produtos batidos.
+      setProducts((prev) => prev.map((p) => {
+        const hit = detected.find(
+          (d) => d.name.toLowerCase() === p.name.toLowerCase() && d.category === p.category,
+        );
+        return hit ? { ...p, x: hit.x, y: hit.y } : p;
+      }));
+      toast.success(`${detected.length} de ${named.length} produto(s) localizados pela IA.`);
+    } catch (err: any) {
+      console.error("detect-touchpoints:", err);
+      toast.error(err.message || "Falha ao detectar touchpoints.");
+    } finally {
+      setDetecting(false);
+    }
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -213,6 +265,21 @@ function Postar() {
                   <span>{products.length} produto{products.length !== 1 ? "s" : ""} marcado{products.length !== 1 ? "s" : ""}</span>
                   <button type="button" onClick={() => { setFile(null); setPreview(null); setProducts([]); }} className="text-coral hover:underline">Trocar foto</button>
                 </div>
+                {/* Auto-detect: só faz sentido se o usuário JÁ digitou nomes dos produtos */}
+                {products.some((p) => p.name?.trim()) && (
+                  <button
+                    type="button"
+                    onClick={detectTouchpointsViaAI}
+                    disabled={detecting}
+                    className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/50 bg-primary/5 px-4 py-2.5 text-sm font-semibold text-primary transition-smooth hover:bg-primary/10 disabled:opacity-50"
+                  >
+                    {detecting ? (
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Detectando posições...</>
+                    ) : (
+                      <><Wand2 className="h-4 w-4" /> Detectar posições com IA</>
+                    )}
+                  </button>
+                )}
               </div>
             )}
 

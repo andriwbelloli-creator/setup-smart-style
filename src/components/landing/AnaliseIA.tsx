@@ -4,6 +4,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useSubscription } from "@/hooks/use-subscription";
+import { track } from "@/lib/track";
 import { toast } from "sonner";
 
 // Estratégia freemium: 3 análises lifetime no plano gratuito.
@@ -65,6 +66,7 @@ export function AnaliseIA() {
       toast.error("Imagem muito grande (máx 10MB).");
       return;
     }
+    track("ia_upload_start", "ia", { size_kb: Math.round(file.size / 1024), is_anon: !user });
 
     // ANONYMOUS PATH: deixa o user ver o preview + fake loading +
     // resultado borrado. Converte muito mais que bloquear no clique.
@@ -82,6 +84,7 @@ export function AnaliseIA() {
       setCriterios(baseCriterios.map((c) => ({ ...c, score: +(7 + Math.random() * 2.4).toFixed(1) })));
       setAnalyzed(true);
       setAiTip("Para ver as sugestões personalizadas da IA e a nota detalhada, faça login grátis (3 análises lifetime).");
+      track("ia_blurred_teaser_shown", "ia", { variant: "anon_curiosity_gap" });
       return;
     }
 
@@ -99,6 +102,7 @@ export function AnaliseIA() {
       setUsedAnalyses(used);
       if (used >= FREE_ANALYSES_LIFETIME) {
         setLimitReached(true);
+        track("ia_paywall_view", "ia", { source: "analyze_limit", analyses_used: used });
         // registra evento pra funil de recovery (não bloqueia UI)
         supabase
           .from("paywall_events")
@@ -143,6 +147,11 @@ export function AnaliseIA() {
       ) ?? data.tips?.[0];
       setAiTip(overallTipObj?.text ?? data.summary ?? null);
       setAnalyzed(true);
+      track("ia_result_view", "ia", {
+        overall: data.overall,
+        analyses_used_after: usedAnalyses + 1,
+        tier: subscription.tier,
+      });
 
       // persist analysis (fire-and-forget, don't block UI)
       supabase
@@ -210,7 +219,7 @@ export function AnaliseIA() {
               </li>
             </ul>
             <div className="mt-6 flex flex-col gap-3">
-              <Link to="/premium" onClick={() => setLimitReached(false)} className="block rounded-full bg-gradient-hero px-5 py-3 text-center text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth hover:opacity-90">
+              <Link to="/premium" onClick={() => { track("ia_upgrade_click", "ia", { from: "analyze_limit_paywall", analyses_used: usedAnalyses }); setLimitReached(false); }} className="block rounded-full bg-gradient-hero px-5 py-3 text-center text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth hover:opacity-90">
                 Assinar Premium · R$ 9,90/mês →
               </Link>
               <button type="button" onClick={() => setLimitReached(false)} className="text-xs text-muted-foreground hover:text-foreground">
@@ -354,7 +363,7 @@ export function AnaliseIA() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => navigate({ to: "/auth" })}
+                  onClick={() => { track("ia_anon_login_click", "ia", { from: "blurred_teaser" }); navigate({ to: "/auth" }); }}
                   className="mt-5 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background shadow-elegant transition-smooth hover:scale-105"
                 >
                   <LogIn className="h-4 w-4" />

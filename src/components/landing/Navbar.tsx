@@ -17,9 +17,10 @@ import { toast } from "sonner";
 const linkBase = "text-sm font-medium text-muted-foreground transition-smooth hover:text-foreground";
 
 const MAIN_LINKS = [
+  { to: "/marketplace", label: "Marketplace" },
+  { to: "/diagnostico", label: "Avaliação IA" },
   { to: "/galeria", label: "Galeria" },
   { to: "/kits", label: "Kits" },
-  { to: "/diagnostico", label: "Diagnóstico IA" },
   { to: "/consultoria", label: "Consultoria" },
   { to: "/blog", label: "Blog" },
   { to: "/orcamento", label: "Orçamentos" },
@@ -100,7 +101,12 @@ export function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/favoritos">
-                      <Bookmark className="mr-2 h-4 w-4" /> Favoritos
+                      <Bookmark className="mr-2 h-4 w-4" /> Favoritos (setups)
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/marketplace/favoritos">
+                      <Bookmark className="mr-2 h-4 w-4" /> Favoritos (marketplace)
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -141,7 +147,7 @@ export function Navbar() {
                 <Link to="/auth">Entrar</Link>
               </Button>
               <Button asChild size="sm" className="hidden sm:inline-flex bg-gradient-hero shadow-elegant transition-smooth hover:shadow-glow">
-                <Link to="/diagnostico">Avaliar meu setup</Link>
+                <Link to="/marketplace">Explorar marketplace</Link>
               </Button>
             </>
           )}
@@ -230,7 +236,7 @@ export function Navbar() {
                   <Link to="/auth">Entrar</Link>
                 </Button>
                 <Button asChild className="w-full bg-gradient-hero" onClick={() => setMobileOpen(false)}>
-                  <Link to="/diagnostico">Avaliar meu setup</Link>
+                  <Link to="/marketplace">Explorar marketplace</Link>
                 </Button>
               </div>
             )}
