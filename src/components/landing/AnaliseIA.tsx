@@ -243,7 +243,7 @@ export function AnaliseIA() {
   const worst = [...criterios].sort((a, b) => a.score - b.score)[0];
 
   return (
-    <section id="analise-ia" className="border-y border-border/60 bg-cream py-24 md:py-32">
+    <section id="analise-ia" className="border-y border-border/60 bg-cream py-14 md:py-20">
       {limitReached && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 px-4" onClick={() => setLimitReached(false)}>
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl bg-card p-8 shadow-elegant">
@@ -287,19 +287,18 @@ export function AnaliseIA() {
         </div>
       )}
       <div className="container mx-auto px-4 md:px-6">
+        {/* Header compactado — Hero acima já comunica a proposta.
+            Mantemos um título curto pra estrutura visual sem repetir promessa. */}
         <div className="mx-auto max-w-2xl text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-            <Sparkles className="h-3 w-3" /> Análise por IA
+          <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+            <Sparkles className="h-3 w-3" /> Diagnóstico ao vivo
           </div>
-          <h2 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
-            Uma nota completa do seu setup em <span className="text-primary">30 segundos</span>
+          <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+            Solte sua foto e veja o resultado abaixo
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            6 critérios essenciais e sugestões com produtos reais que cabem no seu bolso.
-          </p>
         </div>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
           {/* Upload card */}
           <div
             ref={dragRef}

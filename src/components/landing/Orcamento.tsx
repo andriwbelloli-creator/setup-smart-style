@@ -46,7 +46,7 @@ const orcamentos = [
 
 export function Orcamento() {
   return (
-    <section id="orcamento" className="bg-cream py-24 md:py-32">
+    <section id="orcamento" className="bg-cream py-14 md:py-20">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-coral/15 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-coral-foreground">

@@ -46,7 +46,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-mesh">
-      <div className="container mx-auto grid gap-12 px-4 py-20 md:px-6 md:py-28 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:py-32">
+      <div className="container mx-auto grid gap-10 px-4 py-14 md:px-6 md:py-20 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:py-24">
         <div className="flex flex-col justify-center animate-fade-up">
           <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary backdrop-blur">
             <span className="relative flex h-2 w-2">

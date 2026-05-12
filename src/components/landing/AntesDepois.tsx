@@ -36,7 +36,7 @@ export function AntesDepois() {
   }, []);
 
   return (
-    <section id="antes-depois" className="py-24 md:py-32">
+    <section id="antes-depois" className="py-14 md:py-20">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-center">
           <div>
