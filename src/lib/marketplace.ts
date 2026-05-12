@@ -38,12 +38,37 @@ export type MarketplaceListing = {
   seller?: { id: string; display_name: string | null; username: string | null; avatar_url: string | null } | null;
 };
 
+// marketplace_listings.seller_id referencia auth.users(id), NÃO profiles(id),
+// por isso o embed via PostgREST (profiles!...seller_id_fkey) dá erro
+// PGRST200. Solução: fetch sem join e hidratar profiles no client via lookup
+// separado em profiles(id IN ...).
 const LISTING_SELECT = `
   *,
   category:marketplace_categories(*),
-  condition:marketplace_conditions(*),
-  seller:profiles!marketplace_listings_seller_id_fkey(id, display_name, username, avatar_url)
+  condition:marketplace_conditions(*)
 ` as const;
+
+async function hydrateSellers(rows: MarketplaceListing[]): Promise<MarketplaceListing[]> {
+  if (rows.length === 0) return rows;
+  const sellerIds = Array.from(new Set(rows.map((r) => r.seller_id).filter(Boolean)));
+  if (sellerIds.length === 0) return rows;
+  const { data: profs } = await (supabase as any)
+    .from("profiles")
+    .select("id, display_name, username, avatar_url")
+    .in("id", sellerIds);
+  const byId = new Map<string, MarketplaceListing["seller"]>(
+    ((profs as any[]) || []).map((p) => [
+      p.id as string,
+      {
+        id: p.id as string,
+        display_name: p.display_name as string | null,
+        username: p.username as string | null,
+        avatar_url: p.avatar_url as string | null,
+      },
+    ]),
+  );
+  return rows.map((r) => ({ ...r, seller: byId.get(r.seller_id) ?? null }));
+}
 
 export async function fetchCategories(): Promise<MarketplaceCategory[]> {
   const { data, error } = await (supabase as any)
@@ -98,7 +123,7 @@ export async function fetchActiveListings(filters: ListingFilters = {}): Promise
     console.warn("[marketplace] listings:", error.message);
     return [];
   }
-  return (data || []) as MarketplaceListing[];
+  return hydrateSellers((data || []) as MarketplaceListing[]);
 }
 
 export async function fetchListingById(id: string): Promise<MarketplaceListing | null> {
@@ -111,7 +136,9 @@ export async function fetchListingById(id: string): Promise<MarketplaceListing |
     console.warn("[marketplace] listing:", error.message);
     return null;
   }
-  return (data as MarketplaceListing) || null;
+  if (!data) return null;
+  const [hydrated] = await hydrateSellers([data as MarketplaceListing]);
+  return hydrated ?? null;
 }
 
 export async function incrementViewCount(id: string): Promise<void> {
@@ -257,7 +284,7 @@ export async function fetchMySavedListings(userId: string): Promise<MarketplaceL
     .from("marketplace_listings")
     .select(LISTING_SELECT)
     .in("id", ids);
-  return ((data as any[]) || []) as MarketplaceListing[];
+  return hydrateSellers(((data as any[]) || []) as MarketplaceListing[]);
 }
 
 export async function fetchMySaveIds(userId: string): Promise<Set<string>> {
@@ -304,7 +331,7 @@ export async function fetchMyListings(sellerId: string): Promise<MarketplaceList
     .select(LISTING_SELECT)
     .eq("seller_id", sellerId)
     .order("created_at", { ascending: false });
-  return ((data as any[]) || []) as MarketplaceListing[];
+  return hydrateSellers(((data as any[]) || []) as MarketplaceListing[]);
 }
 
 // =====================================================
