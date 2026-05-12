@@ -17,9 +17,9 @@ import { toast } from "sonner";
 const linkBase = "text-sm font-medium text-muted-foreground transition-smooth hover:text-foreground";
 
 const MAIN_LINKS = [
-  { to: "/marketplace", label: "Marketplace" },
-  { to: "/diagnostico", label: "Avaliação IA" },
+  { to: "/diagnostico", label: "Diagnóstico IA" },
   { to: "/galeria", label: "Galeria" },
+  { to: "/marketplace", label: "Marketplace" },
   { to: "/kits", label: "Kits" },
   { to: "/consultoria", label: "Consultoria" },
   { to: "/blog", label: "Blog" },
@@ -147,7 +147,7 @@ export function Navbar() {
                 <Link to="/auth">Entrar</Link>
               </Button>
               <Button asChild size="sm" className="hidden sm:inline-flex bg-gradient-hero shadow-elegant transition-smooth hover:shadow-glow">
-                <Link to="/marketplace">Explorar marketplace</Link>
+                <Link to="/diagnostico">Avaliar meu setup</Link>
               </Button>
             </>
           )}
@@ -236,7 +236,7 @@ export function Navbar() {
                   <Link to="/auth">Entrar</Link>
                 </Button>
                 <Button asChild className="w-full bg-gradient-hero" onClick={() => setMobileOpen(false)}>
-                  <Link to="/marketplace">Explorar marketplace</Link>
+                  <Link to="/diagnostico">Avaliar meu setup</Link>
                 </Button>
               </div>
             )}

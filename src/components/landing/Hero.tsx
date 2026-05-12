@@ -20,23 +20,28 @@ export function Hero() {
     <section className="relative overflow-hidden bg-gradient-mesh">
       <div className="container mx-auto grid gap-12 px-4 py-20 md:px-6 md:py-28 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:py-32">
         <div className="flex flex-col justify-center animate-fade-up">
-          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
-            <Zap className="h-3.5 w-3.5 text-accent" />
-            Plataforma 100% brasileira para home office
+          {/* Badge animada + pulse pra chamar atenção pra IA */}
+          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary backdrop-blur">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+            </span>
+            <Zap className="h-3.5 w-3.5" />
+            IA brasileira · Diagnóstico em 30 segundos
           </div>
-          <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">
-            Seu setup,{" "}
+          <h1 className="font-display text-5xl font-bold leading-[1.02] tracking-tight text-foreground md:text-6xl lg:text-7xl">
+            Seu home office,{" "}
             <span className="bg-gradient-warm bg-clip-text text-transparent">avaliado</span>{" "}
-            por IA.
+            por IA em <span className="whitespace-nowrap">30 segundos</span>.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-            Envie uma foto do seu home office e receba nota de ergonomia, iluminação, organização e estética — com produtos da Amazon BR, Mercado Livre, Kabum e Magalu.
+            Envie uma foto e descubra <strong className="text-foreground">o que está sabotando sua produtividade</strong> — nota de ergonomia, iluminação, organização e dicas com produtos reais do Brasil.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="lg" className="h-14 gap-2 bg-gradient-hero px-8 text-base shadow-elegant transition-smooth hover:shadow-glow">
+            <Button asChild size="lg" className="group h-14 gap-2 bg-gradient-hero px-8 text-base font-bold shadow-elegant transition-smooth hover:shadow-glow hover:scale-[1.02]">
               <Link to="/diagnostico">
-                <Upload className="h-5 w-5" />
-                Enviar foto do setup
+                <Upload className="h-5 w-5 transition-transform group-hover:-translate-y-0.5" />
+                Avaliar meu setup agora — grátis
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="h-14 gap-2 border-2 px-8 text-base">
@@ -45,6 +50,9 @@ export function Hero() {
               </Link>
             </Button>
           </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            <strong className="text-foreground">3 análises gratuitas</strong> — sem cartão, sem pegadinha. Resultado em ~30s.
+          </p>
           <div className="mt-10 flex flex-wrap items-center gap-8 text-sm text-muted-foreground">
             <div>
               <div className="font-display text-2xl font-bold text-foreground">12k+</div>
