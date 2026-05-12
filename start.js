@@ -20,6 +20,27 @@ const CLIENT_DIR = join(__dirname, "dist", "client");
 // Não inclui CSP porque o app usa scripts inline do TanStack Start
 // e o Vite gera URLs com hashes que mudam a cada build (CSP estrito
 // quebraria sem ajustes). Implementar CSP report-only depois.
+// CSP em modo report-only: ainda permite tudo, mas browser reporta
+// violações pra /csp-report. Depois de uma semana coletando dados
+// e ajustando a policy, trocar pra Content-Security-Policy (enforced).
+const CSP_POLICY = [
+  "default-src 'self'",
+  // TanStack Start gera scripts inline em SSR — precisa unsafe-inline
+  // até migrarmos pra nonce/hash. Tudo bem em report-only.
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://deskly.life",
+  "font-src 'self' data:",
+  "connect-src 'self' https://*.supabase.co https://api.stripe.com",
+  "frame-src https://js.stripe.com https://hooks.stripe.com",
+  "frame-ancestors 'none'",
+  "form-action 'self' https://checkout.stripe.com",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "upgrade-insecure-requests",
+  "report-uri /csp-report",
+].join("; ");
+
 const SECURITY_HEADERS = {
   "X-Frame-Options": "DENY",
   "X-Content-Type-Options": "nosniff",
@@ -27,6 +48,7 @@ const SECURITY_HEADERS = {
   "Permissions-Policy": "camera=(self), microphone=(), geolocation=(), interest-cohort=()",
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
   "X-DNS-Prefetch-Control": "on",
+  "Content-Security-Policy-Report-Only": CSP_POLICY,
 };
 
 function applySecurityHeaders(res) {
@@ -101,6 +123,40 @@ async function logBotTrap(req, ip, trapType) {
   } catch {
     // silencioso — não queremos quebrar a resposta por falha de log
   }
+}
+
+async function handleCspReport(req, res) {
+  // Browser envia POST JSON com o relatório
+  let body = "";
+  for await (const chunk of req) body += chunk;
+  try {
+    const parsed = JSON.parse(body || "{}");
+    const r = parsed["csp-report"] || parsed;
+    if (SUPABASE_URL && SUPABASE_SERVICE) {
+      // fire-and-forget — não bloqueia resposta
+      fetch(`${SUPABASE_URL}/rest/v1/csp_violations`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_SERVICE,
+          Authorization: `Bearer ${SUPABASE_SERVICE}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          document_uri: String(r["document-uri"] || "").slice(0, 500),
+          violated_directive: String(r["violated-directive"] || "").slice(0, 200),
+          blocked_uri: String(r["blocked-uri"] || "").slice(0, 500),
+          source_file: String(r["source-file"] || "").slice(0, 500),
+          line_number: typeof r["line-number"] === "number" ? r["line-number"] : null,
+          user_agent: (req.headers["user-agent"] || "").slice(0, 200),
+        }),
+      }).catch(() => {});
+    }
+  } catch {
+    // payload inválido — ignora silenciosamente
+  }
+  res.statusCode = 204;
+  res.end();
 }
 
 async function handleHoneypot(req, res) {
@@ -235,7 +291,13 @@ const server = createServer(async (req, res) => {
     const path = (req.url || "").split("?")[0];
     const ip = clientIp(req);
 
-    // 2a. Honeypot: link invisível só bots clicam
+    // 2a. CSP violation reports (browser-initiated POST)
+    if (path === "/csp-report" && req.method === "POST") {
+      await handleCspReport(req, res);
+      return;
+    }
+
+    // 2b. Honeypot: link invisível só bots clicam
     if (path === "/honeypot" || path === "/setups/_internal/draft") {
       await handleHoneypot(req, res);
       return;

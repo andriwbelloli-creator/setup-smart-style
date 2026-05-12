@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Heart, MapPin, Bookmark, ArrowRight } from "lucide-react";
 import type { Setup } from "@/data/setups";
 import { useLikes, useSaves } from "@/hooks/use-saved";
+import { WatermarkOverlay } from "@/components/setup/WatermarkOverlay";
 
 export function SetupCard({ s, featured = false }: { s: Setup; featured?: boolean }) {
   const likes = useLikes();
@@ -34,6 +35,7 @@ export function SetupCard({ s, featured = false }: { s: Setup; featured?: boolea
         <div className="absolute bottom-3 right-3 rounded-full bg-card/95 px-3 py-1 text-xs font-bold text-foreground backdrop-blur">
           R$ {s.budget.toLocaleString("pt-BR")}
         </div>
+        <WatermarkOverlay />
       </div>
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">

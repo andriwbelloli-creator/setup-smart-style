@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { findSetup, type Product, type Setup } from "@/data/setups";
+import { WatermarkOverlay } from "@/components/setup/WatermarkOverlay";
 import { fetchSetupBySlug } from "@/lib/setups-db";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
 import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio } from "lucide-react";
@@ -175,6 +176,7 @@ function SetupDetail() {
             <div className="relative overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
               <div className="relative aspect-[16/11]">
                 <img src={heroImage} alt={`Setup completo de ${setup.author}: ${setup.title}`} className="h-full w-full object-cover transition-opacity duration-300" fetchPriority="high" decoding="async" />
+                <WatermarkOverlay />
                 {heroIdx === 0 && setup.products.map((p) => (
                   <button key={p.id} onClick={() => setActive(p)} style={{ left: `${p.x}%`, top: `${p.y}%` }}
                     className="group absolute -translate-x-1/2 -translate-y-1/2" aria-label={`Ver produto ${p.name}`}>

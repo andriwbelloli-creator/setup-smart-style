@@ -16,6 +16,7 @@ import {
   Crown,
   ShieldAlert,
   Bug,
+  Shield,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/admin")({
@@ -72,6 +73,8 @@ type Metrics = {
   recentUsers: Array<{ id: string; display_name: string; username: string; created_at: string }>;
   botTraps: number;
   recentTraps: Array<{ ip_hash: string; trap_type: string; user_agent: string; detected_at: string }>;
+  cspViolations: number;
+  recentCspViolations: Array<{ violated_directive: string; blocked_uri: string; document_uri: string; reported_at: string }>;
 };
 
 async function fetchCount(table: string, filters?: (q: any) => any): Promise<number> {
@@ -222,6 +225,29 @@ function AdminDashboard() {
         .order("created_at", { ascending: false })
         .limit(8);
 
+      // CSP violations (admin via RLS)
+      let cspViolations = 0;
+      let recentCspViolations: Metrics["recentCspViolations"] = [];
+      try {
+        const q1 = supabase.from("csp_violations").select("*", { count: "exact", head: true });
+        const cspCountQuery = startIso ? q1.gte("reported_at", startIso) : q1;
+        const { count: cspCount } = await cspCountQuery;
+        cspViolations = cspCount ?? 0;
+        const { data: cspRows } = await supabase
+          .from("csp_violations")
+          .select("violated_directive, blocked_uri, document_uri, reported_at")
+          .order("reported_at", { ascending: false })
+          .limit(10);
+        recentCspViolations = ((cspRows as any[]) || []).map((r) => ({
+          violated_directive: r.violated_directive ?? "",
+          blocked_uri: r.blocked_uri ?? "",
+          document_uri: r.document_uri ?? "",
+          reported_at: r.reported_at,
+        }));
+      } catch {
+        // tabela ainda não criada
+      }
+
       // Bot traps (acessível só pra admin via RLS)
       let botTraps = 0;
       let recentTraps: Metrics["recentTraps"] = [];
@@ -268,6 +294,8 @@ function AdminDashboard() {
         recentUsers: (recent || []) as any,
         botTraps,
         recentTraps,
+        cspViolations,
+        recentCspViolations,
       });
       setLoading(false);
     })();
@@ -509,6 +537,54 @@ function AdminDashboard() {
                 Acessos a <code className="rounded bg-secondary px-1">/honeypot</code> ou rate
                 limit excedido em <code className="rounded bg-secondary px-1">/r/:id</code>
                 {" "}disparam a captura.
+              </p>
+            </div>
+
+            {/* CSP violations */}
+            <div className="mt-10 rounded-3xl border border-border bg-card p-6 shadow-soft">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-primary" />
+                  <h2 className="font-display text-lg font-bold">Violações CSP (report-only)</h2>
+                </div>
+                <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                  {metrics.cspViolations} total
+                </span>
+              </div>
+              {metrics.recentCspViolations.length === 0 ? (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Sem violações recentes. Policy compatível.
+                </p>
+              ) : (
+                <ul className="mt-4 space-y-2">
+                  {metrics.recentCspViolations.map((v, i) => (
+                    <li
+                      key={i}
+                      className="rounded-xl border border-border bg-background p-3 text-xs"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 font-semibold text-primary">
+                          {v.violated_directive}
+                        </span>
+                        <span className="text-muted-foreground">
+                          {new Date(v.reported_at).toLocaleString("pt-BR")}
+                        </span>
+                      </div>
+                      <div className="mt-1 truncate text-muted-foreground" title={v.blocked_uri}>
+                        bloqueado: <code className="rounded bg-secondary px-1">{v.blocked_uri || "—"}</code>
+                      </div>
+                      <div className="truncate text-muted-foreground" title={v.document_uri}>
+                        em: <code className="rounded bg-secondary px-1">{v.document_uri}</code>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p className="mt-4 text-xs text-muted-foreground">
+                CSP em modo report-only — browser reporta, mas não bloqueia. Após coletar
+                violações legítimas e ajustar a policy, trocar para
+                {" "}<code className="rounded bg-secondary px-1">Content-Security-Policy</code>{" "}
+                enforced.
               </p>
             </div>
 
