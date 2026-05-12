@@ -49,11 +49,17 @@ function fmtBRL(cents: number) {
   return `R$ ${(cents / 100).toFixed(2).replace(".", ",")}`;
 }
 
+// Janela em que o banner de recovery aparece após o usuário ter
+// batido o paywall. Depois disso o desconto expira (urgência).
+const RECOVERY_WINDOW_DAYS = 7;
+
 function Premium() {
   const { user } = useAuth();
   const { tier: currentTier, loading: subLoading } = useSubscription();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [recoveryEligible, setRecoveryEligible] = useState(false);
+  const [recoveryDaysLeft, setRecoveryDaysLeft] = useState(RECOVERY_WINDOW_DAYS);
 
   useEffect(() => {
     let cancelled = false;
@@ -71,6 +77,45 @@ function Premium() {
       cancelled = true;
     };
   }, []);
+
+  // Recovery: se o user bateu paywall nos últimos 7 dias e ainda
+  // não converteu, mostra banner de desconto.
+  useEffect(() => {
+    if (!user || currentTier !== "free") {
+      setRecoveryEligible(false);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      // Tenta DB primeiro (mais confiável)
+      const since = new Date(Date.now() - RECOVERY_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString();
+      const { data } = await supabase
+        .from("paywall_events")
+        .select("hit_at")
+        .eq("user_id", user.id)
+        .is("converted_at", null)
+        .gte("hit_at", since)
+        .order("hit_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (cancelled) return;
+      let hitAt: string | null = data?.hit_at ?? null;
+      // Fallback localStorage (caso tabela ainda não exista)
+      if (!hitAt) {
+        try { hitAt = localStorage.getItem("deskly:paywall_hit_at"); } catch {}
+      }
+      if (!hitAt) return;
+      const hitTime = new Date(hitAt).getTime();
+      const elapsed = (Date.now() - hitTime) / (24 * 60 * 60 * 1000);
+      if (elapsed < RECOVERY_WINDOW_DAYS) {
+        setRecoveryEligible(true);
+        setRecoveryDaysLeft(Math.max(1, Math.ceil(RECOVERY_WINDOW_DAYS - elapsed)));
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, currentTier]);
 
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
@@ -116,6 +161,32 @@ function Premium() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-4 py-12 md:px-6 md:py-20">
+        {recoveryEligible && (
+          <div className="mx-auto mb-10 max-w-3xl rounded-3xl border-2 border-accent bg-gradient-to-r from-accent/15 via-card to-coral/15 p-5 shadow-elegant md:p-6">
+            <div className="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-elegant">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-coral px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-coral-foreground">
+                    Desconto especial · expira em {recoveryDaysLeft} dia{recoveryDaysLeft === 1 ? "" : "s"}
+                  </div>
+                  <div className="mt-2 font-display text-xl font-bold leading-tight md:text-2xl">
+                    Volta com <span className="text-coral">20% off no 1º mês</span> 🎁
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Como você já testou suas 3 análises grátis, garantimos um desconto
+                    só pra você experimentar o Premium sem compromisso. Use o cupom
+                    {" "}<code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-xs font-bold text-foreground">VOLTA20</code>
+                    {" "}no checkout.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mx-auto max-w-2xl text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
             <Sparkles className="h-3 w-3" /> Deskly Premium

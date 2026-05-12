@@ -76,6 +76,18 @@ export function AnaliseIA() {
       setUsedAnalyses(used);
       if (used >= FREE_ANALYSES_LIFETIME) {
         setLimitReached(true);
+        // registra evento pra funil de recovery (não bloqueia UI)
+        supabase
+          .from("paywall_events")
+          .insert({ user_id: user.id, source: "analyze_limit", analyses_used: used })
+          .then(({ error: ev }) => {
+            if (ev) console.warn("paywall_events insert:", ev.message);
+            // grava localStorage também (pro banner de recovery funcionar
+            // mesmo sem o evento persistido — failsafe)
+            try {
+              localStorage.setItem("deskly:paywall_hit_at", new Date().toISOString());
+            } catch {}
+          });
         return;
       }
     }

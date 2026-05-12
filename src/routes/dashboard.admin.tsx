@@ -17,6 +17,7 @@ import {
   ShieldAlert,
   Bug,
   Shield,
+  TrendingUp,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/admin")({
@@ -75,6 +76,9 @@ type Metrics = {
   recentTraps: Array<{ ip_hash: string; trap_type: string; user_agent: string; detected_at: string }>;
   cspViolations: number;
   recentCspViolations: Array<{ violated_directive: string; blocked_uri: string; document_uri: string; reported_at: string }>;
+  paywallHits: number;
+  paywallConversions: number;
+  paywallRecoveryRate: number;
 };
 
 async function fetchCount(table: string, filters?: (q: any) => any): Promise<number> {
@@ -225,6 +229,27 @@ function AdminDashboard() {
         .order("created_at", { ascending: false })
         .limit(8);
 
+      // Paywall funnel: hits + conversões
+      let paywallHits = 0;
+      let paywallConversions = 0;
+      let paywallRecoveryRate = 0;
+      try {
+        const q = supabase.from("paywall_events").select("*", { count: "exact", head: true });
+        const totalQ = startIso ? q.gte("hit_at", startIso) : q;
+        const { count: hits } = await totalQ;
+        paywallHits = hits ?? 0;
+        const qConv = supabase
+          .from("paywall_events")
+          .select("*", { count: "exact", head: true })
+          .not("converted_at", "is", null);
+        const convQ = startIso ? qConv.gte("hit_at", startIso) : qConv;
+        const { count: conv } = await convQ;
+        paywallConversions = conv ?? 0;
+        paywallRecoveryRate = paywallHits > 0 ? (paywallConversions / paywallHits) * 100 : 0;
+      } catch {
+        // tabela ainda não criada
+      }
+
       // CSP violations (admin via RLS)
       let cspViolations = 0;
       let recentCspViolations: Metrics["recentCspViolations"] = [];
@@ -296,6 +321,9 @@ function AdminDashboard() {
         recentTraps,
         cspViolations,
         recentCspViolations,
+        paywallHits,
+        paywallConversions,
+        paywallRecoveryRate,
       });
       setLoading(false);
     })();
@@ -492,6 +520,34 @@ function AdminDashboard() {
                   ))}
                 </ul>
               </div>
+            </div>
+
+            {/* Funil de paywall */}
+            <div className="mt-10 rounded-3xl border-2 border-accent/40 bg-gradient-to-br from-card via-card to-accent/5 p-6 shadow-soft">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-accent" />
+                <h2 className="font-display text-lg font-bold">Funil Freemium</h2>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                3 análises grátis → paywall → recovery 20% off (7 dias)
+              </p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl bg-card p-4 shadow-soft">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Hits no paywall</div>
+                  <div className="mt-2 font-display text-3xl font-bold">{metrics.paywallHits}</div>
+                </div>
+                <div className="rounded-2xl bg-card p-4 shadow-soft">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Converteram após hit</div>
+                  <div className="mt-2 font-display text-3xl font-bold">{metrics.paywallConversions}</div>
+                </div>
+                <div className="rounded-2xl bg-gradient-hero p-4 text-primary-foreground shadow-elegant">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider opacity-80">Taxa de recovery</div>
+                  <div className="mt-2 font-display text-3xl font-bold">{metrics.paywallRecoveryRate.toFixed(1)}%</div>
+                </div>
+              </div>
+              <p className="mt-4 text-xs text-muted-foreground">
+                Benchmark: paywall otimizado converte 6-8% (Adapty, ChartMogul 2026). Abaixo de 3% = revisar copy ou preço.
+              </p>
             </div>
 
             {/* Bot traps (segurança) */}
