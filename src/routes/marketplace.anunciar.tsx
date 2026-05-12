@@ -23,7 +23,9 @@ import {
   Upload,
   ShoppingBag,
   Info,
+  Wand2,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/marketplace/anunciar")({
@@ -115,6 +117,49 @@ function AnunciarProduto() {
       if (removed) URL.revokeObjectURL(removed.previewUrl);
       return next;
     });
+  };
+
+  // ---- IA preenche anúncio (suggest-listing) ----
+  const [suggesting, setSuggesting] = useState(false);
+  const suggestFromImage = async () => {
+    if (images.length === 0) {
+      toast.error("Suba a primeira foto antes de pedir sugestão da IA.");
+      return;
+    }
+    setSuggesting(true);
+    try {
+      const file = images[0].file;
+      const reader = new FileReader();
+      const imageBase64: string = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const { data, error } = await supabase.functions.invoke("suggest-listing", {
+        body: { imageBase64 },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      // Resolve category/condition slug -> id via fetched lists
+      const cat = categories.find((c) => c.slug === data.category_slug);
+      const cond = conditions.find((c) => c.slug === data.condition_slug);
+
+      // Preenche só os campos vazios (não sobrescreve edits do usuário)
+      if (!title) setTitle(data.title);
+      if (!description) setDescription(data.description);
+      if (cat && !categoryId) setCategoryId(cat.id);
+      if (cond && !conditionId) setConditionId(cond.id);
+      if (!price && data.suggested_price_brl) setPrice(String(data.suggested_price_brl));
+
+      toast.success(`IA preencheu o rascunho (${data.confidence}% certeza). Revise antes de publicar.`);
+    } catch (err: any) {
+      console.error("suggest-listing:", err);
+      toast.error(err.message || "IA não conseguiu sugerir. Tente novamente.");
+    } finally {
+      setSuggesting(false);
+    }
   };
 
   const priceNum = Number(price.replace(",", "."));
@@ -242,6 +287,22 @@ function AnunciarProduto() {
                 </label>
               )}
             </div>
+
+            {/* IA preenche o rascunho — só aparece com foto subida */}
+            {images.length > 0 && (
+              <button
+                type="button"
+                onClick={suggestFromImage}
+                disabled={suggesting}
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-primary/50 bg-primary/5 px-4 py-3 text-sm font-bold text-primary transition-smooth hover:bg-primary/10 disabled:opacity-50"
+              >
+                {suggesting ? (
+                  <><Loader2 className="h-4 w-4 animate-spin" /> IA analisando a foto...</>
+                ) : (
+                  <><Wand2 className="h-4 w-4" /> Preencher com IA (título, categoria, preço)</>
+                )}
+              </button>
+            )}
           </div>
 
           {/* Coluna direita: campos */}
