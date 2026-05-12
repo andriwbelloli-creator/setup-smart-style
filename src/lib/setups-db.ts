@@ -53,6 +53,19 @@ export function slugify(s: string) {
     .slice(0, 60);
 }
 
+export async function fetchMySetups(ownerId: string): Promise<Setup[]> {
+  const { data, error } = await supabase
+    .from("setups")
+    .select("*, profiles!setups_owner_id_fkey(username, display_name, avatar_url)")
+    .eq("owner_id", ownerId)
+    .order("created_at", { ascending: false });
+  if (error) {
+    const r = await supabase.from("setups").select("*").eq("owner_id", ownerId).order("created_at", { ascending: false });
+    return (r.data || []).map((row: any) => rowToSetup(row));
+  }
+  return (data || []).map((row: any) => rowToSetup(row));
+}
+
 export async function fetchPublishedSetups(): Promise<Setup[]> {
   const { data, error } = await supabase
     .from("setups")

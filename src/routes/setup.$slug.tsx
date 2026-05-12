@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { findSetup, type Product, type Setup } from "@/data/setups";
@@ -113,6 +113,25 @@ function SetupDetail() {
   const cmt = useComments(setup.id, fromDb);
   const [commentBody, setCommentBody] = useState("");
   const [deletingSetup, setDeletingSetup] = useState(false);
+  const [myFirstSlug, setMyFirstSlug] = useState<string | null>(null);
+
+  // Carrega 1º setup do user logado pra habilitar one-click "Comparar com meu"
+  useEffect(() => {
+    if (!user) { setMyFirstSlug(null); return; }
+    let cancelled = false;
+    supabase
+      .from("setups")
+      .select("slug")
+      .eq("owner_id", user.id)
+      .neq("slug", setup.slug)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled) setMyFirstSlug(data?.slug ?? null);
+      });
+    return () => { cancelled = true; };
+  }, [user, setup.slug]);
 
   const handleDeleteSetup = async () => {
     if (!confirm(`Excluir o setup "${setup.title}"? Esta ação é permanente.`)) return;
@@ -262,6 +281,13 @@ function SetupDetail() {
                   <ArrowLeftRight className="h-4 w-4" /> Comparar com outro
                 </Link>
               </Button>
+              {myFirstSlug && (
+                <Button asChild className="gap-2 bg-gradient-hero">
+                  <Link to="/comparar" search={{ setups: `${myFirstSlug},${setup.slug}` }}>
+                    <ArrowLeftRight className="h-4 w-4" /> Comparar com o meu setup
+                  </Link>
+                </Button>
+              )}
               {isAdmin && (
                 <Button
                   type="button"

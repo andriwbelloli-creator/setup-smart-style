@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useSubscription } from "@/hooks/use-subscription";
 import { useSaves } from "@/hooks/use-saved";
-import { fetchPublishedSetups } from "@/lib/setups-db";
+import { fetchPublishedSetups, fetchMySetups } from "@/lib/setups-db";
 import { SETUPS, type Setup, type Product } from "@/data/setups";
 import {
   Crown,
@@ -45,6 +45,7 @@ function Comparar() {
   const search = useSearch({ from: "/comparar" });
   const saves = useSaves();
   const [allSetups, setAllSetups] = useState<Setup[]>([]);
+  const [mySetups, setMySetups] = useState<Setup[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -58,17 +59,66 @@ function Comparar() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Carrega setups do user logado pra exibir grupo "Meus setups" no topo
+  useEffect(() => {
+    if (!user) {
+      setMySetups([]);
+      return;
+    }
+    let cancelled = false;
+    fetchMySetups(user.id)
+      .then((rows) => {
+        if (!cancelled) setMySetups(rows);
+      })
+      .catch(() => {
+        if (!cancelled) setMySetups([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  // Auto-prefill: se o user tem setup próprio e nada está selecionado,
+  // pré-popula com o setup dele mais recente. Faz o aha moment do
+  // "antes (meu) vs depois (galeria)" acontecer sem clique extra.
+  const prefillAppliedRef = useRef(false);
+  useEffect(() => {
+    if (prefillAppliedRef.current) return;
+    if (!mySetups.length) return;
+    if (selectedSlugs.length > 0) {
+      prefillAppliedRef.current = true;
+      return;
+    }
+    prefillAppliedRef.current = true;
+    setSelection([mySetups[0].slug]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mySetups, selectedSlugs.length]);
+
   const selectedSlugs = useMemo(
     () => (search.setups ?? "").split(",").filter(Boolean),
     [search.setups],
   );
 
+  const mySlugSet = useMemo(() => new Set(mySetups.map((s) => s.slug)), [mySetups]);
+
+  // Mescla pra resolver os slugs selecionados (próprios + galeria, sem duplicar)
+  const universe = useMemo(() => {
+    const seen = new Set<string>();
+    const merged: Setup[] = [];
+    for (const s of [...mySetups, ...allSetups]) {
+      if (seen.has(s.slug)) continue;
+      seen.add(s.slug);
+      merged.push(s);
+    }
+    return merged;
+  }, [mySetups, allSetups]);
+
   const selected: Setup[] = useMemo(
     () =>
       selectedSlugs
-        .map((slug) => allSetups.find((s) => s.slug === slug))
+        .map((slug) => universe.find((s) => s.slug === slug))
         .filter(Boolean) as Setup[],
-    [selectedSlugs, allSetups],
+    [selectedSlugs, universe],
   );
 
   const setSelection = (slugs: string[]) => {
@@ -144,12 +194,12 @@ function Comparar() {
     );
   }
 
-  // Setups recomendados pra comparar: primeiro salvos, depois galeria geral
-  const savedSetups = allSetups.filter((s) => saves.has(s.id));
-  const candidates =
+  // Galeria filtrada: salvos primeiro, depois resto, exclui os "meus"
+  const savedSetups = allSetups.filter((s) => saves.has(s.id) && !mySlugSet.has(s.slug));
+  const galleryCandidates =
     savedSetups.length >= 2
       ? savedSetups
-      : [...savedSetups, ...allSetups.filter((s) => !saves.has(s.id))].slice(0, 20);
+      : [...savedSetups, ...allSetups.filter((s) => !saves.has(s.id) && !mySlugSet.has(s.slug))].slice(0, 12);
 
   return (
     <div className="min-h-screen bg-background">
@@ -187,44 +237,66 @@ function Comparar() {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : (
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-              {candidates.slice(0, 12).map((s) => {
-                const isSelected = selectedSlugs.includes(s.slug);
-                return (
-                  <button
-                    key={s.id}
-                    onClick={() => toggleSelect(s.slug)}
-                    className={`group relative flex items-center gap-2 rounded-xl border p-2 text-left transition-smooth ${
-                      isSelected
-                        ? "border-primary bg-primary/5 ring-2 ring-primary/30"
-                        : "border-border bg-background hover:border-foreground"
-                    }`}
-                  >
-                    <img
-                      src={s.image}
-                      alt=""
-                      className="h-12 w-12 flex-shrink-0 rounded-lg object-cover"
-                      loading="lazy"
+            <div className="space-y-5">
+              {/* Grupo: Meus setups */}
+              {mySetups.length > 0 && (
+                <div>
+                  <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-primary">
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5">⭐ Meus setups</span>
+                    <span className="text-muted-foreground">use o seu como base "antes"</span>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                    {mySetups.map((s) => (
+                      <SelectorCard
+                        key={s.id}
+                        s={s}
+                        isSelected={selectedSlugs.includes(s.slug)}
+                        onToggle={() => toggleSelect(s.slug)}
+                        mine
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Grupo: galeria */}
+              <div>
+                <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  <span className="rounded-full bg-secondary px-2 py-0.5">📦 Galeria</span>
+                  {savedSetups.length > 0 && <span>favoritos primeiro</span>}
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                  {galleryCandidates.map((s) => (
+                    <SelectorCard
+                      key={s.id}
+                      s={s}
+                      isSelected={selectedSlugs.includes(s.slug)}
+                      onToggle={() => toggleSelect(s.slug)}
                     />
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-xs font-semibold">{s.title}</div>
-                      <div className="truncate text-[10px] text-muted-foreground">{s.author}</div>
-                    </div>
-                    {isSelected && (
-                      <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                        <Check className="h-3 w-3" />
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+                  ))}
+                </div>
+              </div>
+
+              {mySetups.length === 0 && user && (
+                <div className="rounded-2xl border border-dashed border-border bg-background p-4 text-center text-xs text-muted-foreground">
+                  Você ainda não postou nenhum setup.{" "}
+                  <Link to="/postar" className="text-primary hover:underline">
+                    Poste o seu
+                  </Link>{" "}
+                  pra comparar com a galeria.
+                </div>
+              )}
             </div>
           )}
         </div>
 
         {/* Side-by-side comparison */}
         {selected.length === 2 ? (
-          <ComparisonView a={selected[0]} b={selected[1]} />
+          <ComparisonView
+            a={selected[0]}
+            b={selected[1]}
+            mySlugs={mySlugSet}
+          />
         ) : selected.length === 1 ? (
           <div className="mt-8 rounded-2xl border border-dashed border-border bg-background p-8 text-center text-sm text-muted-foreground">
             Selecione mais 1 setup pra começar a comparação.
@@ -240,11 +312,53 @@ function Comparar() {
   );
 }
 
-function ComparisonView({ a, b }: { a: Setup; b: Setup }) {
+function SelectorCard({
+  s,
+  isSelected,
+  onToggle,
+  mine = false,
+}: {
+  s: Setup;
+  isSelected: boolean;
+  onToggle: () => void;
+  mine?: boolean;
+}) {
+  return (
+    <button
+      onClick={onToggle}
+      className={`group relative flex items-center gap-2 rounded-xl border p-2 text-left transition-smooth ${
+        isSelected
+          ? "border-primary bg-primary/5 ring-2 ring-primary/30"
+          : mine
+            ? "border-primary/30 bg-primary/5 hover:border-primary"
+            : "border-border bg-background hover:border-foreground"
+      }`}
+    >
+      <img src={s.image} alt="" className="h-12 w-12 flex-shrink-0 rounded-lg object-cover" loading="lazy" />
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-xs font-semibold">{s.title}</div>
+        <div className="truncate text-[10px] text-muted-foreground">
+          {mine ? "Você" : s.author} · R$ {s.budget.toLocaleString("pt-BR")}
+        </div>
+      </div>
+      {isSelected && (
+        <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <Check className="h-3 w-3" />
+        </span>
+      )}
+    </button>
+  );
+}
+
+function ComparisonView({ a, b, mySlugs }: { a: Setup; b: Setup; mySlugs: Set<string> }) {
   const scoreDiff = +(a.score - b.score).toFixed(1);
   const budgetDiff = a.budget - b.budget;
   const aWon = scoreDiff > 0;
   const aCheaper = budgetDiff < 0;
+  const aIsMine = mySlugs.has(a.slug);
+  const bIsMine = mySlugs.has(b.slug);
+  const labelA = aIsMine ? "Meu" : "Galeria A";
+  const labelB = bIsMine ? "Meu" : "Galeria B";
 
   // Agrupa produtos por categoria pra comparar lado a lado
   const categories = Array.from(
@@ -254,8 +368,8 @@ function ComparisonView({ a, b }: { a: Setup; b: Setup }) {
   return (
     <div className="mt-10 space-y-6">
       <div className="grid gap-6 md:grid-cols-2">
-        <SetupColumn s={a} label="A" highlight={aWon} />
-        <SetupColumn s={b} label="B" highlight={!aWon} />
+        <SetupColumn s={a} label={labelA} highlight={aWon} mine={aIsMine} />
+        <SetupColumn s={b} label={labelB} highlight={!aWon} mine={bIsMine} />
       </div>
 
       {/* Diff summary */}
@@ -331,12 +445,18 @@ function ComparisonView({ a, b }: { a: Setup; b: Setup }) {
   );
 }
 
-function SetupColumn({ s, label, highlight }: { s: Setup; label: string; highlight: boolean }) {
+function SetupColumn({ s, label, highlight, mine = false }: { s: Setup; label: string; highlight: boolean; mine?: boolean }) {
   return (
-    <div className={`rounded-3xl border bg-card p-5 shadow-soft transition-smooth ${highlight ? "border-primary ring-2 ring-primary/30" : "border-border"}`}>
+    <div className={`rounded-3xl border bg-card p-5 shadow-soft transition-smooth ${highlight ? "border-primary ring-2 ring-primary/30" : mine ? "border-primary/30" : "border-border"}`}>
       <div className="mb-3 flex items-center justify-between gap-3">
-        <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${highlight ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"}`}>
-          {label}
+        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
+          mine
+            ? "bg-primary text-primary-foreground"
+            : highlight
+              ? "bg-primary/15 text-primary"
+              : "bg-secondary text-muted-foreground"
+        }`}>
+          {mine ? "⭐ " : ""}{label}
         </span>
         {highlight && (
           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
