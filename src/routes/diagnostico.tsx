@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { AnaliseIA } from "@/components/landing/AnaliseIA";
-import { Sparkles, ShieldCheck, Zap, ListChecks } from "lucide-react";
+import { Sparkles, ShieldCheck, Zap, ListChecks, Info } from "lucide-react";
 
 export const Route = createFileRoute("/diagnostico")({
   head: () => ({
@@ -37,6 +37,20 @@ function Diagnostico() {
         </section>
 
         <AnaliseIA />
+
+        {/* Disclaimer IA — proteção jurídica: análise é orientativa, não substitui profissional */}
+        <section className="bg-background py-8">
+          <div className="container mx-auto max-w-3xl px-4 md:px-6">
+            <div className="flex items-start gap-3 rounded-2xl border-l-4 border-accent bg-accent/5 p-5">
+              <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-accent-foreground" />
+              <div className="text-xs leading-relaxed text-muted-foreground">
+                <strong className="text-foreground">Análise por IA é orientativa.</strong>{" "}
+                As notas e sugestões aqui são geradas por modelos automatizados (Google Gemini) com base em uma única foto e podem conter imprecisões. Não substituem avaliação profissional de ergonomia, design ou saúde ocupacional. As recomendações de produtos não constituem aconselhamento médico, financeiro ou jurídico. Decisões de compra são exclusivas do usuário.{" "}
+                <a href="/termos" className="underline hover:text-foreground">Ver Termos completos</a>.
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section className="py-20">
           <div className="container mx-auto px-4 md:px-6">

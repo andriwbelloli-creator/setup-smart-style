@@ -10,6 +10,11 @@ CREATE TABLE IF NOT EXISTS public.newsletter_signups (
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   referrer TEXT,
   user_agent TEXT,
+  -- LGPD/Marco Civil: registra exatamente quando o consentimento
+  -- foi dado e qual texto o usuário viu. Necessário pra provar
+  -- opt-in caso a pessoa conteste depois.
+  consent_given_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  consent_text TEXT,
   unsubscribed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

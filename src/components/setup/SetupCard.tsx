@@ -33,11 +33,27 @@ export function SetupCard({
     e.stopPropagation();
     if (!confirm(`Excluir o setup "${s.title}"? Esta ação é permanente.`)) return;
     setDeleting(true);
+    // Snapshot pra audit log (provê accountability LGPD art. 37)
+    const { data: snap } = await supabase.from("setups").select("*").eq("id", s.id).maybeSingle();
+    const { data: auth } = await supabase.auth.getUser();
     const { error } = await supabase.from("setups").delete().eq("id", s.id);
     setDeleting(false);
     if (error) {
       toast.error(`Falha ao excluir: ${error.message}`);
       return;
+    }
+    // Fire-and-forget — não bloqueia UX
+    if (auth?.user?.id) {
+      (supabase as any).from("admin_actions").insert({
+        admin_user_id: auth.user.id,
+        action: "delete_setup",
+        target_table: "setups",
+        target_id: s.id,
+        target_snapshot: snap,
+        reason: "Excluído via SetupCard (galeria)",
+      }).then(({ error: logErr }: { error: { message: string } | null }) => {
+        if (logErr) console.warn("admin_actions log:", logErr.message);
+      });
     }
     toast.success("Setup excluído.");
     onDeleted?.(s.id);

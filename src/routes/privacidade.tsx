@@ -19,7 +19,7 @@ function Privacidade() {
       <Navbar />
       <main className="container mx-auto max-w-3xl px-4 py-12 md:px-6 md:py-20">
         <h1 className="font-display text-4xl font-bold tracking-tight">Política de Privacidade</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Última atualização: 10 de maio de 2026 · Versão 2026-05-10</p>
+        <p className="mt-2 text-sm text-muted-foreground">Última atualização: 12 de maio de 2026 · Versão 2026-05-12</p>
 
         <div className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-5 text-sm leading-relaxed">
           <p className="font-semibold">Resumo em 30 segundos</p>

@@ -195,6 +195,7 @@ async function handleSitemap(_req, res) {
     { loc: "https://deskly.life/blog/por-que-sua-nota-ia-ta-baixa-6-erros", priority: 0.8, changefreq: "monthly" },
     { loc: "https://deskly.life/termos", priority: 0.3, changefreq: "monthly" },
     { loc: "https://deskly.life/privacidade", priority: 0.3, changefreq: "monthly" },
+    { loc: "https://deskly.life/relatar-conteudo", priority: 0.3, changefreq: "monthly" },
   ];
 
   let setupUrls = [];

@@ -181,11 +181,26 @@ function SetupDetail() {
   const handleDeleteSetup = async () => {
     if (!confirm(`Excluir o setup "${setup.title}"? Esta ação é permanente.`)) return;
     setDeletingSetup(true);
+    const { data: snap } = await supabase.from("setups").select("*").eq("id", setup.id).maybeSingle();
+    const { data: auth } = await supabase.auth.getUser();
     const { error } = await supabase.from("setups").delete().eq("id", setup.id);
     setDeletingSetup(false);
     if (error) {
       toast.error(`Falha ao excluir: ${error.message}`);
       return;
+    }
+    if (auth?.user?.id) {
+      // admin_actions ainda não está nos types gerados — cast
+      (supabase as any).from("admin_actions").insert({
+        admin_user_id: auth.user.id,
+        action: "delete_setup",
+        target_table: "setups",
+        target_id: setup.id,
+        target_snapshot: snap,
+        reason: "Excluído via página de detalhe",
+      }).then(({ error: logErr }: { error: { message: string } | null }) => {
+        if (logErr) console.warn("admin_actions log:", logErr.message);
+      });
     }
     toast.success("Setup excluído.");
     navigate({ to: "/galeria" });

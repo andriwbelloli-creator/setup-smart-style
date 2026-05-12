@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermosRouteImport } from './routes/termos'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RelatarConteudoRouteImport } from './routes/relatar-conteudo'
 import { Route as PrivacidadeRouteImport } from './routes/privacidade'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PostarRouteImport } from './routes/postar'
@@ -41,6 +42,11 @@ const TermosRoute = TermosRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RelatarConteudoRoute = RelatarConteudoRouteImport.update({
+  id: '/relatar-conteudo',
+  path: '/relatar-conteudo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacidadeRoute = PrivacidadeRouteImport.update({
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/postar': typeof PostarRoute
   '/premium': typeof PremiumRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/relatar-conteudo': typeof RelatarConteudoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/postar': typeof PostarRoute
   '/premium': typeof PremiumRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/relatar-conteudo': typeof RelatarConteudoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -217,6 +225,7 @@ export interface FileRoutesById {
   '/postar': typeof PostarRoute
   '/premium': typeof PremiumRoute
   '/privacidade': typeof PrivacidadeRoute
+  '/relatar-conteudo': typeof RelatarConteudoRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/postar'
     | '/premium'
     | '/privacidade'
+    | '/relatar-conteudo'
     | '/reset-password'
     | '/termos'
     | '/auth/callback'
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
     | '/postar'
     | '/premium'
     | '/privacidade'
+    | '/relatar-conteudo'
     | '/reset-password'
     | '/termos'
     | '/auth/callback'
@@ -294,6 +305,7 @@ export interface FileRouteTypes {
     | '/postar'
     | '/premium'
     | '/privacidade'
+    | '/relatar-conteudo'
     | '/reset-password'
     | '/termos'
     | '/auth/callback'
@@ -320,6 +332,7 @@ export interface RootRouteChildren {
   PostarRoute: typeof PostarRoute
   PremiumRoute: typeof PremiumRoute
   PrivacidadeRoute: typeof PrivacidadeRoute
+  RelatarConteudoRoute: typeof RelatarConteudoRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermosRoute: typeof TermosRoute
   DashboardAdminRoute: typeof DashboardAdminRoute
@@ -341,6 +354,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/relatar-conteudo': {
+      id: '/relatar-conteudo'
+      path: '/relatar-conteudo'
+      fullPath: '/relatar-conteudo'
+      preLoaderRoute: typeof RelatarConteudoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacidade': {
@@ -530,6 +550,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostarRoute: PostarRoute,
   PremiumRoute: PremiumRoute,
   PrivacidadeRoute: PrivacidadeRoute,
+  RelatarConteudoRoute: RelatarConteudoRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermosRoute: TermosRoute,
   DashboardAdminRoute: DashboardAdminRoute,

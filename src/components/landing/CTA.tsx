@@ -57,6 +57,7 @@ export function Footer() {
             <Link to="/premium" className="hover:text-foreground">Premium</Link>
             <Link to="/termos" className="hover:text-foreground">Termos</Link>
             <Link to="/privacidade" className="hover:text-foreground">Privacidade</Link>
+            <Link to="/relatar-conteudo" className="hover:text-foreground">Relatar conteúdo</Link>
           </div>
         </div>
       </div>

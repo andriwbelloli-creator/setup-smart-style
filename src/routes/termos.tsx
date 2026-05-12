@@ -18,7 +18,7 @@ function Termos() {
       <Navbar />
       <main className="container mx-auto max-w-3xl px-4 py-12 md:px-6 md:py-20">
         <h1 className="font-display text-4xl font-bold tracking-tight">Termos de Uso</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Última atualização: 12 de maio de 2026</p>
+        <p className="mt-2 text-sm text-muted-foreground">Última atualização: 12 de maio de 2026 · v2026-05-12</p>
 
         <div className="prose mt-8 max-w-none space-y-6 text-sm leading-relaxed text-foreground">
           <section>
@@ -82,22 +82,63 @@ function Termos() {
 
           <section>
             <h2 className="font-display text-xl font-bold">10. Limitação de Responsabilidade</h2>
-            <p>Na máxima extensão permitida em lei, o Deskly e seus operadores não são responsáveis por danos indiretos, lucros cessantes ou perda de dados decorrentes do uso da Plataforma.</p>
+            <p>Na máxima extensão permitida em lei brasileira, e ressalvadas as proteções imperativas do Código de Defesa do Consumidor (Lei nº 8.078/1990):</p>
+            <ul className="ml-6 list-disc space-y-1">
+              <li>O Deskly e seus operadores <strong>não são responsáveis por danos indiretos, lucros cessantes, perda de oportunidade, dano à imagem ou perda de dados</strong> decorrentes do uso da Plataforma.</li>
+              <li>A <strong>responsabilidade total agregada</strong> do Deskly por qualquer reivindicação relacionada à Plataforma fica limitada ao maior valor entre (i) o total efetivamente pago por você ao Deskly nos 12 meses anteriores ao evento que originou a reivindicação, ou (ii) R$ 200,00 (duzentos reais).</li>
+              <li>Sugestões geradas por IA, recomendações de produtos e análises de setup são <strong>orientativas e não constituem aconselhamento profissional</strong> (médico, ergonômico, jurídico ou financeiro). Decisões de compra são exclusivas do usuário.</li>
+              <li>O Deskly não vende, fabrica, distribui ou estoca os produtos exibidos. As compras são realizadas diretamente nas lojas parceiras (Amazon BR, Mercado Livre, Kabum, Magalu, Pichau etc.), sob os respectivos termos, garantias e políticas de devolução. <strong>Reclamações sobre produtos devem ser direcionadas à loja vendedora.</strong></li>
+            </ul>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold">11. Foro e Lei Aplicável</h2>
+            <h2 className="font-display text-xl font-bold">11. Indenização (Indemnification)</h2>
+            <p>Você concorda em indenizar, defender e manter o Deskly, seus operadores, fornecedores e parceiros isentos de quaisquer reivindicações, perdas, despesas, danos e custos (incluindo honorários advocatícios razoáveis) decorrentes de:</p>
+            <ul className="ml-6 list-disc space-y-1">
+              <li>violação destes Termos, da política de privacidade ou da lei aplicável por você;</li>
+              <li>conteúdo que você publicou que viole direitos de terceiros (imagem, autoral, marca);</li>
+              <li>uso não autorizado da sua conta (incluindo por terceiros que tenham obtido sua senha);</li>
+              <li>fraude, atividade ilícita ou tentativa de burlar mecanismos de segurança/monetização;</li>
+              <li>scraping, mineração ou extração automatizada não autorizada.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold">12. Resolução de Disputas</h2>
+            <p>Antes de iniciar qualquer ação judicial, ambas as partes concordam em tentar resolver disputas amigavelmente pelo prazo de 30 dias, mediante notificação escrita ao e-mail <a href="mailto:juridico@deskly.life" className="text-primary hover:underline">juridico@deskly.life</a>.</p>
+            <p>Esgotada a tentativa amigável, as partes poderão recorrer ao Poder Judiciário ou, alternativamente, à arbitragem sob as regras da Câmara de Conciliação, Mediação e Arbitragem CIESP/FIESP, à escolha de quem propor a ação primeiro. <strong>Cláusula sem prejuízo às garantias do Código de Defesa do Consumidor.</strong></p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold">13. Notificação e Remoção de Conteúdo (Notice & Takedown)</h2>
+            <p>Se você acredita que algum conteúdo na Plataforma viola seus direitos (autorais, imagem, marca, ou outro direito legal), envie notificação para <a href="mailto:juridico@deskly.life" className="text-primary hover:underline">juridico@deskly.life</a> ou pela página <a href="/relatar-conteudo" className="text-primary hover:underline">/relatar-conteudo</a>, contendo:</p>
+            <ul className="ml-6 list-disc space-y-1">
+              <li>identificação do titular do direito (você ou quem representa);</li>
+              <li>URL específica do conteúdo questionado;</li>
+              <li>fundamento legal da reclamação;</li>
+              <li>declaração de boa-fé de que a reivindicação é legítima.</li>
+            </ul>
+            <p>Analisaremos em até 5 dias úteis. Notificações abusivas (Lei nº 12.965/2014, Marco Civil da Internet) podem resultar em responsabilização civil do notificante.</p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl font-bold">14. Foro e Lei Aplicável</h2>
             <p>Estes Termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o foro da comarca de domicílio do usuário consumidor para dirimir controvérsias.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold">12. Alterações</h2>
-            <p>Podemos atualizar estes Termos. Mudanças relevantes serão comunicadas por e-mail ou aviso na Plataforma com pelo menos 15 dias de antecedência.</p>
+            <h2 className="font-display text-xl font-bold">15. Alterações</h2>
+            <p>Podemos atualizar estes Termos. Mudanças <strong>relevantes</strong> (que aumentem responsabilidade do usuário, reduzam direitos ou alterem preço) serão comunicadas por e-mail ou aviso na Plataforma com pelo menos 15 dias de antecedência. Você poderá rescindir gratuitamente nesse período se não concordar. Mudanças <strong>não-relevantes</strong> (correções, ajustes ortográficos, esclarecimentos) entram em vigor na publicação.</p>
+            <p>Histórico de versões fica disponível mediante solicitação via <a href="mailto:juridico@deskly.life" className="text-primary hover:underline">juridico@deskly.life</a>.</p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold">13. Contato</h2>
-            <p>E-mail: <a href="mailto:contato@deskly.life" className="text-primary hover:underline">contato@deskly.life</a></p>
+            <h2 className="font-display text-xl font-bold">16. Contato</h2>
+            <ul className="ml-6 list-disc space-y-1">
+              <li>Geral: <a href="mailto:contato@deskly.life" className="text-primary hover:underline">contato@deskly.life</a></li>
+              <li>Jurídico / Notificações / DMCA: <a href="mailto:juridico@deskly.life" className="text-primary hover:underline">juridico@deskly.life</a></li>
+              <li>Privacidade / LGPD / Encarregado (DPO): <a href="mailto:privacidade@deskly.life" className="text-primary hover:underline">privacidade@deskly.life</a></li>
+            </ul>
           </section>
         </div>
       </main>
