@@ -13,11 +13,20 @@
  * - aria-hidden → não conta como conteúdo pra leitor de tela
  * - drop-shadow → segura legibilidade em backgrounds claros
  */
-export function WatermarkOverlay() {
+type Position = "bl" | "br" | "tl" | "tr";
+
+const POSITION_CLASSES: Record<Position, string> = {
+  bl: "bottom-2 left-2",
+  br: "bottom-2 right-2",
+  tl: "top-2 left-2",
+  tr: "top-2 right-2",
+};
+
+export function WatermarkOverlay({ position = "bl" }: { position?: Position } = {}) {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute bottom-2 right-2 z-10 select-none rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white/80 mix-blend-difference"
+      className={`pointer-events-none absolute z-10 select-none rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white/80 mix-blend-difference ${POSITION_CLASSES[position]}`}
       style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
     >
       deskly.life
