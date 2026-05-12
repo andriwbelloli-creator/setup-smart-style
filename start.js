@@ -122,7 +122,10 @@ async function logBotTrap(req, ip, trapType) {
         Prefer: "return=minimal",
       },
       body: JSON.stringify({
-        ip,
+        // LGPD: não armazenamos o IP cru. Apenas hash não-criptográfico
+        // de 8 hex digits, suficiente pra agrupar requests do mesmo
+        // visitante (bot detection) sem ser PII direta.
+        ip: "redacted",
         ip_hash: ipShortHash(ip),
         user_agent: (req.headers["user-agent"] || "").slice(0, 200),
         referer: (req.headers["referer"] || "").slice(0, 200),

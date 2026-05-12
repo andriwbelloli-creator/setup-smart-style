@@ -4,7 +4,9 @@
 
 CREATE TABLE IF NOT EXISTS public.bot_traps (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  ip TEXT NOT NULL,
+  -- LGPD: NÃO armazenamos IP cru. ip='redacted' sempre; identificação
+  -- recorrente do bot é feita via ip_hash não-criptográfico (8 hex).
+  ip TEXT NOT NULL DEFAULT 'redacted',
   ip_hash TEXT NOT NULL,
   user_agent TEXT,
   referer TEXT,

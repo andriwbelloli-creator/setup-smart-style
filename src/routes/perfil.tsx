@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchPublishedSetups, rowToSetup } from "@/lib/setups-db";
 import { SetupCard } from "@/components/setup/SetupCard";
 import type { Setup } from "@/data/setups";
-import { Loader2, Upload, Pencil, Trash2, Download, AlertTriangle } from "lucide-react";
+import { Loader2, Upload, Pencil, Trash2, Download, AlertTriangle, LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/perfil")({
@@ -99,6 +99,15 @@ function Perfil() {
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Dados baixados!");
+  };
+
+  const signOutAllDevices = async () => {
+    if (!confirm("Encerrar sessão em TODOS os dispositivos conectados? Você será deslogado aqui também.")) return;
+    // Supabase global scope revoga refresh tokens em todas as sessões do user
+    const { error } = await supabase.auth.signOut({ scope: "global" });
+    if (error) { toast.error(error.message); return; }
+    toast.success("Sessões encerradas em todos dispositivos.");
+    navigate({ to: "/" });
   };
 
   const deleteAccount = async () => {
@@ -195,6 +204,9 @@ function Perfil() {
               <div className="mt-4 flex flex-wrap gap-3">
                 <Button variant="outline" onClick={exportData} className="gap-2">
                   <Download className="h-4 w-4" /> Baixar meus dados (JSON)
+                </Button>
+                <Button variant="outline" onClick={signOutAllDevices} className="gap-2">
+                  <LogOut className="h-4 w-4" /> Sair de todos os dispositivos
                 </Button>
                 <Button
                   variant="outline"
