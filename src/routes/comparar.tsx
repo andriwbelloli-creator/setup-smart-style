@@ -233,8 +233,16 @@ function Comparar() {
             )}
           </div>
           {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-2 rounded-xl border border-border bg-background p-2">
+                  <div className="h-12 w-12 flex-shrink-0 animate-pulse rounded-lg bg-secondary" />
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="h-3 w-3/4 animate-pulse rounded bg-secondary" />
+                    <div className="h-2 w-1/2 animate-pulse rounded bg-secondary" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="space-y-5">

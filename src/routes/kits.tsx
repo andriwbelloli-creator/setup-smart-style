@@ -5,12 +5,11 @@ import { Footer } from "@/components/landing/CTA";
 import { supabase } from "@/integrations/supabase/client";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
 import { Button } from "@/components/ui/button";
+import { KitCardSkeletonGrid } from "@/components/setup/KitCardSkeleton";
 import {
   Sparkles,
-  Loader2,
   ShoppingBag,
   Check,
-  ExternalLink,
   GraduationCap,
   Briefcase,
   Crown,
@@ -194,8 +193,8 @@ function Kits() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="mt-12">
+            <KitCardSkeletonGrid count={3} />
           </div>
         ) : (
           <div className="mt-12 grid gap-8 lg:grid-cols-3">

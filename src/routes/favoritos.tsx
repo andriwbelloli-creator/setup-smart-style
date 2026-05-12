@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { SetupCard } from "@/components/setup/SetupCard";
+import { SetupCardSkeletonGrid } from "@/components/setup/SetupCardSkeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { useSaves } from "@/hooks/use-saved";
 import { fetchPublishedSetups } from "@/lib/setups-db";
@@ -79,9 +80,7 @@ function Favoritos() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
+          <SetupCardSkeletonGrid count={6} />
         ) : saved.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center">
             <Bookmark className="mx-auto h-10 w-10 text-muted-foreground" />
