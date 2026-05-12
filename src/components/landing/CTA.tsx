@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { NewsletterCapture } from "@/components/NewsletterCapture";
 
 export function CTA() {
   return (
@@ -30,7 +31,15 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-cream py-12">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+        <div className="mb-10 max-w-2xl">
+          <NewsletterCapture
+            source="footer"
+            variant="card"
+            title="3 setups + 1 dica de upgrade, toda semana."
+            subtitle="Curadoria editorial. Sem spam. Cancela em 1 clique."
+          />
+        </div>
+        <div className="flex flex-col items-start justify-between gap-6 border-t border-border pt-8 md:flex-row md:items-center">
           <div>
             <div className="font-display text-xl font-bold">Deskly</div>
             <p className="mt-1 text-sm text-muted-foreground">

@@ -23,6 +23,7 @@ import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as ConsultoriaRouteImport } from './routes/consultoria'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CompararRouteImport } from './routes/comparar'
+import { Route as AvalieSeuSetupRouteImport } from './routes/avalie-seu-setup'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
@@ -100,6 +101,11 @@ const CompararRoute = CompararRouteImport.update({
   path: '/comparar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AvalieSeuSetupRoute = AvalieSeuSetupRouteImport.update({
+  id: '/avalie-seu-setup',
+  path: '/avalie-seu-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -134,6 +140,7 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/avalie-seu-setup': typeof AvalieSeuSetupRoute
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/avalie-seu-setup': typeof AvalieSeuSetupRoute
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/avalie-seu-setup': typeof AvalieSeuSetupRoute
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/avalie-seu-setup'
     | '/comparar'
     | '/comunidade'
     | '/consultoria'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/avalie-seu-setup'
     | '/comparar'
     | '/comunidade'
     | '/consultoria'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/avalie-seu-setup'
     | '/comparar'
     | '/comunidade'
     | '/consultoria'
@@ -270,6 +282,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  AvalieSeuSetupRoute: typeof AvalieSeuSetupRoute
   CompararRoute: typeof CompararRoute
   ComunidadeRoute: typeof ComunidadeRoute
   ConsultoriaRoute: typeof ConsultoriaRoute
@@ -389,6 +402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompararRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/avalie-seu-setup': {
+      id: '/avalie-seu-setup'
+      path: '/avalie-seu-setup'
+      fullPath: '/avalie-seu-setup'
+      preLoaderRoute: typeof AvalieSeuSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -447,6 +467,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  AvalieSeuSetupRoute: AvalieSeuSetupRoute,
   CompararRoute: CompararRoute,
   ComunidadeRoute: ComunidadeRoute,
   ConsultoriaRoute: ConsultoriaRoute,
