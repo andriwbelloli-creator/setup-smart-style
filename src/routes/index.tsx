@@ -46,6 +46,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "HomeOfficeLife — Marketplace de home office usado" },
       { property: "og:description", content: "Compre e venda direto com a comunidade brasileira de home office. Sem taxa pra anunciar." },
       { property: "og:type", content: "website" },
+    ],
+    scripts: [
       { type: "application/ld+json", children: JSON.stringify(orgSchema) },
       { type: "application/ld+json", children: JSON.stringify(websiteSchema) },
     ],
