@@ -20,6 +20,7 @@ import { Route as OrcamentoRouteImport } from './routes/orcamento'
 import { Route as KitsRouteImport } from './routes/kits'
 import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
+import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as ConsultoriaRouteImport } from './routes/consultoria'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
@@ -30,12 +31,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MarketplaceIndexRouteImport } from './routes/marketplace.index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
+import { Route as MarketplaceFavoritosRouteImport } from './routes/marketplace.favoritos'
 import { Route as MarketplaceAnunciarRouteImport } from './routes/marketplace.anunciar'
 import { Route as MarketplaceIdRouteImport } from './routes/marketplace.$id'
 import { Route as DashboardAfiliadosRouteImport } from './routes/dashboard.afiliados'
 import { Route as DashboardAdminRouteImport } from './routes/dashboard.admin'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as DashboardAdminAnalyticsRouteImport } from './routes/dashboard.admin.analytics'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -92,6 +95,11 @@ const FavoritosRoute = FavoritosRouteImport.update({
   path: '/favoritos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DiagnosticoRoute = DiagnosticoRouteImport.update({
   id: '/diagnostico',
   path: '/diagnostico',
@@ -142,6 +150,11 @@ const SetupSlugRoute = SetupSlugRouteImport.update({
   path: '/setup/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketplaceFavoritosRoute = MarketplaceFavoritosRouteImport.update({
+  id: '/marketplace/favoritos',
+  path: '/marketplace/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketplaceAnunciarRoute = MarketplaceAnunciarRouteImport.update({
   id: '/marketplace/anunciar',
   path: '/marketplace/anunciar',
@@ -172,6 +185,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
+const DashboardAdminAnalyticsRoute = DashboardAdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -182,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
   '/kits': typeof KitsRoute
@@ -195,12 +214,14 @@ export interface FileRoutesByFullPath {
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/dashboard/admin': typeof DashboardAdminRoute
+  '/dashboard/admin': typeof DashboardAdminRouteWithChildren
   '/dashboard/afiliados': typeof DashboardAfiliadosRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/marketplace/anunciar': typeof MarketplaceAnunciarRoute
+  '/marketplace/favoritos': typeof MarketplaceFavoritosRoute
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace/': typeof MarketplaceIndexRoute
+  '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -211,6 +232,7 @@ export interface FileRoutesByTo {
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
   '/kits': typeof KitsRoute
@@ -224,12 +246,14 @@ export interface FileRoutesByTo {
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/dashboard/admin': typeof DashboardAdminRoute
+  '/dashboard/admin': typeof DashboardAdminRouteWithChildren
   '/dashboard/afiliados': typeof DashboardAfiliadosRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/marketplace/anunciar': typeof MarketplaceAnunciarRoute
+  '/marketplace/favoritos': typeof MarketplaceFavoritosRoute
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace': typeof MarketplaceIndexRoute
+  '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -241,6 +265,7 @@ export interface FileRoutesById {
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
   '/kits': typeof KitsRoute
@@ -254,12 +279,14 @@ export interface FileRoutesById {
   '/termos': typeof TermosRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/dashboard/admin': typeof DashboardAdminRoute
+  '/dashboard/admin': typeof DashboardAdminRouteWithChildren
   '/dashboard/afiliados': typeof DashboardAfiliadosRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/marketplace/anunciar': typeof MarketplaceAnunciarRoute
+  '/marketplace/favoritos': typeof MarketplaceFavoritosRoute
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace/': typeof MarketplaceIndexRoute
+  '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -272,6 +299,7 @@ export interface FileRouteTypes {
     | '/comunidade'
     | '/consultoria'
     | '/diagnostico'
+    | '/entrar'
     | '/favoritos'
     | '/galeria'
     | '/kits'
@@ -289,8 +317,10 @@ export interface FileRouteTypes {
     | '/dashboard/afiliados'
     | '/marketplace/$id'
     | '/marketplace/anunciar'
+    | '/marketplace/favoritos'
     | '/setup/$slug'
     | '/marketplace/'
+    | '/dashboard/admin/analytics'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -301,6 +331,7 @@ export interface FileRouteTypes {
     | '/comunidade'
     | '/consultoria'
     | '/diagnostico'
+    | '/entrar'
     | '/favoritos'
     | '/galeria'
     | '/kits'
@@ -318,8 +349,10 @@ export interface FileRouteTypes {
     | '/dashboard/afiliados'
     | '/marketplace/$id'
     | '/marketplace/anunciar'
+    | '/marketplace/favoritos'
     | '/setup/$slug'
     | '/marketplace'
+    | '/dashboard/admin/analytics'
   id:
     | '__root__'
     | '/'
@@ -330,6 +363,7 @@ export interface FileRouteTypes {
     | '/comunidade'
     | '/consultoria'
     | '/diagnostico'
+    | '/entrar'
     | '/favoritos'
     | '/galeria'
     | '/kits'
@@ -347,8 +381,10 @@ export interface FileRouteTypes {
     | '/dashboard/afiliados'
     | '/marketplace/$id'
     | '/marketplace/anunciar'
+    | '/marketplace/favoritos'
     | '/setup/$slug'
     | '/marketplace/'
+    | '/dashboard/admin/analytics'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -360,6 +396,7 @@ export interface RootRouteChildren {
   ComunidadeRoute: typeof ComunidadeRoute
   ConsultoriaRoute: typeof ConsultoriaRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
+  EntrarRoute: typeof EntrarRoute
   FavoritosRoute: typeof FavoritosRoute
   GaleriaRoute: typeof GaleriaRoute
   KitsRoute: typeof KitsRoute
@@ -371,10 +408,11 @@ export interface RootRouteChildren {
   RelatarConteudoRoute: typeof RelatarConteudoRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermosRoute: typeof TermosRoute
-  DashboardAdminRoute: typeof DashboardAdminRoute
+  DashboardAdminRoute: typeof DashboardAdminRouteWithChildren
   DashboardAfiliadosRoute: typeof DashboardAfiliadosRoute
   MarketplaceIdRoute: typeof MarketplaceIdRoute
   MarketplaceAnunciarRoute: typeof MarketplaceAnunciarRoute
+  MarketplaceFavoritosRoute: typeof MarketplaceFavoritosRoute
   SetupSlugRoute: typeof SetupSlugRoute
   MarketplaceIndexRoute: typeof MarketplaceIndexRoute
 }
@@ -458,6 +496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FavoritosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/diagnostico': {
       id: '/diagnostico'
       path: '/diagnostico'
@@ -528,6 +573,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/marketplace/favoritos': {
+      id: '/marketplace/favoritos'
+      path: '/marketplace/favoritos'
+      fullPath: '/marketplace/favoritos'
+      preLoaderRoute: typeof MarketplaceFavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/marketplace/anunciar': {
       id: '/marketplace/anunciar'
       path: '/marketplace/anunciar'
@@ -570,6 +622,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/dashboard/admin/analytics': {
+      id: '/dashboard/admin/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/admin/analytics'
+      preLoaderRoute: typeof DashboardAdminAnalyticsRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
   }
 }
 
@@ -593,6 +652,18 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface DashboardAdminRouteChildren {
+  DashboardAdminAnalyticsRoute: typeof DashboardAdminAnalyticsRoute
+}
+
+const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
+  DashboardAdminAnalyticsRoute: DashboardAdminAnalyticsRoute,
+}
+
+const DashboardAdminRouteWithChildren = DashboardAdminRoute._addFileChildren(
+  DashboardAdminRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
@@ -602,6 +673,7 @@ const rootRouteChildren: RootRouteChildren = {
   ComunidadeRoute: ComunidadeRoute,
   ConsultoriaRoute: ConsultoriaRoute,
   DiagnosticoRoute: DiagnosticoRoute,
+  EntrarRoute: EntrarRoute,
   FavoritosRoute: FavoritosRoute,
   GaleriaRoute: GaleriaRoute,
   KitsRoute: KitsRoute,
@@ -613,10 +685,11 @@ const rootRouteChildren: RootRouteChildren = {
   RelatarConteudoRoute: RelatarConteudoRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermosRoute: TermosRoute,
-  DashboardAdminRoute: DashboardAdminRoute,
+  DashboardAdminRoute: DashboardAdminRouteWithChildren,
   DashboardAfiliadosRoute: DashboardAfiliadosRoute,
   MarketplaceIdRoute: MarketplaceIdRoute,
   MarketplaceAnunciarRoute: MarketplaceAnunciarRoute,
+  MarketplaceFavoritosRoute: MarketplaceFavoritosRoute,
   SetupSlugRoute: SetupSlugRoute,
   MarketplaceIndexRoute: MarketplaceIndexRoute,
 }
