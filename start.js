@@ -62,12 +62,19 @@ function applySecurityHeaders(res) {
 // de afiliado armazenado no banco. Mantém o DOM limpo
 // (sem expor URLs de Amazon/Kabum diretamente no HTML).
 // =============================================================
+// Fallback hardcoded para os valores PÚBLICOS do Supabase (já estão
+// embutidos no bundle do cliente — não são segredo). Garante que /r/
+// funcione mesmo se as env vars não estiverem configuradas no Render.
+// Service role (privado) NÃO tem fallback — fica null se ausente,
+// e o servidor falha silenciosamente em logs (bot_traps, csp_violations).
 const SUPABASE_URL =
-  process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || "";
+  process.env.VITE_SUPABASE_URL ||
+  process.env.SUPABASE_URL ||
+  "https://icwgkbvwehkjmkuiecuj.supabase.co";
 const SUPABASE_ANON =
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   process.env.SUPABASE_PUBLISHABLE_KEY ||
-  "";
+  "sb_publishable_MscbtaZRPDd-J5oUE02Imw_vb4_i6Gl";
 const SUPABASE_SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 // =============================================================
