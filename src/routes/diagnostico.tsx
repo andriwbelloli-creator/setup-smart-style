@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { AnaliseIA } from "@/components/landing/AnaliseIA";
-import { Sparkles, ShieldCheck, Zap, ListChecks, Info } from "lucide-react";
+import { Sparkles, ShieldCheck, Zap, ListChecks, Info, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/diagnostico")({
   head: () => ({
@@ -33,6 +33,23 @@ function Diagnostico() {
             <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
               Envie uma foto, receba análise por critério e uma lista de upgrades com produtos disponíveis no Brasil.
             </p>
+          </div>
+        </section>
+
+        {/* Alerta de privacidade — LGPD art. 7º, IX (legítimo interesse) +
+            transparência exigida pelo art. 9º (informações claras). */}
+        <section className="bg-background py-6">
+          <div className="container mx-auto max-w-3xl px-4 md:px-6">
+            <div className="flex items-start gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+              <ShieldAlert className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
+              <p className="text-xs leading-relaxed text-foreground md:text-sm">
+                <strong>Sua privacidade:</strong> evite enviar fotos com
+                rostos, documentos sensíveis ou informações confidenciais na
+                tela do monitor. <strong>As imagens não são salvas</strong> após a
+                análise — são processadas pela IA do Google e descartadas. Saiba mais na{" "}
+                <a href="/privacidade" className="text-primary underline">política de privacidade</a>.
+              </p>
+            </div>
           </div>
         </section>
 

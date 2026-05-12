@@ -54,6 +54,9 @@ function Postar() {
   const [products, setProducts] = useState<DraftProduct[]>([]);
   const [editingProduct, setEditingProduct] = useState<DraftProduct | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // Cessão de imagem — Lei 9.610/98 art. 79 + Lei Geral de Proteção
+  // de Dados art. 7º. Sem o aceite explícito, bloqueamos o submit.
+  const [authorshipConfirmed, setAuthorshipConfirmed] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -261,7 +264,23 @@ function Postar() {
               <input type="range" min={500} max={20000} step={100} value={budget}
                 onChange={(e) => setBudget(Number(e.target.value))} className="w-full accent-primary" />
             </Field>
-            <Button type="submit" disabled={submitting || !file || !title || !city || picked.length === 0}
+            {/* Cessão de imagem — Lei 9.610/98 (Direitos Autorais) */}
+            <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-background p-4 transition-smooth hover:border-foreground/40">
+              <input
+                type="checkbox"
+                checked={authorshipConfirmed}
+                onChange={(e) => setAuthorshipConfirmed(e.target.checked)}
+                className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer accent-primary"
+                aria-label="Declaração de autoria"
+                required
+              />
+              <span className="text-xs leading-relaxed text-muted-foreground">
+                <strong className="text-foreground">Declaro que sou o autor desta foto</strong> e autorizo sua exibição pública no Deskly. Veja a{" "}
+                <Link to="/termos" className="text-primary underline">licença de uso de conteúdo</Link>{" "}
+                nos Termos.
+              </span>
+            </label>
+            <Button type="submit" disabled={submitting || !file || !title || !city || picked.length === 0 || !authorshipConfirmed}
               className="h-12 w-full gap-2 bg-gradient-hero text-base shadow-elegant disabled:opacity-50">
               {submitting ? <><Loader2 className="h-4 w-4 animate-spin" /> Publicando...</> : <><Upload className="h-4 w-4" /> Publicar setup</>}
             </Button>

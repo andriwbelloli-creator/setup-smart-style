@@ -521,6 +521,15 @@ function SetupDetail() {
                   </div>
                 ))}
               </div>
+
+              {/* Disclosure de afiliado — obrigatório CONAR + CDC art. 36 */}
+              {setup.products.length > 0 && (
+                <p className="mt-5 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
+                  O Deskly é mantido por comissões de afiliados. Podemos
+                  receber uma porcentagem se você comprar através dos
+                  nossos links, <strong>sem custo extra para você</strong>.
+                </p>
+              )}
             </div>
           </aside>
         </div>

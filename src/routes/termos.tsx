@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 
@@ -37,9 +37,41 @@ function Termos() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl font-bold">4. Conteúdo do Usuário</h2>
-            <p>Ao publicar setups, fotos ou comentários, você nos concede licença não exclusiva, gratuita e mundial para hospedar, exibir e distribuir esse conteúdo no Deskly. Você garante que tem os direitos sobre o conteúdo publicado.</p>
-            <p>Reservamo-nos o direito de remover conteúdo que viole estes Termos, leis brasileiras ou direitos de terceiros.</p>
+            <h2 className="font-display text-xl font-bold">4. Conteúdo do Usuário (Licença de Uso)</h2>
+            <p>
+              Ao publicar uma foto de setup, comentário ou qualquer outro
+              conteúdo no Deskly, <strong>você declara ser o autor original da
+              imagem ou possuir os direitos necessários para sua divulgação</strong>{" "}
+              (incluindo direitos autorais, direito de imagem de pessoas
+              retratadas e direitos de marca). Você é o único responsável
+              pelo conteúdo que publica.
+            </p>
+            <p>
+              Você concede ao Deskly uma <strong>licença gratuita, não exclusiva,
+              global, perpétua (durante o tempo em que o conteúdo permanecer
+              publicado) e sublicenciável</strong> para:
+            </p>
+            <ul className="ml-6 list-disc space-y-1">
+              <li>exibir, redimensionar, comprimir e distribuir a imagem dentro da Plataforma e em comunicações da Plataforma (newsletter, redes sociais oficiais);</li>
+              <li>gerar previews (Open Graph, Twitter Card) e thumbnails;</li>
+              <li>arquivar e fazer backup conforme exigências técnicas e legais;</li>
+              <li>indexar metadados (legenda, estilo, produtos marcados) para busca e recomendação.</li>
+            </ul>
+            <p>
+              <strong>Limites desta licença:</strong> não vendemos sua imagem
+              isolada como produto, não a usamos em campanhas comerciais
+              pagas de terceiros sem autorização adicional, e não a
+              utilizamos para treinar modelos de IA de terceiros. A licença
+              cessa quando você remove o conteúdo (com prazo de até 30 dias
+              para limpeza de caches e backups).
+            </p>
+            <p>
+              Reservamo-nos o direito de remover conteúdo que viole estes
+              Termos, leis brasileiras ou direitos de terceiros, sem aviso
+              prévio em casos urgentes (conteúdo manifestamente ilícito,
+              risco iminente de dano). Procedimento de notificação está em{" "}
+              <Link to="/relatar-conteudo" className="text-primary hover:underline">/relatar-conteudo</Link>.
+            </p>
           </section>
 
           <section>
