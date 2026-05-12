@@ -1,9 +1,9 @@
-import minimal from "@/assets/setup-minimal.jpg";
-import gamer from "@/assets/setup-gamer.jpg";
-import creator from "@/assets/setup-creator.jpg";
-import compact from "@/assets/setup-compact.jpg";
-import hero from "@/assets/hero-setup.jpg";
-import after from "@/assets/after.jpg";
+import minimal from "@/assets/setup-minimal.webp";
+import gamer from "@/assets/setup-gamer.webp";
+import creator from "@/assets/setup-creator.webp";
+import compact from "@/assets/setup-compact.webp";
+import hero from "@/assets/hero-setup.webp";
+import after from "@/assets/after.webp";
 
 export type Product = {
   id: string;

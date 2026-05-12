@@ -55,10 +55,24 @@ export function AnaliseIA() {
   const [limitReached, setLimitReached] = useState(false);
   const [usedAnalyses, setUsedAnalyses] = useState(0);
 
+  // Click no área de upload — se não logado, redireciona ANTES de
+  // abrir file picker (zero friction: user não desperdiça esforço
+  // escolhendo foto pra depois ser barrado).
+  const requireAuthBeforeUpload = (e: React.MouseEvent | React.DragEvent) => {
+    if (user) return true;
+    e.preventDefault();
+    e.stopPropagation();
+    toast.message("Conta grátis em 10s pra começar a avaliar.", {
+      description: "Sua conta dá acesso a 3 análises grátis + galeria + comunidade.",
+    });
+    navigate({ to: "/auth" });
+    return false;
+  };
+
   const handleFile = async (file?: File) => {
     if (!file) return;
     if (!user) {
-      toast.error("Faça login para analisar seu setup.");
+      // Failsafe — não deveria chegar aqui porque o clique já blocked
       navigate({ to: "/auth" });
       return;
     }
@@ -209,8 +223,15 @@ export function AnaliseIA() {
           <div
             ref={dragRef}
             onDragOver={(e) => { e.preventDefault(); }}
-            onDrop={(e) => { e.preventDefault(); handleFile(e.dataTransfer.files?.[0]); }}
-            onClick={() => inputRef.current?.click()}
+            onDrop={(e) => {
+              if (!requireAuthBeforeUpload(e)) return;
+              e.preventDefault();
+              handleFile(e.dataTransfer.files?.[0]);
+            }}
+            onClick={(e) => {
+              if (!requireAuthBeforeUpload(e)) return;
+              inputRef.current?.click();
+            }}
             className="group relative flex min-h-[320px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-border bg-card p-6 text-center transition-smooth hover:border-primary hover:bg-primary/5"
           >
             {preview ? (

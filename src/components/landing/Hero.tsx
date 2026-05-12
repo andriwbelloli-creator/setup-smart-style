@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { Upload, Star, ArrowRight, Zap, ExternalLink } from "lucide-react";
-import heroImg from "@/assets/hero-setup.jpg";
+import heroImg from "@/assets/hero-setup.webp";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
 
 // Amazon BR com filtro de categoria `i=computers` — única loja BR que

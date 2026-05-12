@@ -1,10 +1,14 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CookieBanner } from "@/components/CookieBanner";
 import { HoneypotLink } from "@/components/HoneypotLink";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ExitIntentModal } from "@/components/ExitIntentModal";
+import { queryClient } from "@/lib/query-client";
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/600.css";
@@ -79,13 +83,26 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function CanonicalTag() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  // Canonical sem query params (UTMs, ?ref=) pra evitar conteúdo duplicado.
+  const href = `https://deskly.life${path === "/" ? "" : path}`;
+  return <link rel="canonical" href={href} />;
+}
+
 function RootComponent() {
   return (
-    <AuthProvider>
-      <Outlet />
-      <Toaster />
-      <CookieBanner />
-      <HoneypotLink />
-    </AuthProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <CanonicalTag />
+          <Outlet />
+          <Toaster />
+          <CookieBanner />
+          <HoneypotLink />
+          <ExitIntentModal />
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

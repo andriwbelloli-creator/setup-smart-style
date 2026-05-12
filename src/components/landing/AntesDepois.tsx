@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import beforeImg from "@/assets/before.jpg";
-import afterImg from "@/assets/after.jpg";
+import beforeImg from "@/assets/before.webp";
+import afterImg from "@/assets/after.webp";
 import { ArrowLeftRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
