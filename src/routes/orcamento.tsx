@@ -10,7 +10,7 @@ import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affili
 export const Route = createFileRoute("/orcamento")({
   head: () => ({
     meta: [
-      { title: "Monte seu setup por orçamento · Deskly" },
+      { title: "Monte seu setup por orçamento · HomeOffice.life" },
       { name: "description", content: "Listas de compras prontas para home office por faixa de orçamento — produtos reais de Amazon BR, Mercado Livre, Kabum e Magalu." },
       { property: "og:title", content: "Monte seu setup por orçamento" },
       { property: "og:description", content: "Essencial, Equilibrado ou Premium — escolha sua faixa e veja a lista pronta." },

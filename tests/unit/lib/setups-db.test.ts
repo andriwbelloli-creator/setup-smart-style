@@ -72,9 +72,9 @@ describe("rowToSetup", () => {
     expect(rowToSetup({ ...baseRow, career: "unknown" as any }).authorRole).toBe("Remoto");
   });
 
-  it("falls back to @deskly when profiles is missing", () => {
+  it("falls back to @homeofficelife when profiles is missing", () => {
     const s = rowToSetup({ ...baseRow, profiles: null });
-    expect(s.author).toBe("@deskly");
+    expect(s.author).toBe("@homeofficelife");
   });
 
   it("uses empty image and Brasil city as fallbacks", () => {

@@ -41,7 +41,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col items-start justify-between gap-6 border-t border-border pt-8 md:flex-row md:items-center">
           <div>
-            <div className="font-display text-xl font-bold">Deskly</div>
+            <div className="font-display text-xl font-bold">HomeOffice.life</div>
             <p className="mt-1 text-sm text-muted-foreground">
               Feito no Brasil pra quem trabalha de casa. © 2026
             </p>

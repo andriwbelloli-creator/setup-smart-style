@@ -73,7 +73,7 @@ function generateTemplate(images: string[]): SetupEntry[] {
     slug: slugify(image),
     title: "PREENCHA: título do setup",
     description: "PREENCHA: descrição curta",
-    ownerEmail: "dev@deskly.test",
+    ownerEmail: "dev@homeoffice.test",
     career: "outro",
     budget_brl: 0,
     city: "Brasil",

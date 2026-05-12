@@ -12,7 +12,7 @@ import { Loader2, Upload, Pencil, Trash2, Download, AlertTriangle, LogOut } from
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/perfil")({
-  head: () => ({ meta: [{ title: "Meu perfil · Deskly" }] }),
+  head: () => ({ meta: [{ title: "Meu perfil · HomeOffice.life" }] }),
   component: Perfil,
 });
 
@@ -95,7 +95,7 @@ function Perfil() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `deskly-meus-dados-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `homeofficelife-meus-dados-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Dados baixados!");

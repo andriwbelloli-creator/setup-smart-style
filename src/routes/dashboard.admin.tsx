@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/admin")({
-  head: () => ({ meta: [{ title: "Painel Admin · Deskly" }] }),
+  head: () => ({ meta: [{ title: "Painel Admin · HomeOffice.life" }] }),
   component: AdminDashboard,
 });
 
@@ -378,7 +378,7 @@ function AdminDashboard() {
             </div>
             <h1 className="font-display text-3xl font-bold tracking-tight">Painel de administração</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Métricas em tempo real da plataforma Deskly
+              Métricas em tempo real da plataforma HomeOffice.life
             </p>
           </div>
           <div className="flex gap-2 rounded-full bg-card p-1 shadow-soft">

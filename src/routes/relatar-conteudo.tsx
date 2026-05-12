@@ -6,8 +6,8 @@ import { ShieldAlert, FileText, AlertTriangle } from "lucide-react";
 export const Route = createFileRoute("/relatar-conteudo")({
   head: () => ({
     meta: [
-      { title: "Relatar conteúdo · Deskly" },
-      { name: "description", content: "Procedimento de notificação e remoção (notice & takedown) para reclamar de conteúdo que viole direitos autorais, imagem ou marca no Deskly." },
+      { title: "Relatar conteúdo · HomeOffice.life" },
+      { name: "description", content: "Procedimento de notificação e remoção (notice & takedown) para reclamar de conteúdo que viole direitos autorais, imagem ou marca no HomeOffice.life." },
       { name: "robots", content: "index,follow" },
     ],
   }),
@@ -26,7 +26,7 @@ function RelatarConteudo() {
           Relatar conteúdo
         </h1>
         <p className="mt-3 text-lg text-muted-foreground">
-          Encontrou um setup, comentário ou produto na Deskly que viola seus
+          Encontrou um setup, comentário ou produto na HomeOffice.life que viola seus
           direitos (autorais, imagem, marca) ou a lei? Aqui você notifica e
           analisamos em até 5 dias úteis.
         </p>
@@ -39,15 +39,15 @@ function RelatarConteudo() {
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
               Envie um e-mail para{" "}
-              <a href="mailto:juridico@deskly.life" className="font-semibold text-primary hover:underline">
-                juridico@deskly.life
+              <a href="mailto:juridico@homeoffice.life" className="font-semibold text-primary hover:underline">
+                juridico@homeoffice.life
               </a>{" "}
               com o seguinte:
             </p>
             <ol className="ml-6 mt-3 list-decimal space-y-2 text-sm">
               <li><strong>Identificação:</strong> seu nome completo, CPF/CNPJ, e-mail e telefone.</li>
               <li><strong>Representação:</strong> se você representa o titular do direito, anexe procuração ou prova de mandato.</li>
-              <li><strong>URL específica:</strong> link direto do conteúdo questionado (ex: <code className="rounded bg-secondary px-1">https://deskly.life/setup/...</code>).</li>
+              <li><strong>URL específica:</strong> link direto do conteúdo questionado (ex: <code className="rounded bg-secondary px-1">https://homeoffice.life/setup/...</code>).</li>
               <li><strong>Fundamento legal:</strong> qual lei foi violada (ex: Lei 9.610/98 — direitos autorais, Lei 9.279/96 — marca, art. 20 CC — direito de imagem).</li>
               <li><strong>Evidência do direito:</strong> certificado de registro, foto original (com EXIF), contrato, etc.</li>
               <li><strong>Declaração de boa-fé:</strong> a frase: <em>"Declaro, sob as penas da lei, que as informações aqui prestadas são verdadeiras e que sou o titular do direito alegado ou seu representante legal."</em></li>
@@ -86,7 +86,7 @@ function RelatarConteudo() {
             <p className="mt-2 text-sm text-foreground">
               Conforme art. 19 da Lei nº 12.965/2014 (Marco Civil da Internet) e jurisprudência do STJ,
               notificações falsas, fraudulentas ou manifestamente improcedentes podem resultar em
-              responsabilização civil do notificante por danos materiais e morais ao usuário afetado e ao Deskly.
+              responsabilização civil do notificante por danos materiais e morais ao usuário afetado e ao HomeOffice.life.
             </p>
             <p className="mt-2 text-sm text-foreground">
               Antes de notificar, certifique-se de que você é o titular do direito e que o uso questionado realmente caracteriza violação (uso fair use, paródia, citação acadêmica, crítica e exercício regular de direito não são violações).
@@ -96,9 +96,9 @@ function RelatarConteudo() {
           <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
             <h2 className="font-display text-lg font-bold">Outros canais</h2>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><strong>Privacidade / LGPD / DPO:</strong> <a href="mailto:privacidade@deskly.life" className="text-primary hover:underline">privacidade@deskly.life</a></li>
-              <li><strong>Suporte geral:</strong> <a href="mailto:contato@deskly.life" className="text-primary hover:underline">contato@deskly.life</a></li>
-              <li><strong>Comercial / B2B:</strong> <a href="mailto:contato@deskly.life" className="text-primary hover:underline">contato@deskly.life</a></li>
+              <li><strong>Privacidade / LGPD / DPO:</strong> <a href="mailto:privacidade@homeoffice.life" className="text-primary hover:underline">privacidade@homeoffice.life</a></li>
+              <li><strong>Suporte geral:</strong> <a href="mailto:contato@homeoffice.life" className="text-primary hover:underline">contato@homeoffice.life</a></li>
+              <li><strong>Comercial / B2B:</strong> <a href="mailto:contato@homeoffice.life" className="text-primary hover:underline">contato@homeoffice.life</a></li>
             </ul>
           </section>
         </div>

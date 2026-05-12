@@ -1,5 +1,5 @@
 /**
- * Posts do blog Deskly — long-tail SEO BR.
+ * Posts do blog HomeOffice.life — long-tail SEO BR.
  *
  * Estratégia: cada post mira 1 keyword de cauda longa com 300-3000
  * buscas/mês no Brasil, baixa concorrência. Linka pra galeria,
@@ -24,7 +24,7 @@ export type BlogPost = {
   excerpt: string;
   /** Keywords principais (separadas por vírgula) — vai no meta keywords. */
   keywords: string;
-  /** "Equipe Deskly" ou nome editorial. */
+  /** "Equipe HomeOffice.life" ou nome editorial. */
   author: string;
   /** ISO date string */
   publishedAt: string;
@@ -52,7 +52,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Como montar home office com R$ 500 em 2026 (testado por nós)",
     excerpt: "Setup completo de R$ 500 que aguenta 8h/dia: mesa, cadeira, monitor, periféricos. Lista real com link de cada produto na Amazon, ML e Magalu.",
     keywords: "home office barato, setup R$ 500, home office pequeno, kit home office, cadeira escritório barata",
-    author: "Equipe Deskly",
+    author: "Equipe HomeOffice.life",
     publishedAt: "2026-05-08",
     readingMinutes: 8,
     cover: UNSPLASH("1518770660439-4636190af475"),
@@ -106,7 +106,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: "Setup R$ 3.000 vs R$ 30.000: a diferença real (e a ilusão de marketing)",
     excerpt: "Comparamos lado a lado dois setups completos de R$ 3k e R$ 30k. A diferença de R$ 27.000 vale a pena ou é só vaidade? Spoiler: depende.",
     keywords: "setup R$ 30 mil, setup caro, vale a pena setup gamer, comparação home office, melhor setup home office",
-    author: "Equipe Deskly",
+    author: "Equipe HomeOffice.life",
     publishedAt: "2026-05-09",
     readingMinutes: 11,
     cover: UNSPLASH("1593642634443-44adaa06623a"),
@@ -152,16 +152,16 @@ export const BLOG_POSTS: BlogPost[] = [
   // =========================================================
   {
     slug: "por-que-sua-nota-ia-ta-baixa-6-erros",
-    title: "Por que sua nota de IA tá baixa? 6 erros comuns que a Deskly mais detecta",
+    title: "Por que sua nota de IA tá baixa? 6 erros comuns que a HomeOffice.life mais detecta",
     excerpt: "Analisamos 12.000 setups brasileiros. Esses 6 erros aparecem em 80% das fotos com nota abaixo de 7. Confira se você comete algum.",
     keywords: "ergonomia home office, erros home office, postura mesa, nota IA setup, iluminação home office",
-    author: "Equipe Deskly",
+    author: "Equipe HomeOffice.life",
     publishedAt: "2026-05-10",
     readingMinutes: 7,
     cover: UNSPLASH("1497366216548-37526070297c"),
     category: "ergonomia",
     content: [
-      { type: "p", text: "A IA da Deskly já avaliou mais de 12 mil setups brasileiros. Padronizando os critérios de nota baixa, descobrimos que 80% dos setups com score abaixo de 7 sofrem dos mesmos 6 erros. A boa notícia: 4 deles são corrigidos com menos de R$ 200 e 30 minutos." },
+      { type: "p", text: "A IA da HomeOffice.life já avaliou mais de 12 mil setups brasileiros. Padronizando os critérios de nota baixa, descobrimos que 80% dos setups com score abaixo de 7 sofrem dos mesmos 6 erros. A boa notícia: 4 deles são corrigidos com menos de R$ 200 e 30 minutos." },
       { type: "h2", text: "1. Monitor abaixo da linha dos olhos" },
       { type: "p", text: "Esse é o campeão. O pescoço dobrado pra baixo por 8 horas é causa #1 de dor cervical em quem trabalha de casa. A regra: o topo do monitor deve estar na altura da sua linha dos olhos quando você sentar reto." },
       { type: "callout", tone: "tip", title: "Fix barato", text: "Suporte de notebook elevado (R$ 35-80, ML) ou braço VESA articulado (R$ 200, Amazon) resolve em 5 minutos. Nota IA sobe em média 1.2 pontos só nesse fix." },
@@ -181,7 +181,7 @@ export const BLOG_POSTS: BlogPost[] = [
       { type: "callout", tone: "info", title: "Hábito > equipamento", text: "Esse erro custa R$ 0 pra corrigir mas exige rotina. 5 minutos no fim do expediente arrumando a mesa = 1 ponto de nota IA + cabeça mais leve no dia seguinte." },
       { type: "diagnostic-cta" },
       { type: "h2", text: "Como você descobre qual desses comete" },
-      { type: "p", text: "Tira uma foto frontal da sua mesa, manda pra IA da Deskly. Em 30 segundos você recebe nota detalhada por critério + sugestões com link de produto e preço BR. Grátis, 3 análises lifetime no plano free." },
+      { type: "p", text: "Tira uma foto frontal da sua mesa, manda pra IA da HomeOffice.life. Em 30 segundos você recebe nota detalhada por critério + sugestões com link de produto e preço BR. Grátis, 3 análises lifetime no plano free." },
       { type: "setup-cta", setupSlug: "freelancer-iniciante-vitoria", title: "Vê um setup real de nota 6.9 com upgrade roadmap detalhado →" },
     ],
   },

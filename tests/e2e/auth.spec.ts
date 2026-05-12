@@ -17,7 +17,7 @@ test.describe("Auth flow", () => {
 
     // Back button restores main view
     await page.getByText(/Voltar ao login/i).click();
-    await expect(page.getByText(/Entre no Deskly/i)).toBeVisible();
+    await expect(page.getByText(/Entre no HomeOffice.life/i)).toBeVisible();
   });
 
   test.skip("invalid credentials show error", async ({ page }) => {

@@ -39,16 +39,16 @@ const UNSPLASH = (id: string, w = 1600) =>
   `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
 
 const USERS: NewUser[] = [
-  { email: "ana.advogada@deskly.test", display_name: "Ana Carolina", career: "outro", username: "ana_adv" },
-  { email: "marcos.dentista@deskly.test", display_name: "Marcos Vinícius", career: "outro", username: "drmarcos" },
-  { email: "patricia.prof@deskly.test", display_name: "Patrícia Lopes", career: "outro", username: "profpati" },
-  { email: "joao.estudante@deskly.test", display_name: "João Pedro", career: "outro", username: "jp_med" },
-  { email: "carla.mae@deskly.test", display_name: "Carla Souza", career: "creator", username: "carla.mae" },
-  { email: "lucas.norte@deskly.test", display_name: "Lucas Oliveira", career: "dev", username: "lucas_manaus" },
-  { email: "renata.podcaster@deskly.test", display_name: "Renata Silva", career: "creator", username: "renatapod" },
-  { email: "rafael.arquiteto@deskly.test", display_name: "Rafael Costa", career: "designer", username: "rafarq" },
-  { email: "bia.freelancer@deskly.test", display_name: "Beatriz Almeida", career: "remoto", username: "biafree" },
-  { email: "henrique.contador@deskly.test", display_name: "Henrique Mendes", career: "outro", username: "henrcont" },
+  { email: "ana.advogada@homeoffice.test", display_name: "Ana Carolina", career: "outro", username: "ana_adv" },
+  { email: "marcos.dentista@homeoffice.test", display_name: "Marcos Vinícius", career: "outro", username: "drmarcos" },
+  { email: "patricia.prof@homeoffice.test", display_name: "Patrícia Lopes", career: "outro", username: "profpati" },
+  { email: "joao.estudante@homeoffice.test", display_name: "João Pedro", career: "outro", username: "jp_med" },
+  { email: "carla.mae@homeoffice.test", display_name: "Carla Souza", career: "creator", username: "carla.mae" },
+  { email: "lucas.norte@homeoffice.test", display_name: "Lucas Oliveira", career: "dev", username: "lucas_manaus" },
+  { email: "renata.podcaster@homeoffice.test", display_name: "Renata Silva", career: "creator", username: "renatapod" },
+  { email: "rafael.arquiteto@homeoffice.test", display_name: "Rafael Costa", career: "designer", username: "rafarq" },
+  { email: "bia.freelancer@homeoffice.test", display_name: "Beatriz Almeida", career: "remoto", username: "biafree" },
+  { email: "henrique.contador@homeoffice.test", display_name: "Henrique Mendes", career: "outro", username: "henrcont" },
 ];
 
 const SETUPS: NewSetup[] = [
@@ -63,7 +63,7 @@ const SETUPS: NewSetup[] = [
     city: "Fortaleza, CE",
     cover_url: UNSPLASH("1518770660439-4636190af475"),
     ai_score: 6.8,
-    owner_email: "joao.estudante@deskly.test",
+    owner_email: "joao.estudante@homeoffice.test",
     product_names: ["Suporte notebook elevado", "Luminária mesa LED articulada"],
   },
   {
@@ -76,7 +76,7 @@ const SETUPS: NewSetup[] = [
     city: "Goiânia, GO",
     cover_url: UNSPLASH("1497366216548-37526070297c"),
     ai_score: 7.1,
-    owner_email: "patricia.prof@deskly.test",
+    owner_email: "patricia.prof@homeoffice.test",
     product_names: ["AOC 24B1H 24\" Full HD", "Mesa pinus 120cm"],
   },
   {
@@ -89,7 +89,7 @@ const SETUPS: NewSetup[] = [
     city: "Vitória, ES",
     cover_url: UNSPLASH("1483058712412-4245e9b90334"),
     ai_score: 6.9,
-    owner_email: "bia.freelancer@deskly.test",
+    owner_email: "bia.freelancer@homeoffice.test",
     product_names: ["Teclado Logitech MK470 sem fio", "Logitech K480 + Mouse"],
   },
   {
@@ -102,7 +102,7 @@ const SETUPS: NewSetup[] = [
     city: "Manaus, AM",
     cover_url: UNSPLASH("1593642634443-44adaa06623a"),
     ai_score: 7.2,
-    owner_email: "lucas.norte@deskly.test",
+    owner_email: "lucas.norte@homeoffice.test",
     product_names: ["AOC 24B1H 24\" Full HD", "BR Office Bahamas", "Teclado Logitech MK470 sem fio"],
   },
   {
@@ -115,7 +115,7 @@ const SETUPS: NewSetup[] = [
     city: "Belém, PA",
     cover_url: UNSPLASH("1486312338219-ce68d2c6f44d"),
     ai_score: 7.4,
-    owner_email: "carla.mae@deskly.test",
+    owner_email: "carla.mae@homeoffice.test",
     product_names: ["Logitech C922 Pro", "Ring Light 18\" Profissional"],
   },
   {
@@ -128,7 +128,7 @@ const SETUPS: NewSetup[] = [
     city: "João Pessoa, PB",
     cover_url: UNSPLASH("1590602847861-f357a9332bbc"),
     ai_score: 7.5,
-    owner_email: "renata.podcaster@deskly.test",
+    owner_email: "renata.podcaster@homeoffice.test",
     product_names: ["Maono PD400X", "Shure MV7 USB"],
   },
   {
@@ -141,7 +141,7 @@ const SETUPS: NewSetup[] = [
     city: "Belo Horizonte, MG",
     cover_url: UNSPLASH("1551836022-d5d88e9218df"),
     ai_score: 8.1,
-    owner_email: "marcos.dentista@deskly.test",
+    owner_email: "marcos.dentista@homeoffice.test",
     product_names: ["Dell P2422H 24\" Full HD", "Logitech Brio 4K", "BenQ ScreenBar Halo"],
   },
   {
@@ -154,7 +154,7 @@ const SETUPS: NewSetup[] = [
     city: "Brasília, DF",
     cover_url: UNSPLASH("1497366754035-f200968a6e72"),
     ai_score: 8.4,
-    owner_email: "ana.advogada@deskly.test",
+    owner_email: "ana.advogada@homeoffice.test",
     product_names: ["Dell P2422H 24\" Full HD", "DT3 Office Nimitz", "Mesa madeira maciça carvalho", "Logitech Brio 4K"],
   },
 
@@ -169,7 +169,7 @@ const SETUPS: NewSetup[] = [
     city: "Cuiabá, MT",
     cover_url: UNSPLASH("1517694712202-14dd9538aa97"),
     ai_score: 8.7,
-    owner_email: "rafael.arquiteto@deskly.test",
+    owner_email: "rafael.arquiteto@homeoffice.test",
     product_names: ["Dell U3223QE 32\" 4K", "Wacom Cintiq 16", "BenQ ScreenBar Halo", "Mesa madeira maciça carvalho"],
   },
   {
@@ -182,7 +182,7 @@ const SETUPS: NewSetup[] = [
     city: "Curitiba, PR",
     cover_url: UNSPLASH("1542744095-0d53267d353e"),
     ai_score: 8.5,
-    owner_email: "henrique.contador@deskly.test",
+    owner_email: "henrique.contador@homeoffice.test",
     product_names: ["Dell P2422H 24\" Full HD", "Mesa elétrica FlexiSpot E5", "DT3 Office Nimitz"],
   },
 
@@ -197,7 +197,7 @@ const SETUPS: NewSetup[] = [
     city: "Natal, RN",
     cover_url: UNSPLASH("1611224923853-80b023f02d71"),
     ai_score: 7.8,
-    owner_email: "renata.podcaster@deskly.test",
+    owner_email: "renata.podcaster@homeoffice.test",
     product_names: ["Logitech Brio 4K", "Elgato Key Light Air", "Shure MV7 USB", "BenQ ScreenBar Halo"],
   },
   {
@@ -210,7 +210,7 @@ const SETUPS: NewSetup[] = [
     city: "Florianópolis, SC",
     cover_url: UNSPLASH("1518770660439-4636190af475"),
     ai_score: 8.2,
-    owner_email: "rafael.arquiteto@deskly.test",
+    owner_email: "rafael.arquiteto@homeoffice.test",
     product_names: ["Dell P2422H 24\" Full HD", "Wacom Cintiq 16", "Mesa pinus 120cm"],
   },
   {
@@ -223,7 +223,7 @@ const SETUPS: NewSetup[] = [
     city: "São Luís, MA",
     cover_url: UNSPLASH("1593642632559-0c6d3fc62b89"),
     ai_score: 9.0,
-    owner_email: "lucas.norte@deskly.test",
+    owner_email: "lucas.norte@homeoffice.test",
     product_names: ["LG Ultrawide 34WP65C", "Mesa elétrica FlexiSpot E5", "DT3 Office Nimitz", "Keychron K2 V2 mecânico", "Logitech MX Master 3S", "BenQ ScreenBar Halo"],
   },
   {
@@ -236,7 +236,7 @@ const SETUPS: NewSetup[] = [
     city: "Fortaleza, CE",
     cover_url: UNSPLASH("1559136555-9303baea8ebd"),
     ai_score: 8.6,
-    owner_email: "carla.mae@deskly.test",
+    owner_email: "carla.mae@homeoffice.test",
     product_names: ["Dell P2422H 24\" Full HD", "Logitech Brio 4K", "Shure SM7B", "Elgato Key Light Air", "DT3 Office Nimitz"],
   },
   {
@@ -249,7 +249,7 @@ const SETUPS: NewSetup[] = [
     city: "São Paulo, SP",
     cover_url: UNSPLASH("1606857521015-7f9fcf423740"),
     ai_score: 8.4,
-    owner_email: "bia.freelancer@deskly.test",
+    owner_email: "bia.freelancer@homeoffice.test",
     product_names: ["Dell P2422H 24\" Full HD", "DT3 Office Nimitz", "BenQ ScreenBar Halo"],
   },
 
@@ -264,7 +264,7 @@ const SETUPS: NewSetup[] = [
     city: "Rio de Janeiro, RJ",
     cover_url: UNSPLASH("1554118811-1e0d58224f24"),
     ai_score: 9.3,
-    owner_email: "ana.advogada@deskly.test",
+    owner_email: "ana.advogada@homeoffice.test",
     product_names: ["Apple Studio Display", "Mac Studio M2 Max", "Mesa mogno maciço"],
   },
   {
@@ -277,7 +277,7 @@ const SETUPS: NewSetup[] = [
     city: "Vitória, ES",
     cover_url: UNSPLASH("1593642634402-b0eb5e2eebc9"),
     ai_score: 9.5,
-    owner_email: "rafael.arquiteto@deskly.test",
+    owner_email: "rafael.arquiteto@homeoffice.test",
     product_names: ["LG Ultrawide 34WP65C", "Wacom Cintiq 16", "Mesa Elétrica FlexiSpot E5", "DT3 Office Nimitz", "Elgato Key Light Air"],
   },
 
@@ -292,7 +292,7 @@ const SETUPS: NewSetup[] = [
     city: "Recife, PE",
     cover_url: UNSPLASH("1519389950473-47ba0277781c"),
     ai_score: 6.5,
-    owner_email: "joao.estudante@deskly.test",
+    owner_email: "joao.estudante@homeoffice.test",
     product_names: ["Suporte notebook elevado"],
   },
   {
@@ -305,7 +305,7 @@ const SETUPS: NewSetup[] = [
     city: "Uberlândia, MG",
     cover_url: UNSPLASH("1518744386442-2d48ac47a7eb"),
     ai_score: 6.6,
-    owner_email: "joao.estudante@deskly.test",
+    owner_email: "joao.estudante@homeoffice.test",
     product_names: ["Suporte notebook elevado"],
   },
   {
@@ -318,7 +318,7 @@ const SETUPS: NewSetup[] = [
     city: "Fortaleza, CE",
     cover_url: UNSPLASH("1556745753-b2904692b3cd"),
     ai_score: 7.0,
-    owner_email: "bia.freelancer@deskly.test",
+    owner_email: "bia.freelancer@homeoffice.test",
     product_names: ["AOC 24B1H 24\" Full HD", "BR Office Bahamas", "Mesa pinus 120cm"],
   },
 ];

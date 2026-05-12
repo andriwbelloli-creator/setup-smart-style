@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Loader2, TrendingUp, MousePointerClick, ShoppingBag, DollarSign } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/afiliados")({
-  head: () => ({ meta: [{ title: "Analytics de Afiliados · Deskly" }] }),
+  head: () => ({ meta: [{ title: "Analytics de Afiliados · HomeOffice.life" }] }),
   component: AffiliateDashboard,
 });
 
@@ -120,7 +120,7 @@ function AffiliateDashboard() {
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="font-display text-3xl font-bold tracking-tight">Analytics de Afiliados</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Performance dos links de afiliados no Deskly</p>
+            <p className="mt-1 text-sm text-muted-foreground">Performance dos links de afiliados no HomeOffice.life</p>
           </div>
           <div className="flex gap-2 rounded-full bg-card p-1 shadow-soft">
             {(["7d", "30d", "90d", "all"] as Range[]).map((r) => (

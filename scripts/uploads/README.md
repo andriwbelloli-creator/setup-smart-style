@@ -38,7 +38,7 @@ risco de "foto de casa" do Unsplash).
     "slug": "meu-dev-setup",
     "title": "Meu setup dev",
     "description": "Setup focado em código + docs lado a lado.",
-    "ownerEmail": "dev@deskly.test",
+    "ownerEmail": "dev@homeoffice.test",
     "career": "dev",
     "budget_brl": 5000,
     "city": "São Paulo, SP",
@@ -64,7 +64,7 @@ risco de "foto de casa" do Unsplash).
 - `image` — nome do arquivo na pasta uploads/
 - `slug` — único, kebab-case
 - `title`, `description`
-- `ownerEmail` — precisa ser um email já cadastrado (use um dos `*@deskly.test` do seed, ou seu próprio)
+- `ownerEmail` — precisa ser um email já cadastrado (use um dos `*@homeoffice.test` do seed, ou seu próprio)
 
 ### Campos opcionais (têm default)
 - `career` — default `"outro"`

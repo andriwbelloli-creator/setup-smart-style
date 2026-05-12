@@ -44,8 +44,8 @@ export type SeedSetup = {
 
 export const SEED_USERS: SeedUser[] = [
   {
-    email: "dev@deskly.test",
-    password: "DesklySeed!2026",
+    email: "dev@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "rafa_dev",
     display_name: "Rafael Souza",
     bio: "Backend dev em RJ, fã de teclados mecânicos e luz quente.",
@@ -54,8 +54,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=12",
   },
   {
-    email: "designer@deskly.test",
-    password: "DesklySeed!2026",
+    email: "designer@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "ju_designer",
     display_name: "Juliana Lima",
     bio: "Product designer remota, paleta minimalista e plantas.",
@@ -64,8 +64,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=47",
   },
   {
-    email: "creator@deskly.test",
-    password: "DesklySeed!2026",
+    email: "creator@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "leo_creator",
     display_name: "Leonardo Castro",
     bio: "Criador de conteúdo de tech, foco em produtividade e gear.",
@@ -74,8 +74,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=33",
   },
   {
-    email: "estudante@deskly.test",
-    password: "DesklySeed!2026",
+    email: "estudante@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "mari_estudante",
     display_name: "Mariana Costa",
     bio: "Estudante de eng. de software. Aprendendo a montar setup decente sem quebrar a banca.",
@@ -84,8 +84,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=45",
   },
   {
-    email: "arquiteto@deskly.test",
-    password: "DesklySeed!2026",
+    email: "arquiteto@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "pedro_arq",
     display_name: "Pedro Almeida",
     bio: "Arquiteto e ilustrador, vive no AutoCAD e Procreate.",
@@ -94,8 +94,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=68",
   },
   {
-    email: "executivo@deskly.test",
-    password: "DesklySeed!2026",
+    email: "executivo@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "carlos_exec",
     display_name: "Carlos Mendes",
     bio: "Diretor financeiro. Setup para reuniões e relatórios.",
@@ -104,8 +104,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=11",
   },
   {
-    email: "casal@deskly.test",
-    password: "DesklySeed!2026",
+    email: "casal@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "ana_e_bruno",
     display_name: "Ana & Bruno",
     bio: "Trabalhamos juntos em casa. Dividimos um quarto/escritório.",
@@ -114,8 +114,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=20",
   },
   {
-    email: "pm@deskly.test",
-    password: "DesklySeed!2026",
+    email: "pm@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "isa_pm",
     display_name: "Isabela Ferraz",
     bio: "Product Manager remota. Vivo em chamadas — luz e câmera são prioridade.",
@@ -124,8 +124,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=49",
   },
   {
-    email: "psi@deskly.test",
-    password: "DesklySeed!2026",
+    email: "psi@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "renata_psi",
     display_name: "Renata Vargas",
     bio: "Psicóloga clínica online. Acolhimento + qualidade de áudio acima de tudo.",
@@ -134,8 +134,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=44",
   },
   {
-    email: "trader@deskly.test",
-    password: "DesklySeed!2026",
+    email: "trader@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "mauricio_trader",
     display_name: "Maurício Tanaka",
     bio: "Day trader full-time. 4 monitores, dois teclados, café preto.",
@@ -144,8 +144,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=15",
   },
   {
-    email: "empreendedor@deskly.test",
-    password: "DesklySeed!2026",
+    email: "empreendedor@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "vini_founder",
     display_name: "Vinícius Tavares",
     bio: "Founder de startup early-stage. Mesa pra tudo: pitch, código, reunião.",
@@ -154,8 +154,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=22",
   },
   {
-    email: "professor@deskly.test",
-    password: "DesklySeed!2026",
+    email: "professor@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "helena_prof",
     display_name: "Helena Brandão",
     bio: "Professora de inglês online. Câmera, lousa digital e plantas.",
@@ -164,8 +164,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=41",
   },
   {
-    email: "consultor@deskly.test",
-    password: "DesklySeed!2026",
+    email: "consultor@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "thiago_consult",
     display_name: "Thiago Couto",
     bio: "Consultor de gestão. 80% do tempo em call — setup pra parecer sério.",
@@ -174,8 +174,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=8",
   },
   {
-    email: "streamer@deskly.test",
-    password: "DesklySeed!2026",
+    email: "streamer@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "kaua_stream",
     display_name: "Kauã Reis",
     bio: "Streamer de FPS. RGB no talo, três câmeras, fone aberto premium.",
@@ -184,8 +184,8 @@ export const SEED_USERS: SeedUser[] = [
     avatar_url: "https://i.pravatar.cc/200?img=53",
   },
   {
-    email: "datasci@deskly.test",
-    password: "DesklySeed!2026",
+    email: "datasci@homeoffice.test",
+    password: "HomeOffice.lifeSeed!2026",
     username: "fer_data",
     display_name: "Fernanda Otsuka",
     bio: "Cientista de dados. ThinkPad + monitor 4K + muita memória.",
@@ -197,7 +197,7 @@ export const SEED_USERS: SeedUser[] = [
 
 export const SEED_SETUPS: SeedSetup[] = [
   {
-    ownerEmail: "dev@deskly.test",
+    ownerEmail: "dev@homeoffice.test",
     slug: "setup-dev-minimalista-madeira",
     title: "Setup dev minimalista em madeira",
     description: "Foco total no código com mesa de madeira maciça, ultrawide e teclado mecânico silencioso.",
@@ -215,7 +215,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "dev@deskly.test",
+    ownerEmail: "dev@homeoffice.test",
     slug: "home-office-dev-dual-monitor",
     title: "Dual monitor 27\" com luz quente",
     description: "Dois monitores 27\" lado a lado, ideal pra full-stack. Iluminação de canto cria atmosfera relaxada.",
@@ -232,7 +232,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "designer@deskly.test",
+    ownerEmail: "designer@homeoffice.test",
     slug: "designer-minimal-branco-plantas",
     title: "Mesa branca com plantas — designer remoto",
     description: "Estética clean, plantas, tablet de desenho e monitor único. Mesa pequena que cabe em apartamento.",
@@ -249,7 +249,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "designer@deskly.test",
+    ownerEmail: "designer@homeoffice.test",
     slug: "cantinho-criativo-cores-pasteis",
     title: "Cantinho criativo em tons pastéis",
     description: "Pequeno espaço otimizado, cor pastel e luz natural. Para quem trabalha em apê pequeno.",
@@ -266,7 +266,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "creator@deskly.test",
+    ownerEmail: "creator@homeoffice.test",
     slug: "studio-creator-tech-rgb",
     title: "Studio creator com RGB e câmera 4K",
     description: "Setup pra YouTube/Twitch: ring light, câmera Sony, microfone Shure e iluminação RGB Govee.",
@@ -284,7 +284,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "creator@deskly.test",
+    ownerEmail: "creator@homeoffice.test",
     slug: "cantinho-podcast-acustico",
     title: "Cantinho de podcast com tratamento acústico",
     description: "Espuma acústica, mic dinâmico, monitor compacto. Custo baixo, qualidade profissional.",
@@ -301,7 +301,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "dev@deskly.test",
+    ownerEmail: "dev@homeoffice.test",
     slug: "gamer-rgb-triple-monitor",
     title: "Gamer RGB com 3 monitores",
     description: "Setup gamer high-end: 3 monitores 240Hz, RTX 4080, RGB sincronizado e cadeira gamer top.",
@@ -320,7 +320,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "estudante@deskly.test",
+    ownerEmail: "estudante@homeoffice.test",
     slug: "setup-estudante-orcamento-1500",
     title: "Setup estudante por R$ 1.500",
     description: "Setup completo pra quem tá começando: notebook + monitor extra + cadeira decente, tudo dentro de R$ 1.500.",
@@ -338,7 +338,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "designer@deskly.test",
+    ownerEmail: "designer@homeoffice.test",
     slug: "standing-desk-ergonomico",
     title: "Standing desk com mesa eletrônica",
     description: "Mesa que sobe e desce com motor elétrico, tapete antifadiga e monitor em altura ideal. Adeus dor lombar.",
@@ -356,7 +356,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "arquiteto@deskly.test",
+    ownerEmail: "arquiteto@homeoffice.test",
     slug: "arquiteto-monitor-vertical-cintiq",
     title: "Arquiteto com Cintiq + monitor vertical",
     description: "Wacom Cintiq Pro pro desenho à mão livre, monitor vertical pra ler plantas e código. Setup pesado e preciso.",
@@ -374,7 +374,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "executivo@deskly.test",
+    ownerEmail: "executivo@homeoffice.test",
     slug: "executivo-classico-mogno-couro",
     title: "Executivo clássico em mogno e couro",
     description: "Estética corporativa: mesa de mogno escura, cadeira de couro legítima, abajur metal e luz quente. Pra reuniões importantes.",
@@ -392,7 +392,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "casal@deskly.test",
+    ownerEmail: "casal@homeoffice.test",
     slug: "setup-duplo-casal-home-office",
     title: "Setup duplo lado a lado pra casal",
     description: "Duas estações no mesmo cômodo, sem atrapalhar um ao outro. Mesa em L compartilhada, cabeamento limpo, divisória acústica.",
@@ -410,7 +410,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "designer@deskly.test",
+    ownerEmail: "designer@homeoffice.test",
     slug: "apartamento-minusculo-mesa-dobravel",
     title: "Apto minúsculo com mesa dobrável",
     description: "Pra quem mora em studio: mesa dobrável de parede, cadeira que guarda na vertical, organização extrema.",
@@ -428,7 +428,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "pm@deskly.test",
+    ownerEmail: "pm@homeoffice.test",
     slug: "pm-camera-4k-iluminacao-zoom",
     title: "PM com câmera 4K e iluminação pra Zoom",
     description: "Setup focado em apresentações: câmera Sony 4K, ring light frontal, microfone direcional, mesa limpa, fundo neutro.",
@@ -449,7 +449,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Psicóloga Renata =====
   {
-    ownerEmail: "psi@deskly.test",
+    ownerEmail: "psi@homeoffice.test",
     slug: "consultorio-online-acolhedor",
     title: "Consultório online acolhedor",
     description: "Espaço para psicoterapia remota: luz quente, painel acústico, mic profissional e cor sóbria. Privacidade visual e audio limpo.",
@@ -468,7 +468,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "psi@deskly.test",
+    ownerEmail: "psi@homeoffice.test",
     slug: "consultorio-plantas-luz-natural",
     title: "Consultório com plantas e luz natural",
     description: "Janela ao lado, cortina blackout pra controle, plantas reais. Ambiente que reduz ansiedade do paciente.",
@@ -488,7 +488,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Trader Maurício =====
   {
-    ownerEmail: "trader@deskly.test",
+    ownerEmail: "trader@homeoffice.test",
     slug: "trader-4-monitores-curvos",
     title: "Trader com 4 monitores curvos",
     description: "Operação multi-tela: 4 monitores 27\" com suportes articulados, mesa em L, café à mão. Pra quem opera o dia inteiro.",
@@ -507,7 +507,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "trader@deskly.test",
+    ownerEmail: "trader@homeoffice.test",
     slug: "trader-compacto-ultrawide",
     title: "Day trader compacto com ultrawide",
     description: "Um monitor ultrawide 49\" substitui 3 telas. Menos cabo, mais foco. Para apê pequeno com alma de Wall Street.",
@@ -526,7 +526,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Empreendedor Vini =====
   {
-    ownerEmail: "empreendedor@deskly.test",
+    ownerEmail: "empreendedor@homeoffice.test",
     slug: "founder-startup-mesa-de-pe",
     title: "Founder de startup com mesa de pé",
     description: "Mesa eletrônica + cadeira high-end + setup multi-uso (call, código, pitch). Para quem alterna entre 5 chapéus por dia.",
@@ -546,7 +546,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Professora Helena =====
   {
-    ownerEmail: "professor@deskly.test",
+    ownerEmail: "professor@homeoffice.test",
     slug: "professora-online-camera-lousa",
     title: "Professora online com câmera + lousa",
     description: "Setup pra aulas remotas: câmera 4K, lousa digital, mic com cancelamento e iluminação difusa pra cara não brilhar.",
@@ -564,7 +564,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "professor@deskly.test",
+    ownerEmail: "professor@homeoffice.test",
     slug: "professor-quarto-pequeno-mesa-canto",
     title: "Professor em quarto pequeno",
     description: "Mesa de canto, parede neutra clara, iluminação artificial bem feita pra não depender da janela. Curinga.",
@@ -584,7 +584,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Consultor Thiago =====
   {
-    ownerEmail: "consultor@deskly.test",
+    ownerEmail: "consultor@homeoffice.test",
     slug: "consultor-call-elegante",
     title: "Consultor: a melhor cara em call",
     description: "Mesa sóbria, fundo neutro, câmera ligeiramente acima dos olhos. Pra quem cobra R$ 500/hora a aparência conta.",
@@ -604,7 +604,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Streamer Kauã =====
   {
-    ownerEmail: "streamer@deskly.test",
+    ownerEmail: "streamer@homeoffice.test",
     slug: "streamer-fps-rgb-completo",
     title: "Streamer de FPS com RGB completo",
     description: "PC top + 240Hz + iluminação reativa + braço de mic. Pra quem faz live de FPS competitivo todo dia.",
@@ -623,7 +623,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "streamer@deskly.test",
+    ownerEmail: "streamer@homeoffice.test",
     slug: "streamer-casual-comecando",
     title: "Streamer começando — kit essencial",
     description: "Não dá pra comprar tudo de cara. Kit mínimo para começar a streamar com qualidade decente, sem mortgage.",
@@ -643,7 +643,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Cientista de Dados Fernanda =====
   {
-    ownerEmail: "datasci@deskly.test",
+    ownerEmail: "datasci@homeoffice.test",
     slug: "data-scientist-thinkpad-4k",
     title: "Cientista de dados: ThinkPad + 4K",
     description: "Notebook potente + dock + monitor 4K + cadeira pra 10h de IDE aberta. Sem firula, foco em produtividade.",
@@ -663,7 +663,7 @@ export const SEED_SETUPS: SeedSetup[] = [
 
   // ===== Adicionais pra usuários existentes =====
   {
-    ownerEmail: "dev@deskly.test",
+    ownerEmail: "dev@homeoffice.test",
     slug: "dev-backend-cave-escura",
     title: "Dev backend cave escura",
     description: "Parede preta, RGB calibrado, monitor curvo. Pra quem trabalha à noite e tem o monitor como única luz.",
@@ -681,7 +681,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "designer@deskly.test",
+    ownerEmail: "designer@homeoffice.test",
     slug: "designer-ipad-procreate-mesa-branca",
     title: "Designer com iPad + Procreate",
     description: "iPad Pro 12.9 como ferramenta principal, mesa branca super limpa. Mobilidade total — leva pra cafeteria fácil.",
@@ -698,7 +698,7 @@ export const SEED_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "creator@deskly.test",
+    ownerEmail: "creator@homeoffice.test",
     slug: "creator-tiktok-vertical-fundo",
     title: "Creator TikTok: setup vertical-first",
     description: "Câmera no celular, ring light na altura do peito, fundo colorido pra reels. Otimizado pra criar vertical.",
@@ -719,70 +719,70 @@ export const SEED_SETUPS: SeedSetup[] = [
 
 export const SEED_COMMENTS: SeedComment[] = [
   // setup-dev-minimalista-madeira
-  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "designer@deskly.test", body: "Esse tom de madeira tá perfeito! Onde comprou?" },
-  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "creator@deskly.test", body: "Keychron K2 é meu também, melhor compra do ano." },
-  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "pm@deskly.test", body: "Quanto ficou no total esse setup?" },
-  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "dev@deskly.test", body: "@isa_pm uns R$ 8.500 com a cadeira nova. Mesa eu já tinha." },
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "designer@homeoffice.test", body: "Esse tom de madeira tá perfeito! Onde comprou?" },
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "creator@homeoffice.test", body: "Keychron K2 é meu também, melhor compra do ano." },
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "pm@homeoffice.test", body: "Quanto ficou no total esse setup?" },
+  { setupSlug: "setup-dev-minimalista-madeira", authorEmail: "dev@homeoffice.test", body: "@isa_pm uns R$ 8.500 com a cadeira nova. Mesa eu já tinha." },
 
   // home-office-dev-dual-monitor
-  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "estudante@deskly.test", body: "Sonho ter dois 4K assim 😍" },
-  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "arquiteto@deskly.test", body: "O Philips Hue compensa mesmo? Tô em dúvida." },
-  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "dev@deskly.test", body: "@pedro_arq compensa, mas configura no app que faz diferença na vibe." },
-  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "casal@deskly.test", body: "Excelente organização de cabos. Inveja!" },
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "estudante@homeoffice.test", body: "Sonho ter dois 4K assim 😍" },
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "arquiteto@homeoffice.test", body: "O Philips Hue compensa mesmo? Tô em dúvida." },
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "dev@homeoffice.test", body: "@pedro_arq compensa, mas configura no app que faz diferença na vibe." },
+  { setupSlug: "home-office-dev-dual-monitor", authorEmail: "casal@homeoffice.test", body: "Excelente organização de cabos. Inveja!" },
 
   // designer-minimal-branco-plantas
-  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "pm@deskly.test", body: "As plantas dão outra vida no espaço, amei." },
-  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "executivo@deskly.test", body: "Wacom Intuos Pro vale o investimento? Quero começar a desenhar." },
-  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "designer@deskly.test", body: "@carlos_exec super vale, peso ergonomia + sensibilidade. Recomendo." },
-  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "creator@deskly.test", body: "Setup limpíssimo. Que monitor é esse?" },
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "pm@homeoffice.test", body: "As plantas dão outra vida no espaço, amei." },
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "executivo@homeoffice.test", body: "Wacom Intuos Pro vale o investimento? Quero começar a desenhar." },
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "designer@homeoffice.test", body: "@carlos_exec super vale, peso ergonomia + sensibilidade. Recomendo." },
+  { setupSlug: "designer-minimal-branco-plantas", authorEmail: "creator@homeoffice.test", body: "Setup limpíssimo. Que monitor é esse?" },
 
   // cantinho-criativo-cores-pasteis
-  { setupSlug: "cantinho-criativo-cores-pasteis", authorEmail: "estudante@deskly.test", body: "Adorei a paleta pastel! Cabe num quarto pequeno?" },
-  { setupSlug: "cantinho-criativo-cores-pasteis", authorEmail: "designer@deskly.test", body: "@mari_estudante cabe sim, mesa tem só 90cm. 😉" },
+  { setupSlug: "cantinho-criativo-cores-pasteis", authorEmail: "estudante@homeoffice.test", body: "Adorei a paleta pastel! Cabe num quarto pequeno?" },
+  { setupSlug: "cantinho-criativo-cores-pasteis", authorEmail: "designer@homeoffice.test", body: "@mari_estudante cabe sim, mesa tem só 90cm. 😉" },
 
   // studio-creator-tech-rgb
-  { setupSlug: "studio-creator-tech-rgb", authorEmail: "dev@deskly.test", body: "Que iluminação maravilhosa! Govee mesmo?" },
-  { setupSlug: "studio-creator-tech-rgb", authorEmail: "pm@deskly.test", body: "A Sony ZV-E10 é referência pra creator iniciante, ótima escolha." },
-  { setupSlug: "studio-creator-tech-rgb", authorEmail: "casal@deskly.test", body: "Esse setup deve render uns vídeos lindos." },
-  { setupSlug: "studio-creator-tech-rgb", authorEmail: "creator@deskly.test", body: "@ana_e_bruno valeu! Em breve tutorial completo no canal." },
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "dev@homeoffice.test", body: "Que iluminação maravilhosa! Govee mesmo?" },
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "pm@homeoffice.test", body: "A Sony ZV-E10 é referência pra creator iniciante, ótima escolha." },
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "casal@homeoffice.test", body: "Esse setup deve render uns vídeos lindos." },
+  { setupSlug: "studio-creator-tech-rgb", authorEmail: "creator@homeoffice.test", body: "@ana_e_bruno valeu! Em breve tutorial completo no canal." },
 
   // cantinho-podcast-acustico
-  { setupSlug: "cantinho-podcast-acustico", authorEmail: "arquiteto@deskly.test", body: "A espuma fez muita diferença na qualidade do som?" },
-  { setupSlug: "cantinho-podcast-acustico", authorEmail: "creator@deskly.test", body: "@pedro_arq absurda. Antes eco horrível, agora som limpo." },
+  { setupSlug: "cantinho-podcast-acustico", authorEmail: "arquiteto@homeoffice.test", body: "A espuma fez muita diferença na qualidade do som?" },
+  { setupSlug: "cantinho-podcast-acustico", authorEmail: "creator@homeoffice.test", body: "@pedro_arq absurda. Antes eco horrível, agora som limpo." },
 
   // gamer-rgb-triple-monitor
-  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "estudante@deskly.test", body: "Daqui uns 5 anos chego nesse nível 🥲" },
-  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "creator@deskly.test", body: "Mano, isso aí é o sonho. Quanto FPS no Cyberpunk?" },
-  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "dev@deskly.test", body: "@leo_creator 144fps tranquilo no Ultra. RTX 4080 dá conta." },
-  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "pm@deskly.test", body: "Como vc consegue se concentrar com tanto RGB? hahaha" },
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "estudante@homeoffice.test", body: "Daqui uns 5 anos chego nesse nível 🥲" },
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "creator@homeoffice.test", body: "Mano, isso aí é o sonho. Quanto FPS no Cyberpunk?" },
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "dev@homeoffice.test", body: "@leo_creator 144fps tranquilo no Ultra. RTX 4080 dá conta." },
+  { setupSlug: "gamer-rgb-triple-monitor", authorEmail: "pm@homeoffice.test", body: "Como vc consegue se concentrar com tanto RGB? hahaha" },
 
   // setup-estudante-orcamento-1500
-  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "designer@deskly.test", body: "Setup honesto e funcional, parabéns! Começa assim mesmo." },
-  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "casal@deskly.test", body: "Adorei a dica do suporte de notebook, vou comprar." },
-  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "estudante@deskly.test", body: "@ana_e_bruno vale muito a pena, melhora muito a postura!" },
+  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "designer@homeoffice.test", body: "Setup honesto e funcional, parabéns! Começa assim mesmo." },
+  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "casal@homeoffice.test", body: "Adorei a dica do suporte de notebook, vou comprar." },
+  { setupSlug: "setup-estudante-orcamento-1500", authorEmail: "estudante@homeoffice.test", body: "@ana_e_bruno vale muito a pena, melhora muito a postura!" },
 
   // standing-desk-ergonomico
-  { setupSlug: "standing-desk-ergonomico", authorEmail: "executivo@deskly.test", body: "Vale o investimento na FlexiSpot? Tenho problema de coluna." },
-  { setupSlug: "standing-desk-ergonomico", authorEmail: "designer@deskly.test", body: "@carlos_exec absolutamente vale, em 1 mês minha lombar já agradeceu." },
-  { setupSlug: "standing-desk-ergonomico", authorEmail: "pm@deskly.test", body: "Passei 1h em pé hoje, mudei o jogo." },
+  { setupSlug: "standing-desk-ergonomico", authorEmail: "executivo@homeoffice.test", body: "Vale o investimento na FlexiSpot? Tenho problema de coluna." },
+  { setupSlug: "standing-desk-ergonomico", authorEmail: "designer@homeoffice.test", body: "@carlos_exec absolutamente vale, em 1 mês minha lombar já agradeceu." },
+  { setupSlug: "standing-desk-ergonomico", authorEmail: "pm@homeoffice.test", body: "Passei 1h em pé hoje, mudei o jogo." },
 
   // arquiteto-monitor-vertical-cintiq
-  { setupSlug: "arquiteto-monitor-vertical-cintiq", authorEmail: "designer@deskly.test", body: "Cintiq Pro é caro mas é outro patamar. Inveja boa." },
-  { setupSlug: "arquiteto-monitor-vertical-cintiq", authorEmail: "dev@deskly.test", body: "Curiosidade: o monitor vertical ajuda mesmo no AutoCAD?" },
+  { setupSlug: "arquiteto-monitor-vertical-cintiq", authorEmail: "designer@homeoffice.test", body: "Cintiq Pro é caro mas é outro patamar. Inveja boa." },
+  { setupSlug: "arquiteto-monitor-vertical-cintiq", authorEmail: "dev@homeoffice.test", body: "Curiosidade: o monitor vertical ajuda mesmo no AutoCAD?" },
 
   // executivo-classico-mogno-couro
-  { setupSlug: "executivo-classico-mogno-couro", authorEmail: "pm@deskly.test", body: "Estética muito profissional. Perfeita pra reuniões importantes." },
-  { setupSlug: "executivo-classico-mogno-couro", authorEmail: "creator@deskly.test", body: "Setup raro nessa galeria. Bem clássico, gostei." },
+  { setupSlug: "executivo-classico-mogno-couro", authorEmail: "pm@homeoffice.test", body: "Estética muito profissional. Perfeita pra reuniões importantes." },
+  { setupSlug: "executivo-classico-mogno-couro", authorEmail: "creator@homeoffice.test", body: "Setup raro nessa galeria. Bem clássico, gostei." },
 
   // setup-duplo-casal-home-office
-  { setupSlug: "setup-duplo-casal-home-office", authorEmail: "designer@deskly.test", body: "Como vocês fazem com chamadas simultâneas?" },
-  { setupSlug: "setup-duplo-casal-home-office", authorEmail: "casal@deskly.test", body: "@ju_designer fone com cancelamento de ruído pra cada um, salva." },
+  { setupSlug: "setup-duplo-casal-home-office", authorEmail: "designer@homeoffice.test", body: "Como vocês fazem com chamadas simultâneas?" },
+  { setupSlug: "setup-duplo-casal-home-office", authorEmail: "casal@homeoffice.test", body: "@ju_designer fone com cancelamento de ruído pra cada um, salva." },
 
   // apartamento-minusculo-mesa-dobravel
-  { setupSlug: "apartamento-minusculo-mesa-dobravel", authorEmail: "estudante@deskly.test", body: "Genial! Moro num studio e isso é exatamente o que preciso." },
+  { setupSlug: "apartamento-minusculo-mesa-dobravel", authorEmail: "estudante@homeoffice.test", body: "Genial! Moro num studio e isso é exatamente o que preciso." },
 
   // pm-camera-4k-iluminacao-zoom
-  { setupSlug: "pm-camera-4k-iluminacao-zoom", authorEmail: "executivo@deskly.test", body: "A diferença que uma boa câmera faz nas calls é absurda." },
-  { setupSlug: "pm-camera-4k-iluminacao-zoom", authorEmail: "creator@deskly.test", body: "Elgato Key Light Air é top, uso a versão grande aqui." },
+  { setupSlug: "pm-camera-4k-iluminacao-zoom", authorEmail: "executivo@homeoffice.test", body: "A diferença que uma boa câmera faz nas calls é absurda." },
+  { setupSlug: "pm-camera-4k-iluminacao-zoom", authorEmail: "creator@homeoffice.test", body: "Elgato Key Light Air é top, uso a versão grande aqui." },
 ];
 

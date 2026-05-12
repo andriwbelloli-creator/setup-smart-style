@@ -12,12 +12,12 @@ import { NewsletterCapture } from "@/components/NewsletterCapture";
 export const Route = createFileRoute("/avalie-seu-setup")({
   head: () => ({
     meta: [
-      { title: "Avalie seu setup com IA · Deskly" },
+      { title: "Avalie seu setup com IA · HomeOffice.life" },
       { name: "description", content: "Envie a foto do seu home office e em 30 segundos receba nota de ergonomia, iluminação, organização e sugestões de upgrade com preço real BR. Grátis." },
-      { property: "og:title", content: "Sua mesa de R$ 8 ou R$ 8 mil? A IA da Deskly te diz." },
+      { property: "og:title", content: "Sua mesa de R$ 8 ou R$ 8 mil? A IA da HomeOffice.life te diz." },
       { property: "og:description", content: "Análise grátis. 6 critérios. Produtos da Amazon BR, ML, Kabum e Magalu." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://deskly.life/og-image.jpg" },
+      { property: "og:image", content: "https://homeoffice.life/og-image.jpg" },
     ],
   }),
   component: AvalieSeuSetup,
@@ -33,7 +33,7 @@ function AvalieSeuSetup() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-hero text-primary-foreground shadow-elegant">
               <Sparkles className="h-4 w-4" />
             </div>
-            <span className="font-display text-lg font-bold tracking-tight">Deskly</span>
+            <span className="font-display text-lg font-bold tracking-tight">HomeOffice.life</span>
           </Link>
         </div>
       </header>
@@ -144,7 +144,7 @@ function AvalieSeuSetup() {
 
       <footer className="border-t border-border bg-cream py-8 text-center">
         <p className="text-xs text-muted-foreground">
-          © 2026 Deskly · Feito no Brasil ·{" "}
+          © 2026 HomeOffice.life · Feito no Brasil ·{" "}
           <Link to="/privacidade" className="hover:text-foreground">Privacidade</Link>
           {" · "}
           <Link to="/termos" className="hover:text-foreground">Termos</Link>

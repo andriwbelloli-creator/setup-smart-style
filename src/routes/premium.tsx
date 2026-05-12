@@ -12,11 +12,11 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/premium")({
   head: () => ({
     meta: [
-      { title: "Premium · Deskly" },
+      { title: "Premium · HomeOffice.life" },
       {
         name: "description",
         content:
-          "Análise IA ilimitada, recomendações personalizadas, sem anúncios. Deskly Premium a partir de R$ 9,90/mês.",
+          "Análise IA ilimitada, recomendações personalizadas, sem anúncios. Premium a partir de R$ 9,90/mês.",
       },
     ],
   }),
@@ -189,7 +189,7 @@ function Premium() {
 
         <div className="mx-auto max-w-2xl text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-            <Sparkles className="h-3 w-3" /> Deskly Premium
+            <Sparkles className="h-3 w-3" /> Premium
           </div>
           <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
             Tire o máximo do seu home office

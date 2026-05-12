@@ -32,22 +32,22 @@ type LUser = {
 };
 
 const USERS: LUser[] = [
-  { email: "matheus.code@deskly.test", password: "DesklySeed!2026", username: "matheus.code",
+  { email: "matheus.code@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "matheus.code",
     display_name: "Matheus Code", bio: "Dev backend, foco profundo e teclados silenciosos.",
     career: "dev", city: "São Paulo, SP", avatar_url: "https://i.pravatar.cc/200?img=12" },
-  { email: "gabi.streams@deskly.test", password: "DesklySeed!2026", username: "gabi.streams",
+  { email: "gabi.streams@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "gabi.streams",
     display_name: "Gabi Streams", bio: "Streamer e criadora de conteúdo. RGB no talo.",
     career: "creator", city: "Curitiba, PR", avatar_url: "https://i.pravatar.cc/200?img=47" },
-  { email: "ana.designer@deskly.test", password: "DesklySeed!2026", username: "ana.designer",
+  { email: "ana.designer@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "ana.designer",
     display_name: "Ana Designer", bio: "Designer minimalista. Tudo branco, zero distração.",
     career: "designer", city: "Belo Horizonte, MG", avatar_url: "https://i.pravatar.cc/200?img=45" },
-  { email: "joao.cria@deskly.test", password: "DesklySeed!2026", username: "joao.cria",
+  { email: "joao.cria@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "joao.cria",
     display_name: "João Cria", bio: "Criador focado em vídeo e podcast.",
     career: "creator", city: "Rio de Janeiro, RJ", avatar_url: "https://i.pravatar.cc/200?img=33" },
-  { email: "bia.pequena@deskly.test", password: "DesklySeed!2026", username: "bia.pequena",
+  { email: "bia.pequena@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "bia.pequena",
     display_name: "Bia Pequena", bio: "Remota em apê de 32m². Setup que cabe em 80cm.",
     career: "remoto", city: "Porto Alegre, RS", avatar_url: "https://i.pravatar.cc/200?img=20" },
-  { email: "rafa.home@deskly.test", password: "DesklySeed!2026", username: "rafa.home",
+  { email: "rafa.home@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "rafa.home",
     display_name: "Rafa Home", bio: "PM com reuniões o dia todo. Madeira, plantas e luz quente.",
     career: "pm", city: "Florianópolis, SC", avatar_url: "https://i.pravatar.cc/200?img=8" },
 ];
@@ -87,7 +87,7 @@ const p = (
 
 const SETUPS: LSetup[] = [
   {
-    ownerEmail: "matheus.code@deskly.test",
+    ownerEmail: "matheus.code@homeoffice.test",
     slug: "dev-turquesa",
     title: "Dev Turquesa",
     description: "Setup focado em foco profundo. Ultrawide pra ver código + docs lado a lado, teclado mecânico silencioso pra calls e parede turquesa pra cortar a fadiga visual do branco.",
@@ -104,7 +104,7 @@ const SETUPS: LSetup[] = [
     ],
   },
   {
-    ownerEmail: "gabi.streams@deskly.test",
+    ownerEmail: "gabi.streams@homeoffice.test",
     slug: "cyber-cave",
     title: "Cyber Cave",
     description: "Dual monitor com RGB pra streaming e edição. Cadeira gamer com sustentação lombar pra maratonas de live.",
@@ -120,7 +120,7 @@ const SETUPS: LSetup[] = [
     ],
   },
   {
-    ownerEmail: "ana.designer@deskly.test",
+    ownerEmail: "ana.designer@homeoffice.test",
     slug: "white-clean",
     title: "White & Clean",
     description: "Tudo branco, zero distração visual. iMac M3, teclado Magic compacto e plantinha pra cortar.",
@@ -136,7 +136,7 @@ const SETUPS: LSetup[] = [
     ],
   },
   {
-    ownerEmail: "joao.cria@deskly.test",
+    ownerEmail: "joao.cria@homeoffice.test",
     slug: "creator-studio",
     title: "Creator Studio",
     description: "Foco em vídeo e podcast: ring light, mic shotgun e câmera DSLR num tripé compacto.",
@@ -151,7 +151,7 @@ const SETUPS: LSetup[] = [
     ],
   },
   {
-    ownerEmail: "bia.pequena@deskly.test",
+    ownerEmail: "bia.pequena@homeoffice.test",
     slug: "ape-32m2",
     title: "Apê 32m²",
     description: "Setup que cabe em 80cm. Suporte de notebook + teclado externo + monitor 19\" usado.",
@@ -166,7 +166,7 @@ const SETUPS: LSetup[] = [
     ],
   },
   {
-    ownerEmail: "rafa.home@deskly.test",
+    ownerEmail: "rafa.home@homeoffice.test",
     slug: "cozy-wood",
     title: "Cozy Wood",
     description: "Madeira, plantas e luz quente. Pra quem tem reunião o dia todo e precisa de fundo bonito na câmera.",

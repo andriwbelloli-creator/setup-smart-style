@@ -1,6 +1,17 @@
+# Configuração do serviço no Render.
+#
+# IMPORTANTE — rebranding Deskly → HomeOffice.life:
+# Este `name` é o slug do serviço no Render. Mudá-lo aqui NÃO renomeia
+# automaticamente um serviço já existente (render.yaml só vale na
+# criação inicial). Pra renomear o serviço atual em produção:
+#   1. Render Dashboard → seu serviço atual ("deskly") → Settings
+#   2. "Service Name" → alterar pra "homeofficelife"
+#   3. Salvar (URL onrender.com fallback muda também)
+# O domínio customizado (homeoffice.life) é configurado separadamente
+# em Settings → Custom Domains, independente desse `name`.
 services:
   - type: web
-    name: deskly
+    name: homeofficelife
     runtime: node
     plan: free
     region: oregon

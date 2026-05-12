@@ -13,4 +13,4 @@ Disallow: /postar
 Disallow: /honeypot
 Disallow: /setups/_internal/
 
-Sitemap: https://deskly.life/sitemap.xml
+Sitemap: https://homeoffice.life/sitemap.xml

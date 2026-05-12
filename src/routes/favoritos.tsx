@@ -13,7 +13,7 @@ import { Bookmark, Loader2, ArrowLeftRight } from "lucide-react";
 export const Route = createFileRoute("/favoritos")({
   head: () => ({
     meta: [
-      { title: "Meus favoritos · Deskly" },
+      { title: "Meus favoritos · HomeOffice.life" },
       { name: "description", content: "Setups que você salvou pra inspirar seu próximo upgrade." },
       { name: "robots", content: "noindex, nofollow" },
     ],

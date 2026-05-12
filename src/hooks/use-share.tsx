@@ -23,7 +23,7 @@ export type ShareLinks = {
 export function useShare(target: ShareTarget) {
   const [open, setOpen] = useState(false);
 
-  const message = target.text ?? `${target.title} — vi esse setup no Deskly e amei`;
+  const message = target.text ?? `${target.title} — vi esse setup no HomeOffice.life e amei`;
 
   const links: ShareLinks = {
     whatsapp: `https://wa.me/?text=${encodeURIComponent(`${message} ${target.url}`)}`,

@@ -112,9 +112,9 @@ const STORE_LABEL: Record<string, string> = {
 export const Route = createFileRoute("/kits")({
   head: () => ({
     meta: [
-      { title: "Kits Curados · Deskly" },
-      { name: "description", content: "3 kits prontos pra montar seu home office — Estudante, Dev Remoto e Cyber Cave. Produtos curados pela equipe do Deskly, com preços reais." },
-      { property: "og:title", content: "Kits Curados Deskly — monte seu setup em 1 clique" },
+      { title: "Kits Curados · HomeOffice.life" },
+      { name: "description", content: "3 kits prontos pra montar seu home office — Estudante, Dev Remoto e Cyber Cave. Produtos curados pela equipe do HomeOffice.life, com preços reais." },
+      { property: "og:title", content: "Kits Curados HomeOffice.life — monte seu setup em 1 clique" },
       { property: "og:description", content: "Setup completo curado pra estudante, dev remoto ou setup pro. Lista pronta com preço, loja e link." },
     ],
   }),
@@ -187,7 +187,7 @@ function Kits() {
             Setup pronto.<span className="text-coral"> 1 clique e tá no carrinho.</span>
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Curados pela equipe Deskly. 3 perfis, produtos reais, preço de hoje.
+            Curados pela equipe HomeOffice.life. 3 perfis, produtos reais, preço de hoje.
             Clique em "Comprar todos" e abre cada produto na loja certa numa aba nova.
           </p>
         </div>
@@ -289,7 +289,7 @@ function Kits() {
             Pegamos o preço atual da loja toda vez que você abre a página. Sem cilada de preço desatualizado.
           </Feature>
           <Feature icon={Check} title="Sem cilada de afiliado">
-            O preço pra você é o mesmo da loja. Quando você compra pelo nosso link, a loja repassa uma fatia pra Deskly e nos ajuda a manter a plataforma gratuita.
+            O preço pra você é o mesmo da loja. Quando você compra pelo nosso link, a loja repassa uma fatia pra HomeOffice.life e nos ajuda a manter a plataforma gratuita.
           </Feature>
         </div>
 

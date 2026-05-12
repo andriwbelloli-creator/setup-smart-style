@@ -44,18 +44,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Deskly — Avalie seu home office com IA" },
+      { title: "HomeOffice.life — Avalie seu home office com IA" },
       { name: "description", content: "Plataforma brasileira para montar, avaliar e melhorar seu home office com IA, produtos reais (Amazon BR, Mercado Livre, Kabum, Magalu) e inspiração da comunidade." },
-      { property: "og:title", content: "Deskly — Avalie seu home office com IA" },
+      { property: "og:title", content: "HomeOffice.life — Avalie seu home office com IA" },
       { property: "og:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://deskly.life" },
-      { property: "og:image", content: "https://deskly.life/og-image.jpg" },
+      { property: "og:url", content: "https://homeoffice.life" },
+      { property: "og:image", content: "https://homeoffice.life/og-image.jpg" },
       { property: "og:locale", content: "pt_BR" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Deskly — Avalie seu home office com IA" },
+      { name: "twitter:title", content: "HomeOffice.life — Avalie seu home office com IA" },
       { name: "twitter:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
-      { name: "twitter:image", content: "https://deskly.life/og-image.jpg" },
+      { name: "twitter:image", content: "https://homeoffice.life/og-image.jpg" },
     ],
     links: [
       {
@@ -86,7 +86,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function CanonicalTag() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   // Canonical sem query params (UTMs, ?ref=) pra evitar conteúdo duplicado.
-  const href = `https://deskly.life${path === "/" ? "" : path}`;
+  const href = `https://homeoffice.life${path === "/" ? "" : path}`;
   return <link rel="canonical" href={href} />;
 }
 

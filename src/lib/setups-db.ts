@@ -29,7 +29,7 @@ export function rowToSetup(r: DbSetupRow, products: Product[] = []): Setup {
     id: r.id,
     slug: r.slug,
     title: r.title,
-    author: r.profiles ? `@${r.profiles.username}` : "@deskly",
+    author: r.profiles ? `@${r.profiles.username}` : "@homeofficelife",
     authorRole: roleMap[r.career || "outro"] || "Remoto",
     city: r.city || "Brasil",
     image: r.cover_url || "",

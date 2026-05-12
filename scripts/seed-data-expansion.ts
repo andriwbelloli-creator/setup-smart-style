@@ -50,47 +50,47 @@ const p = (
 });
 
 export const EXP_USERS: SeedUser[] = [
-  { email: "medica.tele@deskly.test", password: "DesklySeed!2026", username: "camila_med",
+  { email: "medica.tele@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "camila_med",
     display_name: "Dra. Camila Vieira", bio: "Médica de telemedicina. Calma, luz boa e câmera nítida são meu cartão de visita.",
     career: "outro", city: "Salvador, BA", avatar_url: "https://i.pravatar.cc/200?img=36" },
-  { email: "advogado@deskly.test", password: "DesklySeed!2026", username: "henrique_adv",
+  { email: "advogado@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "henrique_adv",
     display_name: "Henrique Camargo", bio: "Advogado tributarista. Audiências online, peças longas, café preto.",
     career: "outro", city: "Brasília, DF", avatar_url: "https://i.pravatar.cc/200?img=7" },
-  { email: "audio.eng@deskly.test", password: "DesklySeed!2026", username: "lucas_audio",
+  { email: "audio.eng@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "lucas_audio",
     display_name: "Lucas Maciel", bio: "Engenheiro de som. Mix, master e podcast — silêncio acústico é prioridade.",
     career: "creator", city: "Rio de Janeiro, RJ", avatar_url: "https://i.pravatar.cc/200?img=51" },
-  { email: "fotografo@deskly.test", password: "DesklySeed!2026", username: "bruna_foto",
+  { email: "fotografo@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "bruna_foto",
     display_name: "Bruna Sato", bio: "Fotógrafa editorial. Calibração de cor, dois monitores, backups eternos.",
     career: "creator", city: "São Paulo, SP", avatar_url: "https://i.pravatar.cc/200?img=24" },
-  { email: "tradutor@deskly.test", password: "DesklySeed!2026", username: "marta_trad",
+  { email: "tradutor@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "marta_trad",
     display_name: "Marta Coelho", bio: "Tradutora EN/PT. Apê pequeno, mesa minimalista, dicionário aberto.",
     career: "outro", city: "Recife, PE", avatar_url: "https://i.pravatar.cc/200?img=39" },
-  { email: "youtuber.tut@deskly.test", password: "DesklySeed!2026", username: "andre_yt",
+  { email: "youtuber.tut@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "andre_yt",
     display_name: "André Borges", bio: "YouTuber de tutoriais técnicos. Câmera fixa, microfone bom, screen recorder no talo.",
     career: "creator", city: "Belo Horizonte, MG", avatar_url: "https://i.pravatar.cc/200?img=14" },
-  { email: "animador@deskly.test", password: "DesklySeed!2026", username: "diego_anim",
+  { email: "animador@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "diego_anim",
     display_name: "Diego Pinheiro", bio: "Animador 2D. Wacom Cintiq, paleta na mão, café gelado.",
     career: "designer", city: "Florianópolis, SC", avatar_url: "https://i.pravatar.cc/200?img=18" },
-  { email: "coach@deskly.test", password: "DesklySeed!2026", username: "patricia_coach",
+  { email: "coach@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "patricia_coach",
     display_name: "Patrícia Aguiar", bio: "Coach executiva. Câmera Logitech, luz suave, fundo neutro.",
     career: "outro", city: "Curitiba, PR", avatar_url: "https://i.pravatar.cc/200?img=48" },
-  { email: "modelador3d@deskly.test", password: "DesklySeed!2026", username: "rodrigo_3d",
+  { email: "modelador3d@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "rodrigo_3d",
     display_name: "Rodrigo Tanaka", bio: "Modelador 3D Blender. Workstation potente, monitor secundário vertical.",
     career: "designer", city: "Campinas, SP", avatar_url: "https://i.pravatar.cc/200?img=60" },
-  { email: "editor.video@deskly.test", password: "DesklySeed!2026", username: "marina_edit",
+  { email: "editor.video@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "marina_edit",
     display_name: "Marina Pessoa", bio: "Editora de vídeo. Mac Studio, monitor 5K, projetos longos.",
     career: "creator", city: "Rio de Janeiro, RJ", avatar_url: "https://i.pravatar.cc/200?img=43" },
-  { email: "nomad@deskly.test", password: "DesklySeed!2026", username: "felipe_nomad",
+  { email: "nomad@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "felipe_nomad",
     display_name: "Felipe Andrade", bio: "Nômade digital. Mesa minúscula, suporte de laptop, hub USB-C salva vidas.",
     career: "dev", city: "Florianópolis, SC", avatar_url: "https://i.pravatar.cc/200?img=64" },
-  { email: "ux.writer@deskly.test", password: "DesklySeed!2026", username: "ines_uxw",
+  { email: "ux.writer@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "ines_uxw",
     display_name: "Inês Bittencourt", bio: "UX Writer. Apenas um monitor, mas com tipografia bonita.",
     career: "designer", city: "São Paulo, SP", avatar_url: "https://i.pravatar.cc/200?img=26" },
 ];
 
 export const EXP_SETUPS: SeedSetup[] = [
   {
-    ownerEmail: "medica.tele@deskly.test",
+    ownerEmail: "medica.tele@homeoffice.test",
     slug: "telemedicina-luz-suave-camera-4k",
     title: "Telemedicina · luz suave + câmera 4K",
     description: "Setup pra atender pacientes online. Fundo neutro, ring light de gel quente e câmera 4K pra detalhe nítido. Cadeira ergo pra 8h de plantão.",
@@ -105,7 +105,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "advogado@deskly.test",
+    ownerEmail: "advogado@homeoffice.test",
     slug: "advocacia-tributaria-dois-monitores",
     title: "Advocacia tributária · dois monitores e câmera profissional",
     description: "Audiências virtuais, peças intermináveis e lista de jurisprudência aberta. Dois monitores 27\", câmera externa e estante atrás pra fundo sério.",
@@ -120,7 +120,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "audio.eng@deskly.test",
+    ownerEmail: "audio.eng@homeoffice.test",
     slug: "estudio-mix-mastering-monitores-yamaha",
     title: "Estúdio de mix + master · monitores Yamaha HS",
     description: "Foco em precisão sonora. Par de Yamaha HS8 em triangulação, interface Universal Audio e tratamento acústico básico de espuma.",
@@ -135,7 +135,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "fotografo@deskly.test",
+    ownerEmail: "fotografo@homeoffice.test",
     slug: "foto-editorial-calibragem-eizo",
     title: "Foto editorial · monitor Eizo calibrado + Mac Studio",
     description: "Trabalho com clientes editoriais e moda. Eizo ColorEdge calibrado mensalmente, Mac Studio M2 Max, backup em RAID.",
@@ -150,7 +150,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "tradutor@deskly.test",
+    ownerEmail: "tradutor@homeoffice.test",
     slug: "tradutora-apartamento-pequeno-2-monitores",
     title: "Tradutora freelance · 2 monitores leves em apê 40m²",
     description: "Dois monitores compactos lado a lado (texto original + tradução), suporte VESA pra liberar mesa e cadeira simples mas ajustável.",
@@ -165,7 +165,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "youtuber.tut@deskly.test",
+    ownerEmail: "youtuber.tut@homeoffice.test",
     slug: "youtuber-tutorial-prompter-foco-1pessoa",
     title: "YouTuber tutorial · teleprompter, foco em uma pessoa",
     description: "Câmera Sony alpha em tripé, teleprompter pra falar olhando reto, microfone direcional. Setup pra gravar 20 min de tutorial em um take.",
@@ -180,7 +180,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "animador@deskly.test",
+    ownerEmail: "animador@homeoffice.test",
     slug: "animador-2d-cintiq-16-paleta-de-cores",
     title: "Animador 2D · Wacom Cintiq 16 + paleta de cores",
     description: "Cintiq 16 ligado à workstation principal, paleta Tourbox pra atalhos rápidos, fundo escuro pra reduzir reflexo no display.",
@@ -195,7 +195,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "coach@deskly.test",
+    ownerEmail: "coach@homeoffice.test",
     slug: "coach-executiva-fundo-de-filme-luz-quente",
     title: "Coach executiva · fundo de filme e luz quente",
     description: "Câmera DSLR como webcam, key light + fill light pra rosto sem sombra dura. Fundo de estante curada com livros e plantas.",
@@ -210,7 +210,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "modelador3d@deskly.test",
+    ownerEmail: "modelador3d@homeoffice.test",
     slug: "modelador-3d-blender-workstation-vertical",
     title: "Modelador 3D Blender · workstation + monitor vertical",
     description: "PC com RTX 4080 pra render Cycles, monitor principal 32\" + secundário em pé pra outliner e ref. Mouse 3DConnexion.",
@@ -225,7 +225,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "editor.video@deskly.test",
+    ownerEmail: "editor.video@homeoffice.test",
     slug: "editor-video-mac-studio-monitor-5k",
     title: "Editora de vídeo · Mac Studio + Studio Display",
     description: "Mac Studio M2 + Studio Display 5K, mesa de cortes Loupedeck CT, fones de monitoração HD25. Edita projetos longos no Premiere.",
@@ -240,7 +240,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "nomad@deskly.test",
+    ownerEmail: "nomad@homeoffice.test",
     slug: "digital-nomad-airbnb-kit-portatil",
     title: "Nômade digital · kit portátil que cabe na mochila",
     description: "Monta a estação em qualquer Airbnb. MacBook Air, suporte dobrável, teclado/mouse leves e hub USB-C com HDMI pra TV virar segundo monitor.",
@@ -255,7 +255,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "ux.writer@deskly.test",
+    ownerEmail: "ux.writer@homeoffice.test",
     slug: "ux-writer-um-monitor-tipografia",
     title: "UX Writer · um monitor, tipografia bonita",
     description: "Setup minimalista: monitor único 27\" 4K, teclado mecânico de baixo perfil, Figma + Notion abertos.",
@@ -271,7 +271,7 @@ export const EXP_SETUPS: SeedSetup[] = [
   },
   // Setups extras com personas já existentes do seed-data original
   {
-    ownerEmail: "dev@deskly.test",
+    ownerEmail: "dev@homeoffice.test",
     slug: "dev-mobile-react-native-ipad-secundario",
     title: "Dev mobile · iPad como tela secundária pra preview",
     description: "MacBook Pro + iPad Pro em Sidecar pra ver app rodando ao lado do código. Suporte de iPad articulado, fone Sony XM4 cortando barulho do prédio.",
@@ -286,7 +286,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "datasci@deskly.test",
+    ownerEmail: "datasci@homeoffice.test",
     slug: "data-scientist-3-monitores-jupyter",
     title: "Data scientist · 3 monitores pra Jupyter + dashboard + Slack",
     description: "Setup com 3 telas: notebook (workhorse), dashboard de métricas e Slack. Cadeira Herman Miller pra 10h por dia.",
@@ -301,7 +301,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "streamer@deskly.test",
+    ownerEmail: "streamer@homeoffice.test",
     slug: "streamer-acustica-painel-difusores",
     title: "Streamer · painéis acústicos e difusores na parede",
     description: "Cuidado com áudio: painéis acústicos atrás, difusores nas laterais. Mic Shure MV7 USB, captura de tela com cam externa.",
@@ -316,7 +316,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "pm@deskly.test",
+    ownerEmail: "pm@homeoffice.test",
     slug: "pm-quadro-canvas-fisico-camera-boa",
     title: "PM · quadro Kanban físico atrás + câmera Logitech Brio",
     description: "Quadro magnético com post-its de épicos atrás (ótimo pra calls), câmera Brio em ângulo alto, mic boom flutuante.",
@@ -331,7 +331,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "empreendedor@deskly.test",
+    ownerEmail: "empreendedor@homeoffice.test",
     slug: "founder-mesa-pe-luz-natural",
     title: "Founder · mesa que sobe/desce + luz natural",
     description: "Standing desk pra varia postura no dia, janela ampla atrás, monitor curvo pra reuniões longas, sem bagunça pra parecer profissional em pitch.",
@@ -346,7 +346,7 @@ export const EXP_SETUPS: SeedSetup[] = [
     ],
   },
   {
-    ownerEmail: "consultor@deskly.test",
+    ownerEmail: "consultor@homeoffice.test",
     slug: "consultor-mc-call-cenario-curado",
     title: "Consultor de gestão · cenário curado pra calls VIP",
     description: "Estante de design atrás, livros selecionados, planta artificial, mesa carvalho. Câmera DSLR + key light suave.",
