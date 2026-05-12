@@ -39,8 +39,10 @@ export function Footer() {
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
             <Link to="/galeria" className="hover:text-foreground">Galeria</Link>
+            <Link to="/kits" className="hover:text-foreground">Kits</Link>
             <Link to="/diagnostico" className="hover:text-foreground">Diagnóstico</Link>
             <Link to="/orcamento" className="hover:text-foreground">Orçamentos</Link>
+            <Link to="/consultoria" className="hover:text-foreground">Consultoria</Link>
             <Link to="/comunidade" className="hover:text-foreground">Comunidade</Link>
             <Link to="/premium" className="hover:text-foreground">Premium</Link>
             <Link to="/termos" className="hover:text-foreground">Termos</Link>

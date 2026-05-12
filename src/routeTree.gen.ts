@@ -16,9 +16,11 @@ import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PostarRouteImport } from './routes/postar'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
+import { Route as KitsRouteImport } from './routes/kits'
 import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
+import { Route as ConsultoriaRouteImport } from './routes/consultoria'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -63,6 +65,11 @@ const OrcamentoRoute = OrcamentoRouteImport.update({
   path: '/orcamento',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KitsRoute = KitsRouteImport.update({
+  id: '/kits',
+  path: '/kits',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GaleriaRoute = GaleriaRouteImport.update({
   id: '/galeria',
   path: '/galeria',
@@ -76,6 +83,11 @@ const FavoritosRoute = FavoritosRouteImport.update({
 const DiagnosticoRoute = DiagnosticoRouteImport.update({
   id: '/diagnostico',
   path: '/diagnostico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsultoriaRoute = ConsultoriaRouteImport.update({
+  id: '/consultoria',
+  path: '/consultoria',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComunidadeRoute = ComunidadeRouteImport.update({
@@ -124,9 +136,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
+  '/consultoria': typeof ConsultoriaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
+  '/kits': typeof KitsRoute
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
@@ -144,9 +158,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
+  '/consultoria': typeof ConsultoriaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
+  '/kits': typeof KitsRoute
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
@@ -165,9 +181,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
+  '/consultoria': typeof ConsultoriaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
+  '/kits': typeof KitsRoute
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
   '/postar': typeof PostarRoute
@@ -187,9 +205,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/comparar'
     | '/comunidade'
+    | '/consultoria'
     | '/diagnostico'
     | '/favoritos'
     | '/galeria'
+    | '/kits'
     | '/orcamento'
     | '/perfil'
     | '/postar'
@@ -207,9 +227,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/comparar'
     | '/comunidade'
+    | '/consultoria'
     | '/diagnostico'
     | '/favoritos'
     | '/galeria'
+    | '/kits'
     | '/orcamento'
     | '/perfil'
     | '/postar'
@@ -227,9 +249,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/comparar'
     | '/comunidade'
+    | '/consultoria'
     | '/diagnostico'
     | '/favoritos'
     | '/galeria'
+    | '/kits'
     | '/orcamento'
     | '/perfil'
     | '/postar'
@@ -248,9 +272,11 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   CompararRoute: typeof CompararRoute
   ComunidadeRoute: typeof ComunidadeRoute
+  ConsultoriaRoute: typeof ConsultoriaRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
   FavoritosRoute: typeof FavoritosRoute
   GaleriaRoute: typeof GaleriaRoute
+  KitsRoute: typeof KitsRoute
   OrcamentoRoute: typeof OrcamentoRoute
   PerfilRoute: typeof PerfilRoute
   PostarRoute: typeof PostarRoute
@@ -314,6 +340,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrcamentoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kits': {
+      id: '/kits'
+      path: '/kits'
+      fullPath: '/kits'
+      preLoaderRoute: typeof KitsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/galeria': {
       id: '/galeria'
       path: '/galeria'
@@ -333,6 +366,13 @@ declare module '@tanstack/react-router' {
       path: '/diagnostico'
       fullPath: '/diagnostico'
       preLoaderRoute: typeof DiagnosticoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/consultoria': {
+      id: '/consultoria'
+      path: '/consultoria'
+      fullPath: '/consultoria'
+      preLoaderRoute: typeof ConsultoriaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comunidade': {
@@ -409,9 +449,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   CompararRoute: CompararRoute,
   ComunidadeRoute: ComunidadeRoute,
+  ConsultoriaRoute: ConsultoriaRoute,
   DiagnosticoRoute: DiagnosticoRoute,
   FavoritosRoute: FavoritosRoute,
   GaleriaRoute: GaleriaRoute,
+  KitsRoute: KitsRoute,
   OrcamentoRoute: OrcamentoRoute,
   PerfilRoute: PerfilRoute,
   PostarRoute: PostarRoute,
