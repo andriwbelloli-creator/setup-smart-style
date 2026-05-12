@@ -1,25 +1,49 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Crown, ArrowRight, Check } from "lucide-react";
 import { NewsletterCapture } from "@/components/NewsletterCapture";
 
+// CTA final reformulado pós-auditoria: foco em conversão Premium ao invés
+// de repetir o pitch da IA (já abordado no Hero + AnaliseIA). Free → Pago.
 export function CTA() {
   return (
-    <section className="py-24">
+    <section className="py-14 md:py-20">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-hero px-8 py-16 text-center text-primary-foreground shadow-elegant md:px-16 md:py-24">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-hero px-6 py-12 text-center text-primary-foreground shadow-elegant md:px-12 md:py-16">
           <div className="absolute inset-0 bg-gradient-mesh opacity-40" />
           <div className="relative mx-auto max-w-2xl">
-            <Sparkles className="mx-auto mb-6 h-10 w-10 text-accent" />
-            <h2 className="font-display text-4xl font-bold leading-tight md:text-5xl">
-              Pronto pra descobrir a nota do seu setup?
+            <Crown className="mx-auto mb-4 h-10 w-10 text-accent" />
+            <h2 className="font-display text-3xl font-bold leading-tight md:text-4xl">
+              Faça mais do seu home office com Premium
             </h2>
-            <p className="mt-4 text-lg text-primary-foreground/80">
-              Grátis, sem cadastro. Em 30 segundos você tem análise completa e lista de upgrades por preço de Brasil.
+            <p className="mt-3 text-base text-primary-foreground/85 md:text-lg">
+              Análises ilimitadas, plano de ação detalhado e lista de compras priorizada.
+              A partir de <strong className="text-accent">R$ 19/mês</strong>.
             </p>
-            <Link to="/diagnostico" className="mt-10 inline-flex items-center gap-2 rounded-full bg-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-coral transition-smooth hover:scale-105">
-              Avaliar meu setup agora <ArrowRight className="h-5 w-5" />
-            </Link>
-            <p className="mt-4 text-xs text-primary-foreground/60">+12.000 brasileiros já avaliaram</p>
+
+            <ul className="mx-auto mt-6 max-w-md space-y-1.5 text-left text-sm text-primary-foreground/85">
+              <li className="flex items-start gap-2">
+                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+                Análises ilimitadas (free é 3 lifetime)
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+                Plano de ação detalhado + lista de compras
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+                Suporte de consultoria 1:1 (Enterprise)
+              </li>
+            </ul>
+
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Link to="/premium" className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3 text-sm font-bold text-accent-foreground shadow-coral transition-smooth hover:scale-105">
+                <Crown className="h-4 w-4" /> Assinar Premium
+              </Link>
+              <Link to="/diagnostico" className="text-sm font-semibold text-primary-foreground/80 underline-offset-4 hover:text-primary-foreground hover:underline">
+                Quero testar grátis primeiro →
+              </Link>
+            </div>
+            <p className="mt-3 text-xs text-primary-foreground/60">Cancele a qualquer momento · Sem fidelidade</p>
           </div>
         </div>
       </div>

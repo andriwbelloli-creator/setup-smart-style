@@ -2,20 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/landing/Navbar";
 import { Hero } from "@/components/landing/Hero";
 import { AnaliseIA } from "@/components/landing/AnaliseIA";
-import { Galeria } from "@/components/landing/Galeria";
 import { MarketplaceSection } from "@/components/landing/MarketplaceSection";
+import { Galeria } from "@/components/landing/Galeria";
 import { Orcamento } from "@/components/landing/Orcamento";
 import { AntesDepois } from "@/components/landing/AntesDepois";
 import { CTA, Footer } from "@/components/landing/CTA";
 
-// Estrutura da home:
-//  1. Hero (IA como protagonista — gancho de aquisição)
-//  2. AnaliseIA (componente interativo: foto → nota)
-//  3. Galeria (inspiração / prova social)
-//  4. MarketplaceSection (compra e venda usados — destaque secundário)
-//  5. Orçamento (kits curados por faixa de preço)
-//  6. AntesDepois (transformação visual)
-//  7. CTA + Footer
+// Nova estrutura (auditoria UX 2026-05):
+//  1. Hero IA com drop-zone (hook de aquisição)
+//  2. AnaliseIA (resultados — ÚNICO bloco repete um pouco da promessa, mas
+//     necessário porque renderiza o resultado real). Container compactado.
+//  3. MarketplaceSection (segunda posição — alta lucratividade, 6 cards)
+//  4. Galeria compacta (1 linha de 4 cards no desktop)
+//  5. Orçamento (kits por faixa de preço)
+//  6. Antes & Depois (transformação visual)
+//  7. CTA final focado em Premium (não mais repetindo IA)
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -66,8 +67,8 @@ function Index() {
       <main>
         <Hero />
         <AnaliseIA />
-        <Galeria />
         <MarketplaceSection />
+        <Galeria />
         <Orcamento />
         <AntesDepois />
         <CTA />

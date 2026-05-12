@@ -227,16 +227,19 @@ Deno.serve(async (req) => {
     if (!resp.ok) {
       const t = await resp.text();
       console.error("detect-touchpoints AI error:", resp.status, t);
-      if (resp.status === 429) {
-        return new Response(JSON.stringify({ error: "Quota Gemini atingida." }), {
-          status: 429,
+      // Devolve o body do Google direto pro caller. Ajuda muito a debugar
+      // problemas de billing/quota/key sem precisar ir nos logs.
+      return new Response(
+        JSON.stringify({
+          error: "Falha ao chamar IA de visão",
+          gemini_status: resp.status,
+          gemini_body: t.slice(0, 2000),
+        }),
+        {
+          status: resp.status === 429 ? 429 : 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      return new Response(JSON.stringify({ error: "Falha ao chamar IA de visão" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+        },
+      );
     }
 
     const data = await resp.json();

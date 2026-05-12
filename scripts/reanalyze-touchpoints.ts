@@ -32,11 +32,10 @@ const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-// Gemini 2.5 Flash Lite free tier: 10 RPM (medido em prod, não 15).
-// Sequencial: 1 setup por vez com 7s entre cada = ~8.5 RPM (margem).
-// 53 setups restantes * 7s = ~6min10s total.
-const BATCH_SIZE = 1;
-const DELAY_BETWEEN_BATCHES_MS = 7_000;
+// Tier 1 (pago): 1000 RPM, sem RPD. Podemos ser agressivos.
+// 10 paralelos + 2s entre lotes = ~300 req/min, dentro do limite.
+const BATCH_SIZE = 10;
+const DELAY_BETWEEN_BATCHES_MS = 2_000;
 
 type SetupRow = { id: string; slug: string; cover_url: string | null };
 type ProductRow = { id: string; setup_id: string; name: string; category: string; x: number; y: number };
