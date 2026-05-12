@@ -1,7 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { Upload, Star, ArrowRight, Zap } from "lucide-react";
+import { Upload, Star, ArrowRight, Zap, ExternalLink } from "lucide-react";
 import heroImg from "@/assets/hero-setup.jpg";
+import { decorateAffiliateUrl } from "@/lib/affiliate";
+
+const LG_ULTRAWIDE_URL = decorateAffiliateUrl(
+  "https://www.kabum.com.br/busca/LG%20Ultrawide%2034WP65C",
+  "kabum",
+);
 
 export function Hero() {
   return (
@@ -63,11 +69,19 @@ export function Hero() {
               className="h-full w-full object-cover"
             />
             {/* Floating product tag */}
-            <div className="absolute left-6 top-1/2 hidden animate-float rounded-2xl bg-card/95 p-3 shadow-elegant backdrop-blur md:block">
+            <a
+              href={LG_ULTRAWIDE_URL}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              aria-label="Ver LG Ultrawide 34 polegadas na Kabum"
+              className="group absolute left-6 top-1/2 hidden animate-float rounded-2xl bg-card/95 p-3 shadow-elegant backdrop-blur transition-smooth hover:scale-105 hover:bg-card md:block"
+            >
               <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Monitor</div>
               <div className="text-sm font-semibold">LG Ultrawide 34"</div>
-              <div className="text-xs text-primary">R$ 2.799 · Kabum</div>
-            </div>
+              <div className="mt-0.5 flex items-center gap-1 text-xs text-primary">
+                R$ 2.799 · Kabum <ExternalLink className="h-3 w-3 opacity-0 transition-smooth group-hover:opacity-100" />
+              </div>
+            </a>
             {/* Score badge */}
             <div className="absolute bottom-6 right-6 rounded-2xl bg-card p-4 shadow-elegant">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Nota IA</div>
