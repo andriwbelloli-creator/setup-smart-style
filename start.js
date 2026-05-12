@@ -64,7 +64,10 @@ function applySecurityHeaders(res) {
 // =============================================================
 const SUPABASE_URL =
   process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || "";
-const SUPABASE_ANON = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
+const SUPABASE_ANON =
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.SUPABASE_PUBLISHABLE_KEY ||
+  "";
 const SUPABASE_SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 // =============================================================

@@ -29,13 +29,13 @@ const CURATED: Record<string, string> = {
   // (URLs de produto/<id> não são verificáveis sem scraping;
   // a busca filtrada garante landing em produtos do tipo correto.)
   "ThunderX3 Yama1":
-    "https://www.kabum.com.br/busca/cadeira%20ThunderX3%20Yama1?facet_category_name[]=Cadeiras",
+    "https://www.kabum.com.br/busca/cadeira%20ThunderX3%20Yama1",
   "DT3 Office Nimitz":
-    "https://www.kabum.com.br/busca/cadeira%20DT3%20Office%20Nimitz?facet_category_name[]=Cadeiras",
+    "https://www.kabum.com.br/busca/cadeira%20DT3%20Office%20Nimitz",
   "DT3 Tronos":
-    "https://www.kabum.com.br/busca/cadeira%20DT3%20Office%20Tronos?facet_category_name[]=Cadeiras",
+    "https://www.kabum.com.br/busca/cadeira%20DT3%20Office%20Tronos",
   "DT3 Yama1":
-    "https://www.kabum.com.br/busca/cadeira%20DT3%20Yama1?facet_category_name[]=Cadeiras",
+    "https://www.kabum.com.br/busca/cadeira%20DT3%20Yama1",
   "BR Office Bahamas":
     "https://www.magazineluiza.com.br/busca/cadeira%20BR%20Office%20Bahamas/?filter_categoria=cadeiras-escritorio",
 
@@ -49,7 +49,7 @@ const CURATED: Record<string, string> = {
   "Dell P2422H 24\" Full HD":
     "https://www.amazon.com.br/s?k=Monitor+Dell+P2422H+24+Full+HD&i=computers",
   "Samsung Odyssey G7":
-    "https://www.kabum.com.br/busca/Samsung%20Odyssey%20G7?facet_category_name[]=Monitores",
+    "https://www.kabum.com.br/busca/Samsung%20Odyssey%20G7",
 
   // Mesas
   "Mesa elétrica FlexiSpot E5":
@@ -117,7 +117,7 @@ const CURATED: Record<string, string> = {
   "3DConnexion SpaceMouse":
     "https://www.amazon.com.br/s?k=3Dconnexion+SpaceMouse&i=computers",
   "Logitech G Pro X":
-    "https://www.kabum.com.br/busca/Logitech%20G%20Pro%20X?facet_category_name[]=Perif%C3%A9ricos",
+    "https://www.kabum.com.br/busca/Logitech%20G%20Pro%20X",
 
   // Áudio
   "Shure SM7B":
@@ -201,7 +201,7 @@ const CURATED: Record<string, string> = {
   "Mesa cavalete pinus 100x50":
     "https://www.magazineluiza.com.br/busca/mesa%20cavalete%20pinus%20100cm/?filter_categoria=mesa-escritorio",
   "DT3 Sports Elise":
-    "https://www.kabum.com.br/busca/DT3%20Sports%20Elise?facet_category_name[]=Cadeiras",
+    "https://www.kabum.com.br/busca/DT3%20Sports%20Elise",
   "Vaso cerâmico + suculenta":
     "https://lista.mercadolivre.com.br/casa-moveis-decoracao/decoracao/vasos/vaso-ceramico-com-suculenta_NoIndex_True",
   "iPad Pro 11\" M4":
@@ -251,13 +251,11 @@ function buildSearchUrl(store: Store, category: string, name: string): string {
     }
     case "mercado_livre":
       return `https://lista.mercadolivre.com.br/${q}`;
-    case "kabum": {
-      const facet = KABUM_FACET[category];
-      const base = `https://www.kabum.com.br/busca/${q}`;
-      return facet
-        ? `${base}?facet_category_name[]=${encodeURIComponent(facet)}`
-        : base;
-    }
+    case "kabum":
+      // Kabum rejeita ?facet_category_name[]= (HTTP 400 do Azion CDN).
+      // Busca simples retorna 200 OK e mostra produtos relevantes
+      // por similaridade textual.
+      return `https://www.kabum.com.br/busca/${q}`;
     case "magalu":
       return `https://www.magazineluiza.com.br/busca/${q}/`;
     case "pichau":
