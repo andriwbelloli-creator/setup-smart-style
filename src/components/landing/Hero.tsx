@@ -4,8 +4,13 @@ import { Upload, Star, ArrowRight, Zap, ExternalLink } from "lucide-react";
 import heroImg from "@/assets/hero-setup.jpg";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
 
+// Busca filtrada por categoria Monitores no Kabum — não usamos
+// URL de produto/<id> direto porque não é verificável sem scraping
+// e o ID pode estar associado a outro SKU (caso real: 177566 redirec-
+// tava pra um pneu). A busca com facet_category_name garante landing
+// só em monitores.
 const LG_ULTRAWIDE_URL = decorateAffiliateUrl(
-  "https://www.kabum.com.br/produto/177566/monitor-gamer-lg-ultrawide-34-ips-21-9-100hz-1ms-hdr-curvo-freesync-vesa-34wp65c-b",
+  "https://www.kabum.com.br/busca/LG%20Ultrawide%2034WP65C?facet_category_name[]=Monitores",
   "kabum",
 );
 

@@ -25,25 +25,27 @@ type Store = "amazon_br" | "mercado_livre" | "kabum" | "magalu" | "pichau" | "ou
 // Estes URLs são páginas de produto verificadas (não buscas).
 // Lookup case-insensitive por nome.
 const CURATED: Record<string, string> = {
-  // Cadeiras
+  // Cadeiras — Kabum busca filtrada por categoria Cadeiras
+  // (URLs de produto/<id> não são verificáveis sem scraping;
+  // a busca filtrada garante landing em produtos do tipo correto.)
   "ThunderX3 Yama1":
-    "https://www.kabum.com.br/produto/216117/cadeira-gamer-thunderx3-yama1-preta-yama1-bk",
+    "https://www.kabum.com.br/busca/cadeira%20ThunderX3%20Yama1?facet_category_name[]=Cadeiras",
   "DT3 Office Nimitz":
-    "https://www.kabum.com.br/produto/132611/cadeira-dt3-office-nimitz-preto",
+    "https://www.kabum.com.br/busca/cadeira%20DT3%20Office%20Nimitz?facet_category_name[]=Cadeiras",
   "DT3 Tronos":
-    "https://www.kabum.com.br/produto/106195/cadeira-dt3-office-tronos-encosto-em-malha",
+    "https://www.kabum.com.br/busca/cadeira%20DT3%20Office%20Tronos?facet_category_name[]=Cadeiras",
   "DT3 Yama1":
-    "https://www.kabum.com.br/produto/216117/cadeira-gamer-thunderx3-yama1-preta-yama1-bk",
+    "https://www.kabum.com.br/busca/cadeira%20DT3%20Yama1?facet_category_name[]=Cadeiras",
   "BR Office Bahamas":
     "https://www.magazineluiza.com.br/busca/cadeira%20BR%20Office%20Bahamas/?filter_categoria=cadeiras-escritorio",
 
-  // Monitores
+  // Monitores — Amazon BR com categoria computers
   "LG Ultrawide 34WP65C":
-    "https://www.kabum.com.br/produto/177566/monitor-gamer-lg-ultrawide-34-ips-21-9-100hz-1ms-hdr-curvo-freesync-vesa-34wp65c-b",
+    "https://www.amazon.com.br/s?k=LG+Ultrawide+34WP65C+monitor&i=computers",
   "LG 34WP500-B Ultrawide":
-    "https://www.kabum.com.br/produto/170554/monitor-gamer-lg-ultrawide-34-led-full-hd-75hz-5ms-hdmi-freesync-34wp500-b",
+    "https://www.amazon.com.br/s?k=LG+34WP500-B+Ultrawide+monitor&i=computers",
   "AOC 24B1H 24\" Full HD":
-    "https://www.kabum.com.br/produto/97881/monitor-aoc-23-6-led-full-hd-vga-hdmi-24b1h-75",
+    "https://www.amazon.com.br/s?k=Monitor+AOC+24B1H+24+Full+HD&i=computers",
   "Dell P2422H 24\" Full HD":
     "https://www.amazon.com.br/s?k=Monitor+Dell+P2422H+24+Full+HD&i=computers",
   "Samsung Odyssey G7":
