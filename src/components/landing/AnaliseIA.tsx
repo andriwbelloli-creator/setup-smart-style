@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown, Lock, LogIn } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown, Lock, LogIn, Share2 } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -48,6 +48,9 @@ export function AnaliseIA() {
   const [analyzed, setAnalyzed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [aiTip, setAiTip] = useState<string | null>(null);
+  // Paywall suave: armazenamos TODAS as tips, mas só revelamos as 3 piores
+  // pro free. Premium destrava o restante + lista de compras detalhada.
+  const [allTips, setAllTips] = useState<Array<{ category: string; severity: string; text: string }>>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -146,6 +149,7 @@ export function AnaliseIA() {
         (t) => t.severity === "alta",
       ) ?? data.tips?.[0];
       setAiTip(overallTipObj?.text ?? data.summary ?? null);
+      setAllTips((data.tips as Array<{ category: string; severity: string; text: string }>) ?? []);
       setAnalyzed(true);
       track("ia_result_view", "ia", {
         overall: data.overall,
@@ -179,14 +183,67 @@ export function AnaliseIA() {
     setAnalyzed(false);
     setCriterios(baseCriterios);
     setAiTip(null);
+    setAllTips([]);
     setNeedsLoginToSeeResults(false);
   };
+
+  // Compartilhar a nota: Web Share API nativa em mobile, clipboard em desktop.
+  // Pré-popula texto pra ser viral ("Meu home office tirou nota 8.5/10 na
+  // IA do HomeOfficeLife! 🤖"). Não gera OG image dinâmica ainda — a OG
+  // padrão da home aparece nos links compartilhados.
+  const shareScore = async () => {
+    const overall = +(criterios.reduce((a, c) => a + c.score, 0) / criterios.length).toFixed(1);
+    const worstCat = [...criterios].sort((a, b) => a.score - b.score)[0];
+    const url = "https://homeofficelife.com.br/diagnostico";
+    const text = `Meu home office tirou nota ${overall}/10 na IA do HomeOfficeLife! 🤖\nPonto fraco: ${worstCat.label} (${worstCat.score}). Avalie o seu também:`;
+    track("ia_share_click", "ia", { overall, worst: worstCat.label });
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `Setup nota ${overall}/10`, text, url });
+      } catch {
+        /* usuário cancelou */
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      toast.success("Link copiado! Cole onde quiser compartilhar.");
+    } catch {
+      toast.info(`Copia o texto: ${text} ${url}`);
+    }
+  };
+
+  // Escuta upload feito no Hero (drop-zone). Converte dataURL de volta
+  // pra File e dispara handleFile como se o usuário tivesse subido aqui.
+  useEffect(() => {
+    const PENDING_KEY = "deskly:pending-upload";
+    const consume = async () => {
+      const dataUrl = sessionStorage.getItem(PENDING_KEY);
+      if (!dataUrl) return;
+      sessionStorage.removeItem(PENDING_KEY);
+      try {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        const file = new File([blob], "hero-upload.jpg", { type: blob.type || "image/jpeg" });
+        await handleFile(file);
+      } catch (e) {
+        console.warn("[hero-upload] consume failed:", e);
+      }
+    };
+    // Mount: se já tinha pendente
+    consume();
+    // Listener: Hero dispara esse event após salvar
+    const listener = () => consume();
+    window.addEventListener("deskly:pending-upload", listener);
+    return () => window.removeEventListener("deskly:pending-upload", listener);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const overall = +(criterios.reduce((a, c) => a + c.score, 0) / criterios.length).toFixed(1);
   const worst = [...criterios].sort((a, b) => a.score - b.score)[0];
 
   return (
-    <section id="analise" className="border-y border-border/60 bg-cream py-24 md:py-32">
+    <section id="analise-ia" className="border-y border-border/60 bg-cream py-24 md:py-32">
       {limitReached && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 px-4" onClick={() => setLimitReached(false)}>
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl bg-card p-8 shadow-elegant">
@@ -262,13 +319,25 @@ export function AnaliseIA() {
               <>
                 <img src={preview} alt="Seu setup" className="absolute inset-0 h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent" />
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); reset(); }}
-                  className="relative z-10 ml-auto mr-0 flex items-center gap-1 self-end rounded-full bg-background/90 px-3 py-1 text-xs font-semibold backdrop-blur"
-                >
-                  <RotateCcw className="h-3 w-3" /> Trocar
-                </button>
+                <div className="relative z-10 ml-auto mr-0 flex items-center gap-2 self-end">
+                  {analyzed && !needsLoginToSeeResults && (
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); shareScore(); }}
+                      className="flex items-center gap-1 rounded-full bg-gradient-hero px-3 py-1 text-xs font-bold text-primary-foreground shadow-elegant backdrop-blur transition-smooth hover:scale-105"
+                      aria-label="Compartilhar minha nota"
+                    >
+                      <Share2 className="h-3 w-3" /> Compartilhar nota
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); reset(); }}
+                    className="flex items-center gap-1 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold backdrop-blur"
+                  >
+                    <RotateCcw className="h-3 w-3" /> Trocar
+                  </button>
+                </div>
                 <div className="relative z-10 mt-auto w-full self-start text-left text-background">
                   <div className="text-[10px] font-semibold uppercase tracking-wider opacity-80">{loading ? "Analisando..." : analyzed ? "Pronto" : "Aguarde"}</div>
                   <div className="font-display text-2xl font-bold">{loading ? "IA processando" : "Resultados ao lado →"}</div>
@@ -334,19 +403,108 @@ export function AnaliseIA() {
                   </div>
                 ))}
               </div>
-              <div className="mt-6 rounded-2xl border-l-4 border-coral bg-coral/10 p-4">
-                <div className="text-xs font-semibold uppercase tracking-wider text-coral-foreground/80">Sugestão da IA</div>
-                <p className="mt-1 text-sm text-foreground">
-                  {analyzed
-                    ? aiTip ?? `${worst.label} é o ponto fraco (${worst.score}). ${worst.tip}`
-                    : "Envie uma foto do seu setup acima e a IA brasileira analisa em segundos."}
-                </p>
-              </div>
-              {analyzed && !needsLoginToSeeResults && (
-                <Link to="/orcamento" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-                  Ver lista de upgrades →
-                </Link>
-              )}
+              {/* PAYWALL SUAVE — free vê top 3 problemas, premium vê tudo */}
+              {(() => {
+                if (!analyzed) {
+                  return (
+                    <div className="mt-6 rounded-2xl border-l-4 border-coral bg-coral/10 p-4">
+                      <div className="text-xs font-semibold uppercase tracking-wider text-coral-foreground/80">Sugestão da IA</div>
+                      <p className="mt-1 text-sm text-foreground">
+                        Envie uma foto do seu setup acima e a IA brasileira analisa em segundos.
+                      </p>
+                    </div>
+                  );
+                }
+                const isPremium = subscription.canUse("unlimited_analysis");
+                // Ordena tips por severidade (alta > media > baixa)
+                const severityOrder = { alta: 0, media: 1, baixa: 2 } as Record<string, number>;
+                const sortedTips = [...allTips].sort(
+                  (a, b) => (severityOrder[a.severity] ?? 9) - (severityOrder[b.severity] ?? 9),
+                );
+                const freeTips = sortedTips.slice(0, 3);
+                const premiumTips = sortedTips.slice(3);
+
+                return (
+                  <>
+                    <div className="mt-6">
+                      <div className="mb-3 flex items-center justify-between">
+                        <h3 className="font-display text-base font-bold">
+                          {freeTips.length > 0 ? `Top ${freeTips.length} problemas identificados` : "Análise pronta"}
+                        </h3>
+                        {!needsLoginToSeeResults && (
+                          <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+                            Grátis
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        {freeTips.map((t, i) => (
+                          <div key={i} className={`flex gap-3 rounded-2xl border-l-4 p-3 ${
+                            t.severity === "alta" ? "border-coral bg-coral/10" :
+                            t.severity === "media" ? "border-accent bg-accent/10" :
+                            "border-primary bg-primary/10"
+                          }`}>
+                            <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-foreground/10 text-xs font-bold">
+                              {i + 1}
+                            </div>
+                            <div>
+                              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                                {t.category} · {t.severity}
+                              </div>
+                              <p className="mt-0.5 text-sm text-foreground">{t.text}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Plano de ação detalhado — bloqueado pra free */}
+                    {!needsLoginToSeeResults && (premiumTips.length > 0 || !isPremium) && (
+                      <div className={`mt-4 overflow-hidden rounded-2xl border-2 ${isPremium ? "border-primary/40 bg-primary/5" : "border-dashed border-primary/40 bg-gradient-to-br from-primary/5 to-accent/5"}`}>
+                        <div className="flex items-center justify-between p-4">
+                          <div className="flex items-center gap-2">
+                            {isPremium ? <Sparkles className="h-4 w-4 text-primary" /> : <Lock className="h-4 w-4 text-primary" />}
+                            <h3 className="font-display text-sm font-bold">
+                              Plano de ação detalhado + Lista de compras
+                            </h3>
+                          </div>
+                          <span className="rounded-full bg-gradient-hero px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                            <Crown className="mr-1 inline h-3 w-3" /> Premium
+                          </span>
+                        </div>
+                        {isPremium ? (
+                          <div className="space-y-2 px-4 pb-4">
+                            {premiumTips.map((t, i) => (
+                              <div key={i} className="flex gap-3 rounded-xl bg-card p-3">
+                                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-foreground/10 text-xs font-bold">
+                                  {freeTips.length + i + 1}
+                                </div>
+                                <p className="text-sm">{t.text}</p>
+                              </div>
+                            ))}
+                            <Link to="/orcamento" className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+                              Ver lista de compras completa →
+                            </Link>
+                          </div>
+                        ) : (
+                          <div className="border-t border-primary/20 bg-card/50 p-4">
+                            <p className="text-xs text-muted-foreground">
+                              <strong className="text-foreground">{premiumTips.length || 3}+ ações detalhadas</strong>, lista de compras com produtos exatos e priorização por orçamento. Destravado no Premium.
+                            </p>
+                            <Link
+                              to="/premium"
+                              onClick={() => track("ia_upgrade_click", "ia", { from: "soft_paywall_action_plan" })}
+                              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-hero px-4 py-2.5 text-xs font-bold text-primary-foreground shadow-elegant transition-smooth hover:opacity-90"
+                            >
+                              <Crown className="h-3.5 w-3.5" /> Destravar plano completo
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
 
             {/* Overlay de login — aparece sobre o conteúdo borrado */}

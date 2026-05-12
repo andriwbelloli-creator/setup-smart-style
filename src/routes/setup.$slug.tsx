@@ -9,6 +9,7 @@ import { estimateMonthlyRental } from "@/lib/rental";
 import { fetchSetupBySlug } from "@/lib/setups-db";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
 import { track, trackPageView } from "@/lib/track";
+import { fetchCrossSellMatches, formatBrl, type CrossSellMatch } from "@/lib/marketplace";
 import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight, CalendarClock, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
@@ -163,6 +164,25 @@ function SetupDetail() {
   const [deletingSetup, setDeletingSetup] = useState(false);
   const [myFirstSlug, setMyFirstSlug] = useState<string | null>(null);
   const [rentalOpen, setRentalOpen] = useState(false);
+  const [crossSells, setCrossSells] = useState<Map<string, CrossSellMatch>>(new Map());
+
+  // Cross-selling: pra cada produto deste setup, verifica se tem usado
+  // equivalente no marketplace por preço menor. Mostra badge "Economize R$X".
+  useEffect(() => {
+    if (setup.products.length === 0) {
+      setCrossSells(new Map());
+      return;
+    }
+    const input = setup.products.map((p: Product) => ({
+      product_id: p.id,
+      category: p.category,
+      name: p.name,
+      ref_price: p.price,
+    }));
+    fetchCrossSellMatches(input)
+      .then(setCrossSells)
+      .catch((e) => console.warn("cross-sell:", e));
+  }, [setup.id]);
   const monthlyRental = estimateMonthlyRental(total, 12);
 
   // Track page view + impressões dos produtos (afiliado funnel impression)
@@ -542,38 +562,66 @@ function SetupDetail() {
                     Nenhum produto marcado neste setup.
                   </p>
                 )}
-                {setup.products.map((p) => (
-                  <div key={p.id}
-                    className={`flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-smooth ${
-                      active?.id === p.id ? "border-accent bg-accent/5" : "border-border bg-background hover:border-foreground/30"
-                    }`}>
-                    <button onClick={() => setActive(p)} className="flex flex-1 items-start gap-3 text-left min-w-0">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-secondary text-xs font-bold">
-                        {p.category[0]}
+                {setup.products.map((p) => {
+                  const xSell = crossSells.get(p.id);
+                  return (
+                    <div key={p.id}
+                      className={`flex w-full flex-col gap-2 rounded-2xl border p-3 text-left transition-smooth ${
+                        active?.id === p.id ? "border-accent bg-accent/5" : "border-border bg-background hover:border-foreground/30"
+                      }`}>
+                      <div className="flex items-start gap-3">
+                        <button onClick={() => setActive(p)} className="flex flex-1 items-start gap-3 text-left min-w-0">
+                          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-secondary text-xs font-bold">
+                            {p.category[0]}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{p.category}</div>
+                            <div className="truncate text-sm font-semibold">{p.name}</div>
+                            <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                              <span className="font-bold text-foreground">R$ {p.price.toLocaleString("pt-BR")}</span>
+                              <span>· {p.store}</span>
+                            </div>
+                          </div>
+                        </button>
+                        <a
+                          href={affiliateHref(p.id)}
+                          target="_blank"
+                          rel="sponsored noopener noreferrer"
+                          onClick={() => trackAffiliateClick({ productId: p.id, setupId: setup.id, store: normalizeStore(p.store) })}
+                          className="flex h-9 flex-shrink-0 items-center justify-center gap-1.5 self-center rounded-xl bg-primary px-3 text-xs font-bold text-primary-foreground shadow-soft transition-smooth hover:bg-primary/90 hover:shadow-elegant"
+                          aria-label={`Comprar ${p.name} em ${p.store}`}
+                          title={`Abrir ${p.name} em ${p.store}`}
+                        >
+                          <span className="hidden sm:inline">Ver em</span> {p.store}
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{p.category}</div>
-                        <div className="truncate text-sm font-semibold">{p.name}</div>
-                        <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="font-bold text-foreground">R$ {p.price.toLocaleString("pt-BR")}</span>
-                          <span>· {p.store}</span>
-                        </div>
-                      </div>
-                    </button>
-                    <a
-                      href={affiliateHref(p.id)}
-                      target="_blank"
-                      rel="sponsored noopener noreferrer"
-                      onClick={() => trackAffiliateClick({ productId: p.id, setupId: setup.id, store: normalizeStore(p.store) })}
-                      className="flex h-9 flex-shrink-0 items-center justify-center gap-1.5 self-center rounded-xl bg-primary px-3 text-xs font-bold text-primary-foreground shadow-soft transition-smooth hover:bg-primary/90 hover:shadow-elegant"
-                      aria-label={`Comprar ${p.name} em ${p.store}`}
-                      title={`Abrir ${p.name} em ${p.store}`}
-                    >
-                      <span className="hidden sm:inline">Ver em</span> {p.store}
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </div>
-                ))}
+
+                      {/* Cross-sell badge: produto usado encontrado no marketplace */}
+                      {xSell && (
+                        <Link
+                          to="/marketplace/$id"
+                          params={{ id: xSell.listing.id }}
+                          onClick={() => track("marketplace_crosssell_click", "marketplace", {
+                            from_product_id: p.id,
+                            listing_id: xSell.listing.id,
+                            savings: xSell.savings,
+                          })}
+                          className="group flex items-center gap-2 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 to-accent/10 px-3 py-2 text-xs transition-smooth hover:border-primary hover:from-primary/15 hover:to-accent/15"
+                        >
+                          <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                            Usado
+                          </span>
+                          <span className="flex-1">
+                            <strong className="text-foreground">Economize {formatBrl(xSell.savings)}</strong>{" "}
+                            <span className="text-muted-foreground">comprando da comunidade — {formatBrl(Number(xSell.listing.price))}</span>
+                          </span>
+                          <span className="font-bold text-primary transition-transform group-hover:translate-x-0.5">→</span>
+                        </Link>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Disclosure de afiliado — obrigatório CONAR + CDC art. 36 */}
