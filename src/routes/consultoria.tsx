@@ -26,14 +26,16 @@ type Service = {
   ctaLabel: string;
 };
 
-// IMPORTANTE: ctaUrl deve ser substituído pelos seus Stripe Payment Links
-// reais. Pra criar:
-//   1. https://dashboard.stripe.com/test/payment-links
-//   2. + New → Add product → preço fixo da consultoria
-//   3. Copiar URL https://buy.stripe.com/test_...
-//   4. Substituir aqui.
-// Por enquanto usa mailto pra ainda funcionar sem o setup.
 const CONTACT_EMAIL = "contato@deskly.life";
+
+// Stripe Payment Links (Test mode atualmente — quando migrar pra prod,
+// criar 3 links equivalentes em dashboard.stripe.com/payment-links
+// e trocar aqui).
+const STRIPE_LINKS = {
+  chamada30: "https://buy.stripe.com/test_5kQ8wQ5Ch2ii8W440N0Ny02",
+  analise: "https://buy.stripe.com/test_fZu28s4yd0aa4FOapb0Ny01",
+  completo: "https://buy.stripe.com/test_eVq5kEc0F0aaa081SF0Ny00",
+};
 
 const SERVICES: Service[] = [
   {
@@ -49,8 +51,8 @@ const SERVICES: Service[] = [
       "Recomendações de 5-8 produtos sob medida",
       "Resumo escrito enviado por email",
     ],
-    ctaUrl: `mailto:${CONTACT_EMAIL}?subject=Reservar%20chamada%2030min%20%E2%80%94%20R%24%2099&body=Oi%2C%20quero%20agendar%20uma%20chamada%20de%2030min%20pela%20Deskly.%20Meu%20perfil%3A%20`,
-    ctaLabel: "Reservar chamada",
+    ctaUrl: STRIPE_LINKS.chamada30,
+    ctaLabel: "Reservar agora · R$ 99",
   },
   {
     slug: "analise-pdf",
@@ -67,8 +69,8 @@ const SERVICES: Service[] = [
       "PDF white-label pra você guardar/imprimir",
     ],
     highlight: true,
-    ctaUrl: `mailto:${CONTACT_EMAIL}?subject=Pedir%20an%C3%A1lise%20%2B%20PDF%20%E2%80%94%20R%24%20199&body=Oi%2C%20quero%20a%20an%C3%A1lise%20completa%20com%20PDF.%20Meu%20setup%3A%20`,
-    ctaLabel: "Pedir análise",
+    ctaUrl: STRIPE_LINKS.analise,
+    ctaLabel: "Comprar agora · R$ 199",
   },
   {
     slug: "setup-completo",
@@ -85,8 +87,8 @@ const SERVICES: Service[] = [
       "Roteiro de montagem em ordem (não chega tudo de uma vez)",
       "Suporte por WhatsApp durante a montagem",
     ],
-    ctaUrl: `mailto:${CONTACT_EMAIL}?subject=Setup%20completo%20%E2%80%94%20R%24%20599&body=Oi%2C%20quero%20o%20pacote%20completo.%20Meu%20espa%C3%A7o%2C%20trabalho%2C%20or%C3%A7amento%3A%20`,
-    ctaLabel: "Quero esse",
+    ctaUrl: STRIPE_LINKS.completo,
+    ctaLabel: "Contratar agora · R$ 599",
   },
 ];
 
@@ -165,7 +167,7 @@ function Consultoria() {
                   className={`mt-7 w-full ${s.highlight ? "bg-gradient-hero shadow-elegant" : ""}`}
                   variant={s.highlight ? "default" : "outline"}
                 >
-                  <a href={s.ctaUrl} target={s.ctaUrl.startsWith("mailto:") ? "_self" : "_blank"} rel="noopener noreferrer">
+                  <a href={s.ctaUrl} target="_blank" rel="noopener noreferrer">
                     {s.ctaLabel} →
                   </a>
                 </Button>
