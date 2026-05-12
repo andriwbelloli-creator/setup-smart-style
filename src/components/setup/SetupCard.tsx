@@ -1,14 +1,43 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, MapPin, Bookmark, ArrowRight } from "lucide-react";
+import { Heart, MapPin, Bookmark, ArrowRight, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import type { Setup } from "@/data/setups";
 import { useLikes, useSaves } from "@/hooks/use-saved";
+import { useIsAdmin } from "@/hooks/use-is-admin";
+import { supabase } from "@/integrations/supabase/client";
 import { WatermarkOverlay } from "@/components/setup/WatermarkOverlay";
 
-export function SetupCard({ s, featured = false }: { s: Setup; featured?: boolean }) {
+export function SetupCard({
+  s,
+  featured = false,
+  onDeleted,
+}: {
+  s: Setup;
+  featured?: boolean;
+  onDeleted?: (id: string) => void;
+}) {
   const likes = useLikes();
   const saves = useSaves();
   const liked = likes.has(s.id);
   const saved = saves.has(s.id);
+  const { isAdmin } = useIsAdmin();
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm(`Excluir o setup "${s.title}"? Esta ação é permanente.`)) return;
+    setDeleting(true);
+    const { error } = await supabase.from("setups").delete().eq("id", s.id);
+    setDeleting(false);
+    if (error) {
+      toast.error(`Falha ao excluir: ${error.message}`);
+      return;
+    }
+    toast.success("Setup excluído.");
+    onDeleted?.(s.id);
+  };
   return (
     <Link
       to="/setup/$slug"
@@ -35,6 +64,18 @@ export function SetupCard({ s, featured = false }: { s: Setup; featured?: boolea
         <div className="absolute bottom-3 right-3 rounded-full bg-card/95 px-3 py-1 text-xs font-bold text-foreground backdrop-blur">
           R$ {s.budget.toLocaleString("pt-BR")}
         </div>
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="absolute right-3 top-12 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-elegant transition-smooth hover:scale-110 disabled:opacity-50"
+            aria-label={`Excluir setup ${s.title}`}
+            title="Excluir setup (admin)"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        )}
         <WatermarkOverlay />
       </div>
       <div className="p-5">

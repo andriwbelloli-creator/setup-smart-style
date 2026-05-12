@@ -124,7 +124,12 @@ function Galeria() {
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {pageItems.map((s, i) => (
-                <SetupCard key={s.id} s={s} featured={i === 0 && currentPage === 1} />
+                <SetupCard
+                  key={s.id}
+                  s={s}
+                  featured={i === 0 && currentPage === 1}
+                  onDeleted={(id) => setDbSetups((prev) => prev.filter((x) => x.id !== id))}
+                />
               ))}
             </div>
             {totalPages > 1 && (

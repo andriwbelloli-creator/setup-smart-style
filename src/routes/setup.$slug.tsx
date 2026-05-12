@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
@@ -10,7 +10,9 @@ import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Se
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
 import { useAuth } from "@/hooks/use-auth";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useComments } from "@/hooks/use-comments";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/setup/$slug")({
@@ -106,8 +108,24 @@ function SetupDetail() {
   const liked = likes.has(setup.id);
   const saved = saves.has(setup.id);
   const { user } = useAuth();
+  const { isAdmin } = useIsAdmin();
+  const navigate = useNavigate();
   const cmt = useComments(setup.id, fromDb);
   const [commentBody, setCommentBody] = useState("");
+  const [deletingSetup, setDeletingSetup] = useState(false);
+
+  const handleDeleteSetup = async () => {
+    if (!confirm(`Excluir o setup "${setup.title}"? Esta ação é permanente.`)) return;
+    setDeletingSetup(true);
+    const { error } = await supabase.from("setups").delete().eq("id", setup.id);
+    setDeletingSetup(false);
+    if (error) {
+      toast.error(`Falha ao excluir: ${error.message}`);
+      return;
+    }
+    toast.success("Setup excluído.");
+    navigate({ to: "/galeria" });
+  };
 
   const postComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -239,6 +257,19 @@ function SetupDetail() {
               <Button asChild variant="secondary" className="gap-2 bg-coral text-coral-foreground hover:opacity-90">
                 <Link to="/orcamento"><Sparkles className="h-4 w-4" /> Quero montar parecido</Link>
               </Button>
+              {isAdmin && (
+                <Button
+                  type="button"
+                  onClick={handleDeleteSetup}
+                  disabled={deletingSetup}
+                  variant="outline"
+                  className="ml-auto gap-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                  title="Excluir setup (admin)"
+                >
+                  {deletingSetup ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                  Excluir setup
+                </Button>
+              )}
             </div>
 
             {/* Comments */}
