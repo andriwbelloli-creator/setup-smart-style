@@ -26,13 +26,50 @@ export const Route = createFileRoute("/setup/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
     const s = loaderData.setup;
-    const ldjson = {
+    const url = `https://deskly.life/setup/${s.slug || s.id}`;
+    const description = s.description
+      ? s.description.slice(0, 200)
+      : `Setup de ${s.author} em ${s.city}: ${s.styles.slice(0, 3).join(", ")}. Orçamento R$ ${s.budget.toLocaleString("pt-BR")}.`;
+
+    // JSON-LD: 3 schemas separados (BreadcrumbList, ItemList de produtos,
+    // Article do setup) pra cobrir múltiplos rich snippets do Google.
+    const breadcrumb = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Início", item: "https://deskly.life/" },
+        { "@type": "ListItem", position: 2, name: "Galeria", item: "https://deskly.life/galeria" },
+        { "@type": "ListItem", position: 3, name: s.title, item: url },
+      ],
+    };
+    const article = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: s.title,
+      description,
+      image: s.image,
+      url,
+      author: { "@type": "Person", name: s.author.replace(/^@/, "") },
+      publisher: {
+        "@type": "Organization",
+        name: "Deskly",
+        url: "https://deskly.life",
+        logo: { "@type": "ImageObject", url: "https://deskly.life/og-image.jpg" },
+      },
+      ...(s.score && {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: s.score,
+          bestRating: 10,
+          worstRating: 0,
+          ratingCount: Math.max(1, s.likes + s.saves),
+        },
+      }),
+    };
+    const productList = {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: s.title,
-      description: s.description || `Setup de ${s.author}`,
-      image: s.image,
-      url: `https://deskly.life/setup/${s.slug || s.id}`,
+      name: `Produtos do setup ${s.title}`,
       itemListElement: (s.products || []).map((p: Product, i: number) => ({
         "@type": "ListItem",
         position: i + 1,
@@ -47,7 +84,7 @@ export const Route = createFileRoute("/setup/$slug")({
             price: p.price,
             availability: "https://schema.org/InStock",
             seller: { "@type": "Organization", name: p.store },
-            url: p.affiliateUrl,
+            url: `https://deskly.life/r/${p.id}`,
           },
           aggregateRating: p.rating
             ? { "@type": "AggregateRating", ratingValue: p.rating, ratingCount: 50 }
@@ -58,19 +95,27 @@ export const Route = createFileRoute("/setup/$slug")({
     return {
       meta: [
         { title: `${s.title} — ${s.author} · Deskly` },
-        { name: "description", content: s.description || `Setup de ${s.author}` },
-        { property: "og:title", content: `${s.title} — Setup brasileiro` },
-        { property: "og:description", content: s.description || "" },
+        { name: "description", content: description },
+        { name: "keywords", content: `${s.styles.join(", ")}, home office, setup ${s.authorRole}, ${s.city}, R$ ${s.budget.toLocaleString("pt-BR")}` },
+        { property: "og:title", content: `${s.title} · Setup ${s.styles[0] || "home office"} de ${s.author}` },
+        { property: "og:description", content: description },
         { property: "og:image", content: s.image },
+        { property: "og:image:width", content: "1600" },
+        { property: "og:image:height", content: "1100" },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { property: "og:site_name", content: "Deskly" },
+        { property: "og:locale", content: "pt_BR" },
+        { property: "article:author", content: s.author },
         { property: "twitter:image", content: s.image },
+        { property: "twitter:title", content: `${s.title} — Setup brasileiro` },
+        { property: "twitter:description", content: description },
         { name: "twitter:card", content: "summary_large_image" },
       ],
       scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(ldjson),
-        },
+        { type: "application/ld+json", children: JSON.stringify(breadcrumb) },
+        { type: "application/ld+json", children: JSON.stringify(article) },
+        { type: "application/ld+json", children: JSON.stringify(productList) },
       ],
     };
   },

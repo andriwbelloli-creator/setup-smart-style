@@ -169,6 +169,66 @@ async function handleCspReport(req, res) {
   res.end();
 }
 
+// =============================================================
+// Sitemap dinâmico — lista todos os setups publicados.
+// Substitui /public/sitemap.xml estático (que tinha só 5 URLs).
+// Google indexa o sitemap em ~24h via /robots.txt → Sitemap: ...
+// =============================================================
+async function handleSitemap(_req, res) {
+  const staticUrls = [
+    { loc: "https://deskly.life/", priority: 1.0, changefreq: "daily" },
+    { loc: "https://deskly.life/galeria", priority: 0.9, changefreq: "daily" },
+    { loc: "https://deskly.life/diagnostico", priority: 0.9, changefreq: "weekly" },
+    { loc: "https://deskly.life/orcamento", priority: 0.8, changefreq: "weekly" },
+    { loc: "https://deskly.life/comunidade", priority: 0.7, changefreq: "daily" },
+    { loc: "https://deskly.life/premium", priority: 0.7, changefreq: "monthly" },
+    { loc: "https://deskly.life/termos", priority: 0.3, changefreq: "monthly" },
+    { loc: "https://deskly.life/privacidade", priority: 0.3, changefreq: "monthly" },
+  ];
+
+  let setupUrls = [];
+  try {
+    if (SUPABASE_URL && SUPABASE_ANON) {
+      const r = await fetch(
+        `${SUPABASE_URL}/rest/v1/setups?select=slug,updated_at&status=eq.published&order=updated_at.desc&limit=10000`,
+        { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } },
+      );
+      if (r.ok) {
+        const rows = await r.json();
+        setupUrls = rows.map((row) => ({
+          loc: `https://deskly.life/setup/${row.slug}`,
+          lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
+          priority: 0.6,
+          changefreq: "weekly",
+        }));
+      }
+    }
+  } catch (err) {
+    console.error("[sitemap] failed to load setups:", err);
+  }
+
+  const xml =
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+    [...staticUrls, ...setupUrls]
+      .map(
+        (u) =>
+          `  <url>\n` +
+          `    <loc>${u.loc}</loc>\n` +
+          (u.lastmod ? `    <lastmod>${u.lastmod}</lastmod>\n` : "") +
+          `    <changefreq>${u.changefreq}</changefreq>\n` +
+          `    <priority>${u.priority}</priority>\n` +
+          `  </url>`,
+      )
+      .join("\n") +
+    `\n</urlset>\n`;
+
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "application/xml; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=3600"); // cache 1h
+  res.end(xml);
+}
+
 async function handleHoneypot(req, res) {
   const ip = clientIp(req);
   bannedIps.add(ip);
@@ -304,6 +364,12 @@ const server = createServer(async (req, res) => {
     // 2a. CSP violation reports (browser-initiated POST)
     if (path === "/csp-report" && req.method === "POST") {
       await handleCspReport(req, res);
+      return;
+    }
+
+    // 2a'. Sitemap dinâmico (intercepta antes do serveStatic)
+    if (path === "/sitemap.xml" && (req.method === "GET" || req.method === "HEAD")) {
+      await handleSitemap(req, res);
       return;
     }
 
