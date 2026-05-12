@@ -6,7 +6,12 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSubscription } from "@/hooks/use-subscription";
 import { toast } from "sonner";
 
-const FREE_ANALYSES_PER_MONTH = 1;
+// Estratégia freemium: 3 análises lifetime no plano gratuito.
+// Tentativa 1 = prova de valor (aha moment)
+// Tentativa 2 = engajamento (testa melhorias sugeridas)
+// Tentativa 3 = hábito formado, vê evolução
+// Tentativa 4 = paywall com usuário já convencido
+const FREE_ANALYSES_LIFETIME = 3;
 
 type Crit = { icon: typeof Upload; label: string; score: number; tip: string; color: string };
 
@@ -48,6 +53,7 @@ export function AnaliseIA() {
   const subscription = useSubscription();
   const navigate = useNavigate();
   const [limitReached, setLimitReached] = useState(false);
+  const [usedAnalyses, setUsedAnalyses] = useState(0);
 
   const handleFile = async (file?: File) => {
     if (!file) return;
@@ -60,17 +66,15 @@ export function AnaliseIA() {
       toast.error("Imagem muito grande (máx 10MB).");
       return;
     }
-    // Free tier: 1 análise por mês. Premium/Pro: ilimitado.
+    // Free tier: 3 análises lifetime. Premium/Pro: ilimitado.
     if (!subscription.canUse("unlimited_analysis")) {
-      const startOfMonth = new Date();
-      startOfMonth.setDate(1);
-      startOfMonth.setHours(0, 0, 0, 0);
       const { count } = await supabase
         .from("ai_analyses")
         .select("id", { count: "exact", head: true })
-        .eq("owner_id", user.id)
-        .gte("created_at", startOfMonth.toISOString());
-      if ((count ?? 0) >= FREE_ANALYSES_PER_MONTH) {
+        .eq("owner_id", user.id);
+      const used = count ?? 0;
+      setUsedAnalyses(used);
+      if (used >= FREE_ANALYSES_LIFETIME) {
         setLimitReached(true);
         return;
       }
@@ -139,17 +143,37 @@ export function AnaliseIA() {
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-hero text-primary-foreground">
               <Crown className="h-6 w-6" />
             </div>
-            <h3 className="text-center font-display text-2xl font-bold">Você bateu o limite do plano Gratuito</h3>
+            <h3 className="text-center font-display text-2xl font-bold">
+              Você já melhorou seu setup {usedAnalyses}x 🚀
+            </h3>
             <p className="mt-3 text-center text-sm text-muted-foreground">
-              O plano Gratuito inclui <strong>1 análise por mês</strong>. Pra continuar avaliando setups
-              ilimitadamente, faça upgrade pro Premium (R$ 9,90/mês) ou Pro (R$ 19,90/mês).
+              Pra continuar acompanhando sua evolução, comparar setups lado a lado e
+              gerar relatório PDF, faça upgrade para o <strong>Premium por R$ 9,90/mês</strong>.
+              Cancela quando quiser.
             </p>
+            <ul className="mt-5 space-y-2 text-xs text-foreground">
+              <li className="flex items-center gap-2">
+                <span className="text-primary">✓</span> Análise IA ilimitada
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary">✓</span> Comparação Antes/Depois lado a lado
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary">✓</span> Recomendações personalizadas
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary">✓</span> Relatório PDF do seu setup
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary">✓</span> Sem anúncios
+              </li>
+            </ul>
             <div className="mt-6 flex flex-col gap-3">
               <Link to="/premium" onClick={() => setLimitReached(false)} className="block rounded-full bg-gradient-hero px-5 py-3 text-center text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth hover:opacity-90">
-                Ver planos Premium e Pro →
+                Assinar Premium · R$ 9,90/mês →
               </Link>
               <button type="button" onClick={() => setLimitReached(false)} className="text-xs text-muted-foreground hover:text-foreground">
-                Fechar
+                Talvez depois
               </button>
             </div>
           </div>
