@@ -135,38 +135,52 @@ function Galeria() {
           </p>
         </div>
 
-        {/* Search + filters */}
+        {/* Search + filters compactos: Estilo fica como pills (descobrível),
+            Função e Orçamento viram dropdowns (low cognitive load no mobile) */}
         <div className="rounded-3xl border border-border bg-card p-5 shadow-soft">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Buscar por nome, autor ou cidade…"
-                className="h-12 w-full rounded-2xl border border-border bg-background pl-11 pr-4 text-sm transition-smooth focus:border-primary focus:outline-none"
+                className="h-11 w-full rounded-2xl border border-border bg-background pl-11 pr-4 text-sm transition-smooth focus:border-primary focus:outline-none"
               />
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              <SlidersHorizontal className="h-4 w-4" /> Filtros
+            <div className="flex gap-2">
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                aria-label="Filtrar por função"
+                className="h-11 flex-1 rounded-2xl border border-border bg-background px-3 text-sm font-medium transition-smooth focus:border-primary focus:outline-none lg:flex-none"
+              >
+                <option value="Todos">Função: Todos</option>
+                {ROLES.map((r) => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </select>
+              <select
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                aria-label="Filtrar por orçamento"
+                className="h-11 flex-1 rounded-2xl border border-border bg-background px-3 text-sm font-medium transition-smooth focus:border-primary focus:outline-none lg:flex-none"
+              >
+                <option value="Todos">Orçamento: Todos</option>
+                <option value="<2k">Até R$ 2k</option>
+                <option value="2-5k">R$ 2-5k</option>
+                <option value="5-10k">R$ 5-10k</option>
+                <option value="10-20k">R$ 10-20k</option>
+                <option value="20k+">R$ 20k+</option>
+              </select>
             </div>
           </div>
 
-          <div className="mt-4 space-y-3">
-            <FilterRow label="Estilo" value={style} setValue={setStyle} options={[...STYLES]} />
-            <FilterRow label="Função" value={role} setValue={setRole} options={["Todos", ...ROLES]} />
-            <FilterRow
-              label="Orçamento"
-              value={budget}
-              setValue={setBudget}
-              options={["Todos", "<2k", "2-5k", "5-10k", "10-20k", "20k+"]}
-              format={(o) =>
-                o === "Todos" ? o :
-                o === "<2k" ? "Até R$ 2k" :
-                o === "20k+" ? "R$ 20k+" :
-                `R$ ${o}`
-              }
-            />
+          <div className="mt-4 flex items-start gap-2 border-t border-border pt-4">
+            <SlidersHorizontal className="mt-1.5 hidden h-4 w-4 flex-shrink-0 text-muted-foreground sm:block" />
+            <div className="flex-1">
+              <FilterRow label="Estilo" value={style} setValue={setStyle} options={[...STYLES]} />
+            </div>
           </div>
         </div>
 

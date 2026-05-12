@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown } from "lucide-react";
+import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown, Lock, LogIn } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -54,28 +54,37 @@ export function AnaliseIA() {
   const navigate = useNavigate();
   const [limitReached, setLimitReached] = useState(false);
   const [usedAnalyses, setUsedAnalyses] = useState(0);
-
-  // Click no área de upload — se não logado, redireciona ANTES de
-  // abrir file picker (zero friction: user não desperdiça esforço
-  // escolhendo foto pra depois ser barrado).
-  const requireAuthBeforeUpload = (e: React.MouseEvent | React.DragEvent) => {
-    if (user) return true;
-    e.preventDefault();
-    e.stopPropagation();
-    toast.message("Conta grátis em 10s pra começar a avaliar.", {
-      description: "Sua conta dá acesso a 3 análises grátis + galeria + comunidade.",
-    });
-    navigate({ to: "/auth" });
-    return false;
-  };
+  // Estratégia "curiosity gap": usuário deslogado pode subir foto,
+  // ver preview, esperar análise — mas resultados ficam borrados
+  // com CTA de login. Maior conversão de signup que pedir auth antes.
+  const [needsLoginToSeeResults, setNeedsLoginToSeeResults] = useState(false);
 
   const handleFile = async (file?: File) => {
     if (!file) return;
-    if (!user) {
-      // Failsafe — não deveria chegar aqui porque o clique já blocked
-      navigate({ to: "/auth" });
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Imagem muito grande (máx 10MB).");
       return;
     }
+
+    // ANONYMOUS PATH: deixa o user ver o preview + fake loading +
+    // resultado borrado. Converte muito mais que bloquear no clique.
+    if (!user) {
+      setPreview(URL.createObjectURL(file));
+      setLoading(true);
+      setAnalyzed(false);
+      setAiTip(null);
+      setNeedsLoginToSeeResults(false);
+      // Simula análise (~2.5s) — sensação realista. NÃO chama API real.
+      await new Promise((r) => setTimeout(r, 2500));
+      setLoading(false);
+      setNeedsLoginToSeeResults(true);
+      // Score fake otimista pra teaser ("8.4" + critérios fictícios)
+      setCriterios(baseCriterios.map((c) => ({ ...c, score: +(7 + Math.random() * 2.4).toFixed(1) })));
+      setAnalyzed(true);
+      setAiTip("Para ver as sugestões personalizadas da IA e a nota detalhada, faça login grátis (3 análises lifetime).");
+      return;
+    }
+
     if (file.size > 10 * 1024 * 1024) {
       toast.error("Imagem muito grande (máx 10MB).");
       return;
@@ -156,7 +165,13 @@ export function AnaliseIA() {
     }
   };
 
-  const reset = () => { setPreview(null); setAnalyzed(false); setCriterios(baseCriterios); setAiTip(null); };
+  const reset = () => {
+    setPreview(null);
+    setAnalyzed(false);
+    setCriterios(baseCriterios);
+    setAiTip(null);
+    setNeedsLoginToSeeResults(false);
+  };
 
   const overall = +(criterios.reduce((a, c) => a + c.score, 0) / criterios.length).toFixed(1);
   const worst = [...criterios].sort((a, b) => a.score - b.score)[0];
@@ -277,49 +292,78 @@ export function AnaliseIA() {
           </div>
 
           {/* Score panel */}
-          <div className="rounded-3xl bg-card p-8 shadow-soft">
-            <div className="mb-6 flex items-end justify-between">
-              <div>
-                <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {analyzed ? "Sua nota geral" : "Nota geral (exemplo)"}
-                </div>
-                <div className="font-display text-6xl font-bold transition-smooth">
-                  {overall}<span className="text-2xl text-muted-foreground">/10</span>
-                </div>
-              </div>
-              <div className="rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent-foreground">
-                {analyzed ? (overall > 8 ? "Acima da média" : "Tem upgrades fáceis") : "+0.7 vs média"}
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {criterios.map((c) => (
-                <div key={c.label} className="flex items-center gap-3 rounded-2xl bg-muted/60 p-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-card ${c.color}`}>
-                    <c.icon className="h-5 w-5" />
+          <div className="relative rounded-3xl bg-card p-8 shadow-soft">
+            {/* Conteúdo (borrado quando needsLoginToSeeResults) */}
+            <div className={needsLoginToSeeResults ? "select-none pointer-events-none blur-md" : ""} aria-hidden={needsLoginToSeeResults}>
+              <div className="mb-6 flex items-end justify-between">
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {analyzed ? "Sua nota geral" : "Nota geral (exemplo)"}
                   </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium">{c.label}</div>
-                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-border">
-                      <div className="h-full rounded-full bg-gradient-hero transition-all duration-700"
-                        style={{ width: `${c.score * 10}%` }} />
+                  <div className="font-display text-6xl font-bold transition-smooth">
+                    {overall}<span className="text-2xl text-muted-foreground">/10</span>
+                  </div>
+                </div>
+                <div className="rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent-foreground">
+                  {analyzed ? (overall > 8 ? "Acima da média" : "Tem upgrades fáceis") : "+0.7 vs média"}
+                </div>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {criterios.map((c) => (
+                  <div key={c.label} className="flex items-center gap-3 rounded-2xl bg-muted/60 p-3">
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-card ${c.color}`}>
+                      <c.icon className="h-5 w-5" />
                     </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">{c.label}</div>
+                      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-border">
+                        <div className="h-full rounded-full bg-gradient-hero transition-all duration-700"
+                          style={{ width: `${c.score * 10}%` }} />
+                      </div>
+                    </div>
+                    <div className="font-display text-sm font-bold">{c.score}</div>
                   </div>
-                  <div className="font-display text-sm font-bold">{c.score}</div>
+                ))}
+              </div>
+              <div className="mt-6 rounded-2xl border-l-4 border-coral bg-coral/10 p-4">
+                <div className="text-xs font-semibold uppercase tracking-wider text-coral-foreground/80">Sugestão da IA</div>
+                <p className="mt-1 text-sm text-foreground">
+                  {analyzed
+                    ? aiTip ?? `${worst.label} é o ponto fraco (${worst.score}). ${worst.tip}`
+                    : "Envie uma foto do seu setup acima e a IA brasileira analisa em segundos."}
+                </p>
+              </div>
+              {analyzed && !needsLoginToSeeResults && (
+                <Link to="/orcamento" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+                  Ver lista de upgrades →
+                </Link>
+              )}
+            </div>
+
+            {/* Overlay de login — aparece sobre o conteúdo borrado */}
+            {needsLoginToSeeResults && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-3xl bg-background/40 p-6 text-center backdrop-blur-sm">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-hero text-primary-foreground shadow-elegant">
+                  <Lock className="h-6 w-6" />
                 </div>
-              ))}
-            </div>
-            <div className="mt-6 rounded-2xl border-l-4 border-coral bg-coral/10 p-4">
-              <div className="text-xs font-semibold uppercase tracking-wider text-coral-foreground/80">Sugestão da IA</div>
-              <p className="mt-1 text-sm text-foreground">
-                {analyzed
-                  ? aiTip ?? `${worst.label} é o ponto fraco (${worst.score}). ${worst.tip}`
-                  : "Envie uma foto do seu setup acima e a IA brasileira analisa em segundos."}
-              </p>
-            </div>
-            {analyzed && (
-              <Link to="/orcamento" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-                Ver lista de upgrades →
-              </Link>
+                <h3 className="mt-4 max-w-xs font-display text-xl font-bold leading-tight">
+                  Sua nota está pronta!
+                </h3>
+                <p className="mt-2 max-w-xs text-sm text-muted-foreground">
+                  Faça login grátis pra ver as 6 notas detalhadas e as sugestões personalizadas da IA.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => navigate({ to: "/auth" })}
+                  className="mt-5 inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background shadow-elegant transition-smooth hover:scale-105"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Ver minha nota completa
+                </button>
+                <p className="mt-3 text-[10px] text-muted-foreground">
+                  10 segundos. Conta grátis pra sempre.
+                </p>
+              </div>
             )}
           </div>
         </div>

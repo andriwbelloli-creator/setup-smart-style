@@ -512,11 +512,12 @@ function SetupDetail() {
                       target="_blank"
                       rel="sponsored noopener noreferrer"
                       onClick={() => trackAffiliateClick({ productId: p.id, setupId: setup.id, store: normalizeStore(p.store) })}
-                      className="flex h-9 w-9 flex-shrink-0 items-center justify-center self-center rounded-full bg-foreground text-background transition-smooth hover:bg-foreground/85"
-                      aria-label={`Comprar ${p.name}`}
-                      title="Abrir na loja"
+                      className="flex h-9 flex-shrink-0 items-center justify-center gap-1.5 self-center rounded-xl bg-primary px-3 text-xs font-bold text-primary-foreground shadow-soft transition-smooth hover:bg-primary/90 hover:shadow-elegant"
+                      aria-label={`Comprar ${p.name} em ${p.store}`}
+                      title={`Abrir ${p.name} em ${p.store}`}
                     >
-                      <ExternalLink className="h-4 w-4" />
+                      <span className="hidden sm:inline">Ver em</span> {p.store}
+                      <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
                 ))}
