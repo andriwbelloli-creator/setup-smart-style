@@ -6,6 +6,45 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+// Rate limit: 30 análises por hora por usuário (proteção contra abuso/scraping).
+// O frontend tem limite mensal por tier (1/mês free, ilimitado premium), mas
+// alguém pode criar conta premium e tentar floodar pra raspar dados ou queimar
+// crédito Gemini. 30/hora deixa uso humano legítimo passar com folga.
+const RATE_LIMIT_PER_HOUR = 30;
+
+function extractUserId(authHeader: string | null): string | null {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
+  try {
+    const token = authHeader.slice(7);
+    const [, payloadB64] = token.split(".");
+    const payload = JSON.parse(
+      atob(payloadB64.replace(/-/g, "+").replace(/_/g, "/")),
+    );
+    return payload.sub || null;
+  } catch {
+    return null;
+  }
+}
+
+async function checkRateLimit(userId: string): Promise<{ allowed: boolean; remaining: number }> {
+  const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+  const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!SUPABASE_URL || !SERVICE_ROLE) return { allowed: true, remaining: RATE_LIMIT_PER_HOUR };
+  const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const url = `${SUPABASE_URL}/rest/v1/ai_analyses?select=id&owner_id=eq.${userId}&created_at=gte.${since}`;
+  const r = await fetch(url, {
+    headers: {
+      apikey: SERVICE_ROLE,
+      Authorization: `Bearer ${SERVICE_ROLE}`,
+      Prefer: "count=exact",
+      Range: "0-0",
+    },
+  });
+  const contentRange = r.headers.get("content-range") || "";
+  const total = parseInt(contentRange.split("/").pop() || "0", 10) || 0;
+  return { allowed: total < RATE_LIMIT_PER_HOUR, remaining: Math.max(0, RATE_LIMIT_PER_HOUR - total) };
+}
+
 const SYSTEM_PROMPT = `Você é um especialista brasileiro em ergonomia, iluminação e estética de home offices. Avalie a foto enviada por critérios objetivos. Seja direto, técnico e prático. Use linguagem do dia a dia. Foque em melhorias acessíveis no Brasil (Amazon BR, Mercado Livre, Kabum, Magalu).`;
 
 const TOOL = {
@@ -56,6 +95,29 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Rate limiting por usuário (JWT já validado pelo Supabase em config.toml)
+    const userId = extractUserId(req.headers.get("authorization"));
+    if (userId) {
+      const { allowed, remaining } = await checkRateLimit(userId);
+      if (!allowed) {
+        return new Response(
+          JSON.stringify({
+            error: `Limite de ${RATE_LIMIT_PER_HOUR} análises por hora atingido. Tente daqui a pouco.`,
+          }),
+          {
+            status: 429,
+            headers: {
+              ...corsHeaders,
+              "Content-Type": "application/json",
+              "X-RateLimit-Limit": String(RATE_LIMIT_PER_HOUR),
+              "X-RateLimit-Remaining": "0",
+              "Retry-After": "3600",
+            },
+          },
+        );
+      }
+    }
+
     const { imageUrl, imageBase64 } = await req.json();
     if (!imageUrl && !imageBase64) {
       return new Response(JSON.stringify({ error: "imageUrl ou imageBase64 é obrigatório" }), {

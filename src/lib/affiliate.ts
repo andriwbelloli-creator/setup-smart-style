@@ -77,6 +77,16 @@ const TAG_BY_STORE: Partial<Record<Store, { param: string; value: string }>> = {
 
 const MAGALU_CHANNEL = "magazinedesklylife";
 
+/**
+ * Cloaked affiliate href: aponta para o redirect interno /r/<productId>.
+ * O servidor (start.js) resolve a affiliate_url no DB e faz 302.
+ * Mantém o DOM sem URLs de Amazon/ML/Kabum expostas — dificulta scraping
+ * cego de strings e troca de tags de afiliado por terceiros.
+ */
+export function affiliateHref(productId: string): string {
+  return `/r/${productId}`;
+}
+
 export function decorateAffiliateUrl(url: string, store: Store): string {
   try {
     const u = new URL(url);

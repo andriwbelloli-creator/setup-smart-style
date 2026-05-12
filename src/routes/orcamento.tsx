@@ -5,7 +5,7 @@ import { Footer } from "@/components/landing/CTA";
 import { Wallet, Check, Sparkles, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { trackAffiliateClick, decorateAffiliateUrl, normalizeStore } from "@/lib/affiliate";
+import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
 
 export const Route = createFileRoute("/orcamento")({
   head: () => ({
@@ -175,7 +175,7 @@ function Orcamento() {
                       <div className="font-display text-base font-bold">R$ {it.price.toLocaleString("pt-BR")}</div>
                       <Button asChild size="sm" variant="outline" className="gap-1">
                         <a
-                          href={decorateAffiliateUrl(it.url, normalizeStore(it.storeRaw))}
+                          href={affiliateHref(it.id)}
                           target="_blank"
                           rel="sponsored noopener noreferrer"
                           onClick={() =>

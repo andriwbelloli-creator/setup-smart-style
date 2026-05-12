@@ -14,6 +14,73 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const CLIENT_DIR = join(__dirname, "dist", "client");
 
+// =============================================================
+// Security headers — aplicados a TODA resposta
+// =============================================================
+// Não inclui CSP porque o app usa scripts inline do TanStack Start
+// e o Vite gera URLs com hashes que mudam a cada build (CSP estrito
+// quebraria sem ajustes). Implementar CSP report-only depois.
+const SECURITY_HEADERS = {
+  "X-Frame-Options": "DENY",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(self), microphone=(), geolocation=(), interest-cohort=()",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+  "X-DNS-Prefetch-Control": "on",
+};
+
+function applySecurityHeaders(res) {
+  for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
+    res.setHeader(k, v);
+  }
+}
+
+// =============================================================
+// Affiliate cloaking — /r/:productId redireciona 302 para o URL
+// de afiliado armazenado no banco. Mantém o DOM limpo
+// (sem expor URLs de Amazon/Kabum diretamente no HTML).
+// =============================================================
+const SUPABASE_URL =
+  process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || "";
+const SUPABASE_ANON = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
+
+async function handleAffiliateRedirect(req, res, productId) {
+  if (!SUPABASE_URL || !SUPABASE_ANON) {
+    res.statusCode = 503;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.end("Affiliate redirect not configured.");
+    return;
+  }
+  try {
+    const apiUrl = `${SUPABASE_URL}/rest/v1/setup_products?id=eq.${encodeURIComponent(
+      productId,
+    )}&select=affiliate_url`;
+    const r = await fetch(apiUrl, {
+      headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },
+    });
+    if (!r.ok) throw new Error(`supabase ${r.status}`);
+    const rows = await r.json();
+    const target = rows?.[0]?.affiliate_url;
+    if (!target || typeof target !== "string") {
+      res.statusCode = 404;
+      res.setHeader("Content-Type", "text/plain; charset=utf-8");
+      res.end("Produto não encontrado.");
+      return;
+    }
+    res.statusCode = 302;
+    // referrer policy + no caching pra esse hop
+    res.setHeader("Cache-Control", "private, no-store");
+    res.setHeader("Referrer-Policy", "no-referrer");
+    res.setHeader("Location", target);
+    res.end();
+  } catch (err) {
+    console.error("[affiliate-redirect] error:", err);
+    res.statusCode = 502;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.end("Falha ao resolver link.");
+  }
+}
+
 const MIME = {
   ".js": "application/javascript",
   ".css": "text/css",
@@ -88,7 +155,21 @@ async function serveStatic(req, res) {
 
 const server = createServer(async (req, res) => {
   try {
+    // 1. Headers de segurança em toda resposta
+    applySecurityHeaders(res);
+
+    // 2. Affiliate cloaking: /r/<product-uuid>
+    const path = (req.url || "").split("?")[0];
+    const match = path.match(/^\/r\/([a-z0-9-]{6,64})$/i);
+    if (match) {
+      await handleAffiliateRedirect(req, res, match[1]);
+      return;
+    }
+
+    // 3. Assets estáticos
     if (await serveStatic(req, res)) return;
+
+    // 4. App SSR
     const request = nodeReqToFetchRequest(req);
     const response = await appServer.fetch(request);
     await writeFetchResponse(res, response);

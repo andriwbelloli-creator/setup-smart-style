@@ -18,7 +18,7 @@ function Termos() {
       <Navbar />
       <main className="container mx-auto max-w-3xl px-4 py-12 md:px-6 md:py-20">
         <h1 className="font-display text-4xl font-bold tracking-tight">Termos de Uso</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Última atualização: 10 de maio de 2026</p>
+        <p className="mt-2 text-sm text-muted-foreground">Última atualização: 12 de maio de 2026</p>
 
         <div className="prose mt-8 max-w-none space-y-6 text-sm leading-relaxed text-foreground">
           <section>
@@ -61,12 +61,18 @@ function Termos() {
 
           <section>
             <h2 className="font-display text-xl font-bold">8. Conduta Proibida</h2>
+            <p>É expressamente vedado a qualquer usuário, automatizado ou não:</p>
             <ul className="ml-6 list-disc space-y-1">
-              <li>Publicar conteúdo ilegal, ofensivo, discriminatório ou enganoso</li>
-              <li>Spam, automação ou criação de contas falsas</li>
-              <li>Tentar acessar áreas restritas, fazer engenharia reversa ou explorar vulnerabilidades</li>
-              <li>Usar a Plataforma para concorrer com o Deskly</li>
+              <li>Publicar conteúdo ilegal, ofensivo, discriminatório ou enganoso.</li>
+              <li>Spam, automação não autorizada ou criação de contas falsas.</li>
+              <li><strong>Extração automatizada de dados (web scraping, crawling, mineração)</strong> de qualquer parte da Plataforma — incluindo setups, fotos, comentários, pontuações de IA, listas de produtos, preços, hotspots e metadados — sem autorização prévia, expressa e por escrito do Deskly. O uso de bots, headless browsers, scripts de coleta em massa ou serviços de terceiros para esse fim viola estes Termos.</li>
+              <li><strong>Reprodução do "trade dress" (identidade visual)</strong> do Deskly, incluindo paleta de cores, fontes, layout, ícones, copy, fluxos de UX e diferenciais visuais, em qualquer plataforma concorrente ou correlata, sem autorização escrita.</li>
+              <li><strong>Engenharia reversa, descompilação, ofuscação reversa ou tentativa de extrair código-fonte, prompts de IA, lógica de scoring ou estruturas internas</strong> do Deskly.</li>
+              <li>Acessar áreas restritas, explorar vulnerabilidades ou contornar mecanismos de autenticação, rate limiting ou monetização.</li>
+              <li>Usar a Plataforma, seu conteúdo ou seus dados para treinar modelos de IA de terceiros ou construir serviço concorrente.</li>
+              <li>Remover, substituir ou ocultar tags de afiliados em links de saída.</li>
             </ul>
+            <p>Violações poderão resultar em bloqueio imediato da conta, ação cível por perdas e danos, e, se aplicável, notificação criminal nos termos do art. 154-A do Código Penal (Lei nº 12.737/2012) e da Lei nº 9.610/1998 (Direitos Autorais).</p>
           </section>
 
           <section>
