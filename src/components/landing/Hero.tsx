@@ -5,7 +5,7 @@ import heroImg from "@/assets/hero-setup.jpg";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
 
 const LG_ULTRAWIDE_URL = decorateAffiliateUrl(
-  "https://www.kabum.com.br/busca/LG%20Ultrawide%2034WP65C",
+  "https://www.kabum.com.br/produto/177566/monitor-gamer-lg-ultrawide-34-ips-21-9-100hz-1ms-hdr-curvo-freesync-vesa-34wp65c-b",
   "kabum",
 );
 
