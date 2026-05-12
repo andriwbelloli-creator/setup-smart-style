@@ -106,14 +106,28 @@ function Postar() {
   // ao menos 1 produto declarado (com nome e categoria) — a IA precisa saber
   // o que procurar. Filtra confidence >= 85 no servidor.
   const [detecting, setDetecting] = useState(false);
-  const detectTouchpointsViaAI = async () => {
+  const [autoDetectEnabled, setAutoDetectEnabled] = useState(true);
+  // Debounce: dispara detect 3s após última edição de produto.
+  // Evita gastar quota a cada keystroke.
+  useEffect(() => {
+    if (!autoDetectEnabled || !file || detecting) return;
+    const named = products.filter((p) => p.name?.trim().length >= 3);
+    if (named.length === 0) return;
+    const handle = setTimeout(() => {
+      detectTouchpointsViaAI({ silent: true });
+    }, 3000);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products.map((p) => `${p.id}:${p.name}`).join(","), file, autoDetectEnabled]);
+
+  const detectTouchpointsViaAI = async ({ silent = false }: { silent?: boolean } = {}) => {
     if (!file || products.length === 0) {
-      toast.error("Adicione ao menos 1 produto (nome + categoria) antes de detectar.");
+      if (!silent) toast.error("Adicione ao menos 1 produto (nome + categoria) antes de detectar.");
       return;
     }
     const named = products.filter((p) => p.name?.trim());
     if (named.length === 0) {
-      toast.error("Produtos precisam ter nome preenchido para a IA buscar.");
+      if (!silent) toast.error("Produtos precisam ter nome preenchido para a IA buscar.");
       return;
     }
     setDetecting(true);
@@ -135,7 +149,7 @@ function Postar() {
         name: string; category: string; x: number; y: number; confidence: number;
       }>;
       if (detected.length === 0) {
-        toast.info("IA não conseguiu localizar nenhum produto com certeza. Marque manualmente.");
+        if (!silent) toast.info("IA não conseguiu localizar nenhum produto com certeza. Marque manualmente.");
         return;
       }
       // Match por (category, name) — atualiza x/y só nos produtos batidos.
@@ -145,9 +159,9 @@ function Postar() {
         );
         return hit ? { ...p, x: hit.x, y: hit.y } : p;
       }));
-      toast.success(`${detected.length} de ${named.length} produto(s) localizados pela IA.`);
+      if (!silent) toast.success(`${detected.length} de ${named.length} produto(s) localizados pela IA.`);
     } catch (err: any) {
-      console.error("detect-touchpoints:", err);
+      if (!silent) console.error("detect-touchpoints:", err);
       toast.error(err.message || "Falha ao detectar touchpoints.");
     } finally {
       setDetecting(false);
@@ -157,6 +171,20 @@ function Postar() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !file) return;
+
+    // Crivo de qualidade — pré-requisitos pra publicar
+    // 1. Pelo menos 1 touchpoint marcado (produto na foto)
+    const named = products.filter((p) => p.name?.trim() && p.x >= 0 && p.y >= 0);
+    if (named.length === 0) {
+      toast.error("Marque pelo menos 1 produto na sua foto antes de publicar.");
+      return;
+    }
+    // 2. Descrição mínima
+    if (description.trim().length < 20) {
+      toast.error("Descrição precisa ter no mínimo 20 caracteres pra dar contexto pra comunidade.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       // 1. upload image
@@ -269,7 +297,7 @@ function Postar() {
                 {products.some((p) => p.name?.trim()) && (
                   <button
                     type="button"
-                    onClick={detectTouchpointsViaAI}
+                    onClick={() => detectTouchpointsViaAI({ silent: false })}
                     disabled={detecting}
                     className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/50 bg-primary/5 px-4 py-2.5 text-sm font-semibold text-primary transition-smooth hover:bg-primary/10 disabled:opacity-50"
                   >
