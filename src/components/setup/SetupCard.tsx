@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, MapPin, Bookmark, ArrowRight, Trash2 } from "lucide-react";
+import { Heart, MapPin, Bookmark, ArrowRight, Trash2, Flame } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { Setup } from "@/data/setups";
@@ -12,10 +12,13 @@ import { ShareButton } from "@/components/setup/ShareButton";
 export function SetupCard({
   s,
   featured = false,
+  trending,
   onDeleted,
 }: {
   s: Setup;
   featured?: boolean;
+  /** Quando definido, mostra badge "🔥 N cliques" (uso na galeria ordenada por popular). */
+  trending?: number;
   onDeleted?: (id: string) => void;
 }) {
   const likes = useLikes();
@@ -54,7 +57,12 @@ export function SetupCard({
           loading="lazy"
           className="h-full w-full object-cover transition-smooth group-hover:scale-105"
         />
-        <div className="absolute left-3 top-3 flex gap-1.5">
+        <div className="absolute left-3 top-3 flex flex-wrap items-center gap-1.5">
+          {typeof trending === "number" && trending > 0 && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-coral px-2.5 py-1 text-[11px] font-bold text-coral-foreground shadow-elegant">
+              <Flame className="h-3 w-3" /> {trending} {trending === 1 ? "clique" : "cliques"}
+            </span>
+          )}
           {s.styles.slice(0, 2).map((t) => (
             <span key={t} className="rounded-full bg-background/90 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">{t}</span>
           ))}

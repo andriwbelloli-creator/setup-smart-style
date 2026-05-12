@@ -1,11 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { SetupCard } from "@/components/setup/SetupCard";
 import { SETUPS, STYLES, ROLES, type Setup } from "@/data/setups";
 import { fetchPublishedSetups } from "@/lib/setups-db";
-import { Search, SlidersHorizontal, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Search, SlidersHorizontal, Loader2, ChevronLeft, ChevronRight, Flame, Sparkles, Star, Wallet } from "lucide-react";
+
+type SortKey = "popular" | "recent" | "score" | "budget_asc";
+
+const SORT_LABELS: Record<SortKey, { label: string; icon: typeof Flame }> = {
+  popular: { label: "Mais clicados", icon: Flame },
+  recent: { label: "Recentes", icon: Sparkles },
+  score: { label: "Maior nota IA", icon: Star },
+  budget_asc: { label: "Menor orçamento", icon: Wallet },
+};
 
 const PAGE_SIZE = 9;
 
@@ -26,7 +36,9 @@ function Galeria() {
   const [role, setRole] = useState<string>("Todos");
   const [budget, setBudget] = useState<string>("Todos");
   const [q, setQ] = useState("");
+  const [sort, setSort] = useState<SortKey>("popular");
   const [dbSetups, setDbSetups] = useState<Setup[]>([]);
+  const [clicksBySetup, setClicksBySetup] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
@@ -35,6 +47,31 @@ function Galeria() {
       .then((rows) => setDbSetups(rows))
       .catch(() => setDbSetups([]))
       .finally(() => setLoading(false));
+  }, []);
+
+  // Carrega contagem de cliques por setup pra ordenação "Mais clicados".
+  // Pega últimos 30 dias pra evitar bias dos primeiros setups da plataforma.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const { data } = await supabase
+        .from("affiliate_clicks")
+        .select("setup_id")
+        .gte("clicked_at", since)
+        .not("setup_id", "is", null)
+        .limit(10000);
+      if (cancelled) return;
+      const counts: Record<string, number> = {};
+      for (const c of (data || []) as Array<{ setup_id: string | null }>) {
+        if (!c.setup_id) continue;
+        counts[c.setup_id] = (counts[c.setup_id] || 0) + 1;
+      }
+      setClicksBySetup(counts);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const all: Setup[] = [...dbSetups, ...SETUPS];
@@ -51,13 +88,35 @@ function Galeria() {
     return true;
   });
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const sorted = useMemo(() => {
+    const arr = [...filtered];
+    switch (sort) {
+      case "popular":
+        // Empate por cliques resolvido por nota IA, depois por likes
+        return arr.sort((a, b) => {
+          const ca = clicksBySetup[a.id] || 0;
+          const cb = clicksBySetup[b.id] || 0;
+          if (cb !== ca) return cb - ca;
+          if (b.score !== a.score) return b.score - a.score;
+          return b.likes - a.likes;
+        });
+      case "score":
+        return arr.sort((a, b) => b.score - a.score);
+      case "budget_asc":
+        return arr.sort((a, b) => a.budget - b.budget);
+      case "recent":
+      default:
+        return arr;
+    }
+  }, [filtered, sort, clicksBySetup]);
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
-  const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageItems = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   useEffect(() => {
     setPage(1);
-  }, [style, role, budget, q]);
+  }, [style, role, budget, q, sort]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,27 +169,52 @@ function Galeria() {
           </div>
         </div>
 
-        {/* Results */}
-        <div className="mt-8 mb-4 text-sm text-muted-foreground">
-          {filtered.length} {filtered.length === 1 ? "setup encontrado" : "setups encontrados"}
+        {/* Sort + counter */}
+        <div className="mt-8 mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="text-sm text-muted-foreground">
+            {sorted.length} {sorted.length === 1 ? "setup encontrado" : "setups encontrados"}
+          </div>
+          <div className="flex flex-wrap gap-1.5 rounded-full bg-card p-1 shadow-soft">
+            {(Object.keys(SORT_LABELS) as SortKey[]).map((key) => {
+              const Icon = SORT_LABELS[key].icon;
+              const active = sort === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setSort(key)}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-smooth ${
+                    active ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  aria-pressed={active}
+                >
+                  <Icon className="h-3.5 w-3.5" /> {SORT_LABELS[key].label}
+                </button>
+              );
+            })}
+          </div>
         </div>
         {loading ? (
           <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-        ) : filtered.length === 0 ? (
+        ) : sorted.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center text-muted-foreground">
             Nenhum setup encontrado. Tenta limpar os filtros.
           </div>
         ) : (
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {pageItems.map((s, i) => (
-                <SetupCard
-                  key={s.id}
-                  s={s}
-                  featured={i === 0 && currentPage === 1}
-                  onDeleted={(id) => setDbSetups((prev) => prev.filter((x) => x.id !== id))}
-                />
-              ))}
+              {pageItems.map((s, i) => {
+                const globalIdx = (currentPage - 1) * PAGE_SIZE + i;
+                const showTrending = sort === "popular" && globalIdx < 3 && (clicksBySetup[s.id] || 0) > 0;
+                return (
+                  <SetupCard
+                    key={s.id}
+                    s={s}
+                    featured={i === 0 && currentPage === 1}
+                    trending={showTrending ? clicksBySetup[s.id] : undefined}
+                    onDeleted={(id) => setDbSetups((prev) => prev.filter((x) => x.id !== id))}
+                  />
+                );
+              })}
             </div>
             {totalPages > 1 && (
               <div className="mt-12 flex flex-wrap items-center justify-center gap-2">
