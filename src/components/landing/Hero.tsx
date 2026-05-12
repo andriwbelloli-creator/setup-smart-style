@@ -4,14 +4,15 @@ import { Upload, Star, ArrowRight, Zap, ExternalLink } from "lucide-react";
 import heroImg from "@/assets/hero-setup.jpg";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
 
-// Busca filtrada por categoria Monitores no Kabum — não usamos
-// URL de produto/<id> direto porque não é verificável sem scraping
-// e o ID pode estar associado a outro SKU (caso real: 177566 redirec-
-// tava pra um pneu). A busca com facet_category_name garante landing
-// só em monitores.
+// Amazon BR com filtro de categoria `i=computers` — única loja BR que
+// aceita filtro de categoria via query stable. Kabum rejeita facet
+// query (HTTP 400), Magalu não tem filtro confiável em /busca,
+// Mercado Livre usa path embutido que muda toda hora.
+// Tentamos `kabum.com.br/produto/177566/...` antes mas esse ID era de
+// um pneu. Lição: nunca hardcodar /produto/<id> sem ver no browser.
 const LG_ULTRAWIDE_URL = decorateAffiliateUrl(
-  "https://www.kabum.com.br/busca/LG%20Ultrawide%2034WP65C?facet_category_name[]=Monitores",
-  "kabum",
+  "https://www.amazon.com.br/s?k=LG+Ultrawide+34WP65C+monitor&i=computers",
+  "amazon_br",
 );
 
 export function Hero() {
@@ -78,13 +79,13 @@ export function Hero() {
               href={LG_ULTRAWIDE_URL}
               target="_blank"
               rel="sponsored noopener noreferrer"
-              aria-label="Ver LG Ultrawide 34 polegadas na Kabum"
+              aria-label="Ver LG Ultrawide 34 polegadas na Amazon BR"
               className="group absolute left-6 top-1/2 hidden animate-float rounded-2xl bg-card/95 p-3 shadow-elegant backdrop-blur transition-smooth hover:scale-105 hover:bg-card md:block"
             >
               <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Monitor</div>
               <div className="text-sm font-semibold">LG Ultrawide 34"</div>
               <div className="mt-0.5 flex items-center gap-1 text-xs text-primary">
-                R$ 2.799 · Kabum <ExternalLink className="h-3 w-3 opacity-0 transition-smooth group-hover:opacity-100" />
+                R$ 2.799 · Amazon BR <ExternalLink className="h-3 w-3 opacity-0 transition-smooth group-hover:opacity-100" />
               </div>
             </a>
             {/* Score badge */}
