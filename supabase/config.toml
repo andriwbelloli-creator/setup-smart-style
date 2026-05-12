@@ -3,6 +3,9 @@ project_id = "icwgkbvwehkjmkuiecuj"
 [functions.analyze-setup]
 verify_jwt = true
 
+[functions.detect-touchpoints]
+verify_jwt = true
+
 [functions.create-checkout-session]
 verify_jwt = true
 

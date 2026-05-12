@@ -1,14 +1,18 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
-import { CookieBanner } from "@/components/CookieBanner";
 import { HoneypotLink } from "@/components/HoneypotLink";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { ExitIntentModal } from "@/components/ExitIntentModal";
 import { queryClient } from "@/lib/query-client";
+
+// Componentes não-críticos pra paint inicial: lazy + Suspense vazio
+// pra não bloquear o LCP. Cada um vira chunk próprio.
+const CookieBanner    = lazy(() => import("@/components/CookieBanner").then((m) => ({ default: m.CookieBanner })));
+const ExitIntentModal = lazy(() => import("@/components/ExitIntentModal").then((m) => ({ default: m.ExitIntentModal })));
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/600.css";
@@ -44,24 +48,23 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "HomeOfficeLife — Avalie seu home office com IA" },
-      { name: "description", content: "Plataforma brasileira para montar, avaliar e melhorar seu home office com IA, produtos reais (Amazon BR, Mercado Livre, Kabum, Magalu) e inspiração da comunidade." },
-      { property: "og:title", content: "HomeOfficeLife — Avalie seu home office com IA" },
-      { property: "og:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
+      { title: "HomeOfficeLife — Marketplace de home office usado · Brasil" },
+      { name: "description", content: "Compre e venda equipamentos de home office direto entre pessoas: monitor, cadeira, teclado, mesa. Sem taxa pra anunciar, comunidade brasileira." },
+      { property: "og:title", content: "HomeOfficeLife — Marketplace de home office usado" },
+      { property: "og:description", content: "Compre e venda direto com a comunidade brasileira de home office. Sem taxa pra anunciar." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://homeofficelife.com.br" },
       { property: "og:image", content: "https://homeofficelife.com.br/og-image.jpg" },
       { property: "og:locale", content: "pt_BR" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "HomeOfficeLife — Avalie seu home office com IA" },
-      { name: "twitter:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
+      { name: "twitter:title", content: "HomeOfficeLife — Marketplace de home office usado" },
+      { name: "twitter:description", content: "Compre e venda direto com a comunidade brasileira de home office. Sem taxa pra anunciar." },
       { name: "twitter:image", content: "https://homeofficelife.com.br/og-image.jpg" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+      { rel: "apple-touch-icon", href: "/favicon.svg" },
     ],
   }),
   shellComponent: RootShell,
@@ -98,9 +101,11 @@ function RootComponent() {
           <CanonicalTag />
           <Outlet />
           <Toaster />
-          <CookieBanner />
           <HoneypotLink />
-          <ExitIntentModal />
+          <Suspense fallback={null}>
+            <CookieBanner />
+            <ExitIntentModal />
+          </Suspense>
         </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>

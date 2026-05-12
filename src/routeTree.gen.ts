@@ -28,7 +28,10 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AvalieSeuSetupRouteImport } from './routes/avalie-seu-setup'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MarketplaceIndexRouteImport } from './routes/marketplace.index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
+import { Route as MarketplaceAnunciarRouteImport } from './routes/marketplace.anunciar'
+import { Route as MarketplaceIdRouteImport } from './routes/marketplace.$id'
 import { Route as DashboardAfiliadosRouteImport } from './routes/dashboard.afiliados'
 import { Route as DashboardAdminRouteImport } from './routes/dashboard.admin'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -129,9 +132,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketplaceIndexRoute = MarketplaceIndexRouteImport.update({
+  id: '/marketplace/',
+  path: '/marketplace/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SetupSlugRoute = SetupSlugRouteImport.update({
   id: '/setup/$slug',
   path: '/setup/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceAnunciarRoute = MarketplaceAnunciarRouteImport.update({
+  id: '/marketplace/anunciar',
+  path: '/marketplace/anunciar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceIdRoute = MarketplaceIdRouteImport.update({
+  id: '/marketplace/$id',
+  path: '/marketplace/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardAfiliadosRoute = DashboardAfiliadosRouteImport.update({
@@ -179,7 +197,10 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/afiliados': typeof DashboardAfiliadosRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
+  '/marketplace/anunciar': typeof MarketplaceAnunciarRoute
   '/setup/$slug': typeof SetupSlugRoute
+  '/marketplace/': typeof MarketplaceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -205,7 +226,10 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/afiliados': typeof DashboardAfiliadosRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
+  '/marketplace/anunciar': typeof MarketplaceAnunciarRoute
   '/setup/$slug': typeof SetupSlugRoute
+  '/marketplace': typeof MarketplaceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -232,7 +256,10 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/afiliados': typeof DashboardAfiliadosRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
+  '/marketplace/anunciar': typeof MarketplaceAnunciarRoute
   '/setup/$slug': typeof SetupSlugRoute
+  '/marketplace/': typeof MarketplaceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -260,7 +287,10 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/admin'
     | '/dashboard/afiliados'
+    | '/marketplace/$id'
+    | '/marketplace/anunciar'
     | '/setup/$slug'
+    | '/marketplace/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -286,7 +316,10 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/admin'
     | '/dashboard/afiliados'
+    | '/marketplace/$id'
+    | '/marketplace/anunciar'
     | '/setup/$slug'
+    | '/marketplace'
   id:
     | '__root__'
     | '/'
@@ -312,7 +345,10 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/dashboard/admin'
     | '/dashboard/afiliados'
+    | '/marketplace/$id'
+    | '/marketplace/anunciar'
     | '/setup/$slug'
+    | '/marketplace/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -337,7 +373,10 @@ export interface RootRouteChildren {
   TermosRoute: typeof TermosRoute
   DashboardAdminRoute: typeof DashboardAdminRoute
   DashboardAfiliadosRoute: typeof DashboardAfiliadosRoute
+  MarketplaceIdRoute: typeof MarketplaceIdRoute
+  MarketplaceAnunciarRoute: typeof MarketplaceAnunciarRoute
   SetupSlugRoute: typeof SetupSlugRoute
+  MarketplaceIndexRoute: typeof MarketplaceIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -475,11 +514,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/marketplace/': {
+      id: '/marketplace/'
+      path: '/marketplace'
+      fullPath: '/marketplace/'
+      preLoaderRoute: typeof MarketplaceIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/setup/$slug': {
       id: '/setup/$slug'
       path: '/setup/$slug'
       fullPath: '/setup/$slug'
       preLoaderRoute: typeof SetupSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace/anunciar': {
+      id: '/marketplace/anunciar'
+      path: '/marketplace/anunciar'
+      fullPath: '/marketplace/anunciar'
+      preLoaderRoute: typeof MarketplaceAnunciarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace/$id': {
+      id: '/marketplace/$id'
+      path: '/marketplace/$id'
+      fullPath: '/marketplace/$id'
+      preLoaderRoute: typeof MarketplaceIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/afiliados': {
@@ -555,7 +615,10 @@ const rootRouteChildren: RootRouteChildren = {
   TermosRoute: TermosRoute,
   DashboardAdminRoute: DashboardAdminRoute,
   DashboardAfiliadosRoute: DashboardAfiliadosRoute,
+  MarketplaceIdRoute: MarketplaceIdRoute,
+  MarketplaceAnunciarRoute: MarketplaceAnunciarRoute,
   SetupSlugRoute: SetupSlugRoute,
+  MarketplaceIndexRoute: MarketplaceIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

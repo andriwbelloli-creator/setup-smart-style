@@ -8,6 +8,7 @@ import { RentalLeadModal } from "@/components/setup/RentalLeadModal";
 import { estimateMonthlyRental } from "@/lib/rental";
 import { fetchSetupBySlug } from "@/lib/setups-db";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
+import { track, trackPageView } from "@/lib/track";
 import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight, CalendarClock, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
@@ -163,6 +164,24 @@ function SetupDetail() {
   const [myFirstSlug, setMyFirstSlug] = useState<string | null>(null);
   const [rentalOpen, setRentalOpen] = useState(false);
   const monthlyRental = estimateMonthlyRental(total, 12);
+
+  // Track page view + impressões dos produtos (afiliado funnel impression)
+  useEffect(() => {
+    trackPageView("inspiration", {
+      setup_id: setup.id,
+      setup_slug: setup.slug,
+      product_count: setup.products.length,
+      total_brl: total,
+    });
+    if (setup.products.length > 0) {
+      track("affiliate_impression", "affiliate", {
+        setup_id: setup.id,
+        product_count: setup.products.length,
+        stores: Array.from(new Set(setup.products.map((p) => p.store))),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setup.id]);
 
   // Carrega 1º setup do user logado pra habilitar one-click "Comparar com meu"
   useEffect(() => {
@@ -564,6 +583,20 @@ function SetupDetail() {
                   receber uma porcentagem se você comprar através dos
                   nossos links, <strong>sem custo extra para você</strong>.
                 </p>
+              )}
+
+              {/* CTA Marketplace — vende usado */}
+              {setup.products.length > 0 && (
+                <Link
+                  to="/marketplace/anunciar"
+                  className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-4 text-sm transition-smooth hover:border-primary hover:bg-primary/10"
+                >
+                  <div>
+                    <div className="font-semibold text-foreground">Tem um equipamento igual?</div>
+                    <div className="text-xs text-muted-foreground">Anuncie no Marketplace e venda pra comunidade.</div>
+                  </div>
+                  <span className="text-xs font-semibold text-primary">Anunciar →</span>
+                </Link>
               )}
             </div>
           </aside>

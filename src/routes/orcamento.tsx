@@ -6,6 +6,7 @@ import { Wallet, Check, Sparkles, ExternalLink, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
+import { trackPageView } from "@/lib/track";
 
 export const Route = createFileRoute("/orcamento")({
   head: () => ({
@@ -68,6 +69,10 @@ function Orcamento() {
   const [active, setActive] = useState<string>("equilibrado");
   const [itemsByTier, setItemsByTier] = useState<Record<string, Item[]>>({});
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    trackPageView("affiliate", { route: "orcamento" });
+  }, []);
 
   useEffect(() => {
     let mounted = true;

@@ -109,6 +109,23 @@ const STORE_LABEL: Record<string, string> = {
   outro: "Outro",
 };
 
+// ItemList schema dos kits — ajuda Google a entender que essa página
+// é um catálogo curado (boost p/ rich results de Product listings).
+const kitsItemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Kits Curados HomeOfficeLife",
+  description: "Coleção de 3 kits prontos pra montar home office no Brasil.",
+  numberOfItems: KITS.length,
+  itemListElement: KITS.map((k, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: k.title,
+    description: k.description,
+    url: `https://homeofficelife.com.br/kits#${k.slug}`,
+  })),
+};
+
 export const Route = createFileRoute("/kits")({
   head: () => ({
     meta: [
@@ -116,6 +133,7 @@ export const Route = createFileRoute("/kits")({
       { name: "description", content: "3 kits prontos pra montar seu home office — Estudante, Dev Remoto e Cyber Cave. Produtos curados pela equipe do HomeOfficeLife, com preços reais." },
       { property: "og:title", content: "Kits Curados HomeOfficeLife — monte seu setup em 1 clique" },
       { property: "og:description", content: "Setup completo curado pra estudante, dev remoto ou setup pro. Lista pronta com preço, loja e link." },
+      { type: "application/ld+json", children: JSON.stringify(kitsItemListSchema) },
     ],
   }),
   component: Kits,
