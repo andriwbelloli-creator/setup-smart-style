@@ -57,6 +57,9 @@ Deno.serve(async (req) => {
           updated_at: new Date().toISOString(),
         }, { onConflict: "user_id" });
         await logEvent(supabase, userId, event, session.amount_total);
+        // Marca paywall_events recentes (não convertidos) como
+        // convertidos pra fechar o funil de recovery.
+        await markPaywallConverted(supabase, userId);
         break;
       }
 
@@ -124,4 +127,18 @@ async function logEvent(supabase: any, userId: string, event: Stripe.Event, amou
     currency: "BRL",
     raw_payload: event.data.object,
   });
+}
+
+// Quando o user assina, marca todos os paywall_events recentes
+// (últimos 30 dias, ainda sem converted_at) como convertidos.
+// Isso alimenta a métrica "Taxa de recovery" no admin dashboard.
+async function markPaywallConverted(supabase: any, userId: string) {
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const { error } = await supabase
+    .from("paywall_events")
+    .update({ converted_at: new Date().toISOString() })
+    .eq("user_id", userId)
+    .is("converted_at", null)
+    .gte("hit_at", since);
+  if (error) console.warn("paywall_events update:", error.message);
 }
