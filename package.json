@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "seed": "bun run scripts/seed.ts",
+    "fix-affiliate-urls": "bun run scripts/fix-affiliate-urls.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
