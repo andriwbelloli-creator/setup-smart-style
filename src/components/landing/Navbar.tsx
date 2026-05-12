@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Sparkles, LogOut, User, Crown, Bookmark } from "lucide-react";
+import { Sparkles, LogOut, User, Crown, Bookmark, ArrowLeftRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import {
@@ -65,6 +65,11 @@ export function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link to="/favoritos">
                       <Bookmark className="mr-2 h-4 w-4" /> Favoritos
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/comparar">
+                      <ArrowLeftRight className="mr-2 h-4 w-4" /> Comparar setups
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

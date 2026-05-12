@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useSaves } from "@/hooks/use-saved";
 import { fetchPublishedSetups } from "@/lib/setups-db";
 import { SETUPS, type Setup } from "@/data/setups";
-import { Bookmark, Loader2 } from "lucide-react";
+import { Bookmark, Loader2, ArrowLeftRight } from "lucide-react";
 
 export const Route = createFileRoute("/favoritos")({
   head: () => ({
@@ -67,6 +67,15 @@ function Favoritos() {
               ? "Você ainda não salvou nenhum setup. Explore a galeria e clique no marcador 📑 dos que te inspirarem."
               : `${saved.length} setup${saved.length === 1 ? "" : "s"} pra inspirar seu próximo upgrade.`}
           </p>
+          {saved.length >= 2 && (
+            <Link
+              to="/comparar"
+              search={{ setups: `${saved[0].slug},${saved[1].slug}` }}
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-hero px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth hover:opacity-90"
+            >
+              <ArrowLeftRight className="h-4 w-4" /> Comparar dois favoritos
+            </Link>
+          )}
         </div>
 
         {loading ? (

@@ -20,6 +20,7 @@ import { Route as GaleriaRouteImport } from './routes/galeria'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
+import { Route as CompararRouteImport } from './routes/comparar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SetupSlugRouteImport } from './routes/setup.$slug'
@@ -82,6 +83,11 @@ const ComunidadeRoute = ComunidadeRouteImport.update({
   path: '/comunidade',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompararRoute = CompararRouteImport.update({
+  id: '/comparar',
+  path: '/comparar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -116,6 +122,7 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/favoritos': typeof FavoritosRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/favoritos': typeof FavoritosRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteWithChildren
+  '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/favoritos': typeof FavoritosRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/comparar'
     | '/comunidade'
     | '/diagnostico'
     | '/favoritos'
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/comparar'
     | '/comunidade'
     | '/diagnostico'
     | '/favoritos'
@@ -214,6 +225,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/comparar'
     | '/comunidade'
     | '/diagnostico'
     | '/favoritos'
@@ -234,6 +246,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  CompararRoute: typeof CompararRoute
   ComunidadeRoute: typeof ComunidadeRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
   FavoritosRoute: typeof FavoritosRoute
@@ -329,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComunidadeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/comparar': {
+      id: '/comparar'
+      path: '/comparar'
+      fullPath: '/comparar'
+      preLoaderRoute: typeof CompararRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -387,6 +407,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  CompararRoute: CompararRoute,
   ComunidadeRoute: ComunidadeRoute,
   DiagnosticoRoute: DiagnosticoRoute,
   FavoritosRoute: FavoritosRoute,

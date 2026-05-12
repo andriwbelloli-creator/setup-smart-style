@@ -6,7 +6,7 @@ import { findSetup, type Product, type Setup } from "@/data/setups";
 import { WatermarkOverlay } from "@/components/setup/WatermarkOverlay";
 import { fetchSetupBySlug } from "@/lib/setups-db";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
-import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio } from "lucide-react";
+import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
 import { useAuth } from "@/hooks/use-auth";
@@ -256,6 +256,11 @@ function SetupDetail() {
               </div>
               <Button asChild variant="secondary" className="gap-2 bg-coral text-coral-foreground hover:opacity-90">
                 <Link to="/orcamento"><Sparkles className="h-4 w-4" /> Quero montar parecido</Link>
+              </Button>
+              <Button asChild variant="outline" className="gap-2">
+                <Link to="/comparar" search={{ setups: setup.slug }}>
+                  <ArrowLeftRight className="h-4 w-4" /> Comparar com outro
+                </Link>
               </Button>
               {isAdmin && (
                 <Button
