@@ -5,8 +5,8 @@ import { Footer } from "@/components/landing/CTA";
 export const Route = createFileRoute("/privacidade")({
   head: () => ({
     meta: [
-      { title: "Política de Privacidade · HomeOffice.life" },
-      { name: "description", content: "Como o HomeOffice.life trata seus dados pessoais nos termos da LGPD (Lei 13.709/2018)." },
+      { title: "Política de Privacidade · HomeOfficeLife" },
+      { name: "description", content: "Como o HomeOfficeLife trata seus dados pessoais nos termos da LGPD (Lei 13.709/2018)." },
       { name: "robots", content: "index,follow" },
     ],
   }),
@@ -27,15 +27,15 @@ function Privacidade() {
             <li>Coletamos só o necessário pra você usar a Plataforma.</li>
             <li>Não vendemos seus dados. Compartilhamos só com prestadores essenciais (Supabase, Stripe, Google, Netlify).</li>
             <li>Você pode <Link to="/perfil" className="text-primary hover:underline">baixar todos os seus dados</Link> ou <Link to="/perfil" className="text-primary hover:underline">excluir sua conta</Link> a qualquer momento, sozinho, sem precisar nos pedir.</li>
-            <li>DPO: <a href="mailto:privacidade@homeoffice.life" className="text-primary hover:underline">privacidade@homeoffice.life</a> — respondemos em até 15 dias úteis.</li>
+            <li>DPO: <a href="mailto:privacidade@homeofficelife.com.br" className="text-primary hover:underline">privacidade@homeofficelife.com.br</a> — respondemos em até 15 dias úteis.</li>
           </ul>
         </div>
 
         <div className="prose mt-10 max-w-none space-y-8 text-sm leading-relaxed text-foreground">
           <section>
             <h2 className="font-display text-xl font-bold">1. Quem somos (Controlador dos dados)</h2>
-            <p>O <strong>HomeOffice.life</strong> (homeoffice.life) é uma plataforma brasileira de inspiração, avaliação e compra de produtos para home office, operada por Andriw Belloli (pessoa física, MEI em constituição). Atuamos como <strong>Controlador</strong> dos seus dados pessoais, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018 — LGPD).</p>
-            <p className="mt-2"><strong>Contato:</strong> <a href="mailto:privacidade@homeoffice.life" className="text-primary hover:underline">privacidade@homeoffice.life</a> · <strong>Encarregado (DPO):</strong> Andriw Belloli.</p>
+            <p>O <strong>HomeOfficeLife</strong> (homeofficelife.com.br) é uma plataforma brasileira de inspiração, avaliação e compra de produtos para home office, operada por Andriw Belloli (pessoa física, MEI em constituição). Atuamos como <strong>Controlador</strong> dos seus dados pessoais, nos termos da Lei Geral de Proteção de Dados (Lei 13.709/2018 — LGPD).</p>
+            <p className="mt-2"><strong>Contato:</strong> <a href="mailto:privacidade@homeofficelife.com.br" className="text-primary hover:underline">privacidade@homeofficelife.com.br</a> · <strong>Encarregado (DPO):</strong> Andriw Belloli.</p>
           </section>
 
           <section>
@@ -84,7 +84,7 @@ function Privacidade() {
               <li><strong>Stripe Payments Europe Ltd.</strong> (Irlanda) — processamento de pagamentos. Cartão é tokenizado pela Stripe; não passa pelos nossos servidores.</li>
               <li><strong>Google LLC</strong> (EUA) — análise de imagens via Gemini API e login OAuth opcional. A foto enviada ao Diagnóstico transita pela API do Gemini.</li>
               <li><strong>Netlify, Inc.</strong> (EUA) — hospedagem das páginas estáticas e funções serverless.</li>
-              <li><strong>ImprovMX</strong> (EUA) — encaminhamento de e-mails do domínio homeoffice.life.</li>
+              <li><strong>ImprovMX</strong> (EUA) — encaminhamento de e-mails do domínio homeofficelife.com.br.</li>
               <li><strong>Programas de afiliados</strong> (Amazon BR, Mercado Livre, Magazine Você, Kabum/Awin) — recebem apenas o clique e o ID de afiliado, sem identificação pessoal. Não compartilhamos sua identidade.</li>
             </ul>
           </section>
@@ -112,7 +112,7 @@ function Privacidade() {
               <p className="font-semibold">Como exercer seus direitos:</p>
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 <li><strong>Self-service:</strong> em <Link to="/perfil" className="text-primary hover:underline">/perfil → Editar perfil</Link> você baixa todos os seus dados em JSON e exclui sua conta com 1 clique.</li>
-                <li><strong>E-mail:</strong> <a href="mailto:privacidade@homeoffice.life" className="text-primary hover:underline">privacidade@homeoffice.life</a> — respondemos em até 15 dias úteis.</li>
+                <li><strong>E-mail:</strong> <a href="mailto:privacidade@homeofficelife.com.br" className="text-primary hover:underline">privacidade@homeofficelife.com.br</a> — respondemos em até 15 dias úteis.</li>
                 <li><strong>ANPD:</strong> se acreditar que descumprimos a LGPD, você pode reclamar à <a href="https://www.gov.br/anpd/pt-br" target="_blank" rel="noreferrer" className="text-primary hover:underline">Autoridade Nacional de Proteção de Dados</a>.</li>
               </ul>
             </div>
@@ -159,7 +159,7 @@ function Privacidade() {
 
           <section>
             <h2 className="font-display text-xl font-bold">10. Crianças e adolescentes</h2>
-            <p>O HomeOffice.life é direcionado a maiores de 18 anos. Não coletamos intencionalmente dados de menores. Se você é responsável por um menor cujos dados foram coletados sem seu consentimento, escreva para o DPO que removemos imediatamente.</p>
+            <p>O HomeOfficeLife é direcionado a maiores de 18 anos. Não coletamos intencionalmente dados de menores. Se você é responsável por um menor cujos dados foram coletados sem seu consentimento, escreva para o DPO que removemos imediatamente.</p>
           </section>
 
           <section>

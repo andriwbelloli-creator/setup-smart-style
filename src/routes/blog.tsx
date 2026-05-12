@@ -20,9 +20,9 @@ const CATEGORY_COLOR: Record<string, string> = {
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
-      { title: "Blog · HomeOffice.life — guias práticos de home office BR" },
+      { title: "Blog · HomeOfficeLife — guias práticos de home office BR" },
       { name: "description", content: "Guias, comparações e dicas de home office no Brasil. Tutoriais práticos, listas de produtos com preço real e análise por IA." },
-      { property: "og:title", content: "Blog HomeOffice.life — home office brasileiro" },
+      { property: "og:title", content: "Blog HomeOfficeLife — home office brasileiro" },
       { property: "og:description", content: "Conteúdo prático sobre ergonomia, setup, iluminação e produtos para home office no Brasil." },
       { property: "og:type", content: "website" },
     ],
@@ -41,7 +41,7 @@ function BlogIndex() {
       <main className="container mx-auto px-4 py-12 md:px-6 md:py-16">
         <div className="mb-10 max-w-2xl">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-            <BookOpen className="h-3 w-3" /> Blog HomeOffice.life
+            <BookOpen className="h-3 w-3" /> Blog HomeOfficeLife
           </div>
           <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
             Guias práticos de home office no Brasil

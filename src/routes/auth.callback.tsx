@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/callback")({
-  head: () => ({ meta: [{ title: "Entrando · HomeOffice.life" }] }),
+  head: () => ({ meta: [{ title: "Entrando · HomeOfficeLife" }] }),
   component: AuthCallback,
 });
 

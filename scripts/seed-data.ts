@@ -45,7 +45,7 @@ export type SeedSetup = {
 export const SEED_USERS: SeedUser[] = [
   {
     email: "dev@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "rafa_dev",
     display_name: "Rafael Souza",
     bio: "Backend dev em RJ, fã de teclados mecânicos e luz quente.",
@@ -55,7 +55,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "designer@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "ju_designer",
     display_name: "Juliana Lima",
     bio: "Product designer remota, paleta minimalista e plantas.",
@@ -65,7 +65,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "creator@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "leo_creator",
     display_name: "Leonardo Castro",
     bio: "Criador de conteúdo de tech, foco em produtividade e gear.",
@@ -75,7 +75,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "estudante@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "mari_estudante",
     display_name: "Mariana Costa",
     bio: "Estudante de eng. de software. Aprendendo a montar setup decente sem quebrar a banca.",
@@ -85,7 +85,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "arquiteto@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "pedro_arq",
     display_name: "Pedro Almeida",
     bio: "Arquiteto e ilustrador, vive no AutoCAD e Procreate.",
@@ -95,7 +95,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "executivo@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "carlos_exec",
     display_name: "Carlos Mendes",
     bio: "Diretor financeiro. Setup para reuniões e relatórios.",
@@ -105,7 +105,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "casal@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "ana_e_bruno",
     display_name: "Ana & Bruno",
     bio: "Trabalhamos juntos em casa. Dividimos um quarto/escritório.",
@@ -115,7 +115,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "pm@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "isa_pm",
     display_name: "Isabela Ferraz",
     bio: "Product Manager remota. Vivo em chamadas — luz e câmera são prioridade.",
@@ -125,7 +125,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "psi@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "renata_psi",
     display_name: "Renata Vargas",
     bio: "Psicóloga clínica online. Acolhimento + qualidade de áudio acima de tudo.",
@@ -135,7 +135,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "trader@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "mauricio_trader",
     display_name: "Maurício Tanaka",
     bio: "Day trader full-time. 4 monitores, dois teclados, café preto.",
@@ -145,7 +145,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "empreendedor@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "vini_founder",
     display_name: "Vinícius Tavares",
     bio: "Founder de startup early-stage. Mesa pra tudo: pitch, código, reunião.",
@@ -155,7 +155,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "professor@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "helena_prof",
     display_name: "Helena Brandão",
     bio: "Professora de inglês online. Câmera, lousa digital e plantas.",
@@ -165,7 +165,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "consultor@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "thiago_consult",
     display_name: "Thiago Couto",
     bio: "Consultor de gestão. 80% do tempo em call — setup pra parecer sério.",
@@ -175,7 +175,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "streamer@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "kaua_stream",
     display_name: "Kauã Reis",
     bio: "Streamer de FPS. RGB no talo, três câmeras, fone aberto premium.",
@@ -185,7 +185,7 @@ export const SEED_USERS: SeedUser[] = [
   },
   {
     email: "datasci@homeoffice.test",
-    password: "HomeOffice.lifeSeed!2026",
+    password: "HomeOfficeLifeSeed!2026",
     username: "fer_data",
     display_name: "Fernanda Otsuka",
     bio: "Cientista de dados. ThinkPad + monitor 4K + muita memória.",

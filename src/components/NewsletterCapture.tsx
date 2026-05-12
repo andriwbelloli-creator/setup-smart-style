@@ -38,7 +38,7 @@ export function NewsletterCapture({
     const userAgent = typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 200) : null;
     // Texto de consentimento que o usuário viu — gravado pra
     // accountability LGPD (provar opt-in se contestar depois)
-    const consentText = `${title} | ${subtitle} | Ao inscrever, você concorda em receber emails do HomeOffice.life e pode cancelar a qualquer momento pelo link no rodapé de cada email.`;
+    const consentText = `${title} | ${subtitle} | Ao inscrever, você concorda em receber emails do HomeOfficeLife e pode cancelar a qualquer momento pelo link no rodapé de cada email.`;
     const { error } = await supabase
       .from("newsletter_signups")
       .insert({
@@ -166,7 +166,7 @@ function FormBody({
 export function ConsentNote() {
   return (
     <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
-      Ao se inscrever, você concorda em receber emails do HomeOffice.life. Cancela em
+      Ao se inscrever, você concorda em receber emails do HomeOfficeLife. Cancela em
       1 clique no rodapé de cada email. Não compartilhamos seu email. Veja a
       {" "}<a href="/privacidade" className="underline hover:text-foreground">Política de Privacidade</a>.
     </p>

@@ -1,4 +1,4 @@
-# Hierarquia de Z-Index — HomeOffice.life
+# Hierarquia de Z-Index — HomeOfficeLife
 
 Documento de referência. Ao adicionar elemento sobreposto novo,
 consulte esta tabela e siga a faixa correta. Se precisar de um nível

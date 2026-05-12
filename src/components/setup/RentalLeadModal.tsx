@@ -218,7 +218,7 @@ export function RentalLeadModal({ open, onOpenChange, setupId, setupTitle, total
 
                 <p className="text-[10px] leading-relaxed text-muted-foreground">
                   Ao enviar, você concorda em ser contactado por parceiros de
-                  locação do HomeOffice.life. Sem spam — só sobre essa cotação.
+                  locação do HomeOfficeLife. Sem spam — só sobre essa cotação.
                   Veja a{" "}
                   <a href="/privacidade" className="underline hover:text-foreground">Política de Privacidade</a>.
                 </p>

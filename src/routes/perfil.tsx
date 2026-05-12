@@ -12,7 +12,7 @@ import { Loader2, Upload, Pencil, Trash2, Download, AlertTriangle, LogOut } from
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/perfil")({
-  head: () => ({ meta: [{ title: "Meu perfil · HomeOffice.life" }] }),
+  head: () => ({ meta: [{ title: "Meu perfil · HomeOfficeLife" }] }),
   component: Perfil,
 });
 

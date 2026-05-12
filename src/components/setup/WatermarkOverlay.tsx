@@ -1,5 +1,5 @@
 /**
- * Marca d'água "homeoffice.life" sobreposta nas imagens de setups.
+ * Marca d'água "homeofficelife.com.br" sobreposta nas imagens de setups.
  *
  * Soft protection: copiar via screenshot ou DevTools ainda é trivial,
  * mas (1) sinaliza propriedade ao usuário casual, (2) gera atrito
@@ -29,7 +29,7 @@ export function WatermarkOverlay({ position = "bl" }: { position?: Position } = 
       className={`pointer-events-none absolute z-10 select-none rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white/80 mix-blend-difference ${POSITION_CLASSES[position]}`}
       style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
     >
-      homeoffice.life
+      homeofficelife.com.br
     </div>
   );
 }

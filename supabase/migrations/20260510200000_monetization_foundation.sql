@@ -62,7 +62,7 @@ create policy "plans readable by all"
 insert into public.subscription_plans (tier, name, description, price_cents_brl, features) values
   ('free', 'Gratuito', 'Acesso à comunidade, galeria e 1 análise/mês.', 0,
     '["1 análise IA por mês", "Wishlist até 5 setups", "Acesso à galeria e comunidade"]'),
-  ('premium', 'Premium', 'Pra quem usa o HomeOffice.life toda semana.', 990,
+  ('premium', 'Premium', 'Pra quem usa o HomeOfficeLife toda semana.', 990,
     '["Análise IA ilimitada", "Recomendações personalizadas", "Wishlist ilimitada", "Comparação de 2 setups", "Relatório PDF", "Sem anúncios"]'),
   ('pro', 'Pro', 'Pra criadores e profissionais.', 2990,
     '["Tudo do Premium", "Comparação ilimitada", "Destaque no perfil", "Consultoria 1-on-1 (15min/mês)", "Selo Pro na comunidade"]');

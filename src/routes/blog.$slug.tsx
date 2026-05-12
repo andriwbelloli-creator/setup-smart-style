@@ -21,15 +21,15 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
     const p = loaderData.post;
-    const url = `https://homeoffice.life/blog/${p.slug}`;
+    const url = `https://homeofficelife.com.br/blog/${p.slug}`;
     const ogImage = p.ogImage || p.cover;
 
     const breadcrumb = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Início", item: "https://homeoffice.life/" },
-        { "@type": "ListItem", position: 2, name: "Blog", item: "https://homeoffice.life/blog" },
+        { "@type": "ListItem", position: 1, name: "Início", item: "https://homeofficelife.com.br/" },
+        { "@type": "ListItem", position: 2, name: "Blog", item: "https://homeofficelife.com.br/blog" },
         { "@type": "ListItem", position: 3, name: p.title, item: url },
       ],
     };
@@ -41,19 +41,19 @@ export const Route = createFileRoute("/blog/$slug")({
       image: ogImage,
       datePublished: p.publishedAt,
       dateModified: p.publishedAt,
-      author: { "@type": "Organization", name: p.author, url: "https://homeoffice.life" },
+      author: { "@type": "Organization", name: p.author, url: "https://homeofficelife.com.br" },
       publisher: {
         "@type": "Organization",
-        name: "HomeOffice.life",
-        url: "https://homeoffice.life",
-        logo: { "@type": "ImageObject", url: "https://homeoffice.life/og-image.jpg" },
+        name: "HomeOfficeLife",
+        url: "https://homeofficelife.com.br",
+        logo: { "@type": "ImageObject", url: "https://homeofficelife.com.br/og-image.jpg" },
       },
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
     };
 
     return {
       meta: [
-        { title: `${p.title} · Blog HomeOffice.life` },
+        { title: `${p.title} · Blog HomeOfficeLife` },
         { name: "description", content: p.excerpt },
         { name: "keywords", content: p.keywords },
         { name: "author", content: p.author },
@@ -62,7 +62,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:image", content: ogImage },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
-        { property: "og:site_name", content: "HomeOffice.life" },
+        { property: "og:site_name", content: "HomeOfficeLife" },
         { property: "og:locale", content: "pt_BR" },
         { property: "article:published_time", content: p.publishedAt },
         { property: "article:author", content: p.author },

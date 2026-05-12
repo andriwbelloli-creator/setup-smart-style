@@ -10,7 +10,7 @@ import { Sparkles, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
-    meta: [{ title: "Redefinir senha · HomeOffice.life" }],
+    meta: [{ title: "Redefinir senha · HomeOfficeLife" }],
   }),
   component: ResetPassword,
 });

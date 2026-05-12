@@ -12,9 +12,9 @@ import { Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/comunidade")({
   head: () => ({
     meta: [
-      { title: "Comunidade · HomeOffice.life" },
+      { title: "Comunidade · HomeOfficeLife" },
       { name: "description", content: "Comunidade brasileira de devs, designers e profissionais remotos compartilhando setups, dicas e transformações." },
-      { property: "og:title", content: "Comunidade HomeOffice.life" },
+      { property: "og:title", content: "Comunidade HomeOfficeLife" },
       { property: "og:description", content: "Brasileiros trocando experiência sobre home office." },
     ],
   }),

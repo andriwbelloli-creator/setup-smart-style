@@ -1,12 +1,12 @@
 import { test, expect } from "@playwright/test";
 
 const PUBLIC_ROUTES = [
-  { path: "/", contains: /avaliado por IA|Seu setup/i, title: /HomeOffice.life/i },
+  { path: "/", contains: /avaliado por IA|Seu setup/i, title: /HomeOfficeLife/i },
   { path: "/galeria", contains: /Descubra setups/i },
   { path: "/diagnostico", contains: /Descubra a nota|home office em/i },
   { path: "/orcamento", contains: /Diga seu bolso/i },
   { path: "/comunidade", contains: /trocando setup/i },
-  { path: "/auth", contains: /Entre no HomeOffice.life/i },
+  { path: "/auth", contains: /Entre no HomeOfficeLife/i },
 ];
 
 test.describe("@smoke public routes", () => {
@@ -26,7 +26,7 @@ test.describe("@smoke public routes", () => {
     expect(r.ok()).toBe(true);
     const body = await r.text();
     expect(body).toContain("<urlset");
-    expect(body).toContain("homeoffice.life");
+    expect(body).toContain("homeofficelife.com.br");
   });
 
   test("/robots.txt is reachable", async ({ request }) => {

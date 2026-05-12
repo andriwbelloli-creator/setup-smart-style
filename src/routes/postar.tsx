@@ -13,8 +13,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/postar")({
   head: () => ({
     meta: [
-      { title: "Postar meu setup · HomeOffice.life" },
-      { name: "description", content: "Compartilhe seu home office com a comunidade HomeOffice.life e receba feedback de ergonomia, iluminação e estética." },
+      { title: "Postar meu setup · HomeOfficeLife" },
+      { name: "description", content: "Compartilhe seu home office com a comunidade HomeOfficeLife e receba feedback de ergonomia, iluminação e estética." },
     ],
   }),
   component: Postar,
@@ -275,7 +275,7 @@ function Postar() {
                 required
               />
               <span className="text-xs leading-relaxed text-muted-foreground">
-                <strong className="text-foreground">Declaro que sou o autor desta foto</strong> e autorizo sua exibição pública no HomeOffice.life. Veja a{" "}
+                <strong className="text-foreground">Declaro que sou o autor desta foto</strong> e autorizo sua exibição pública no HomeOfficeLife. Veja a{" "}
                 <Link to="/termos" className="text-primary underline">licença de uso de conteúdo</Link>{" "}
                 nos Termos.
               </span>

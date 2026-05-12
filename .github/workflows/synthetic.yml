@@ -14,7 +14,7 @@ jobs:
       - name: HTTP probe
         id: probe
         env:
-          BASE: ${{ vars.PROD_BASE_URL || 'https://homeoffice.life' }}
+          BASE: ${{ vars.PROD_BASE_URL || 'https://homeofficelife.com.br' }}
           FALLBACK: https://monumental-marshmallow-4b5790.netlify.app
         run: |
           set -e

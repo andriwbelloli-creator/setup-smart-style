@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
       return json({ error: `STRIPE_PRICE_${tier.toUpperCase()} não configurado` }, 500);
     }
 
-    const origin = returnUrl || req.headers.get("origin") || "https://homeoffice.life";
+    const origin = returnUrl || req.headers.get("origin") || "https://homeofficelife.com.br";
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],

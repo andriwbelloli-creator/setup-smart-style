@@ -30,8 +30,8 @@ export const Route = createFileRoute("/comparar")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Comparar setups · HomeOffice.life" },
-      { name: "description", content: "Compare dois setups lado a lado — nota IA, orçamento, produtos. Recurso Premium do HomeOffice.life." },
+      { title: "Comparar setups · HomeOfficeLife" },
+      { name: "description", content: "Compare dois setups lado a lado — nota IA, orçamento, produtos. Recurso Premium do HomeOfficeLife." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

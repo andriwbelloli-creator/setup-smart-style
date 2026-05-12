@@ -78,7 +78,7 @@ export function ExitIntentModal() {
       return;
     }
     setState("loading");
-    const consentText = "Exit-intent: Guia 50 dicas + newsletter HomeOffice.life | Cancela em 1 clique";
+    const consentText = "Exit-intent: Guia 50 dicas + newsletter HomeOfficeLife | Cancela em 1 clique";
     const { error } = await supabase.from("newsletter_signups").insert({
       email: email.toLowerCase().trim(),
       source: "exit_intent_guide",

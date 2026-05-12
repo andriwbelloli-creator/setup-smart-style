@@ -29,7 +29,7 @@ const CSP_POLICY = [
   // até migrarmos pra nonce/hash. Tudo bem em report-only.
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://homeoffice.life",
+  "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://homeofficelife.com.br",
   "font-src 'self' data:",
   "connect-src 'self' https://*.supabase.co https://api.stripe.com",
   "frame-src https://js.stripe.com https://hooks.stripe.com",
@@ -179,23 +179,23 @@ async function handleCspReport(req, res) {
 // =============================================================
 async function handleSitemap(_req, res) {
   const staticUrls = [
-    { loc: "https://homeoffice.life/", priority: 1.0, changefreq: "daily" },
-    { loc: "https://homeoffice.life/galeria", priority: 0.9, changefreq: "daily" },
-    { loc: "https://homeoffice.life/diagnostico", priority: 0.9, changefreq: "weekly" },
-    { loc: "https://homeoffice.life/kits", priority: 0.9, changefreq: "weekly" },
-    { loc: "https://homeoffice.life/blog", priority: 0.9, changefreq: "weekly" },
-    { loc: "https://homeoffice.life/consultoria", priority: 0.8, changefreq: "weekly" },
-    { loc: "https://homeoffice.life/orcamento", priority: 0.8, changefreq: "weekly" },
-    { loc: "https://homeoffice.life/comunidade", priority: 0.7, changefreq: "daily" },
-    { loc: "https://homeoffice.life/premium", priority: 0.7, changefreq: "monthly" },
+    { loc: "https://homeofficelife.com.br/", priority: 1.0, changefreq: "daily" },
+    { loc: "https://homeofficelife.com.br/galeria", priority: 0.9, changefreq: "daily" },
+    { loc: "https://homeofficelife.com.br/diagnostico", priority: 0.9, changefreq: "weekly" },
+    { loc: "https://homeofficelife.com.br/kits", priority: 0.9, changefreq: "weekly" },
+    { loc: "https://homeofficelife.com.br/blog", priority: 0.9, changefreq: "weekly" },
+    { loc: "https://homeofficelife.com.br/consultoria", priority: 0.8, changefreq: "weekly" },
+    { loc: "https://homeofficelife.com.br/orcamento", priority: 0.8, changefreq: "weekly" },
+    { loc: "https://homeofficelife.com.br/comunidade", priority: 0.7, changefreq: "daily" },
+    { loc: "https://homeofficelife.com.br/premium", priority: 0.7, changefreq: "monthly" },
     // Blog posts — hardcoded slugs (atualizar manualmente quando publicar
     // novo post no src/data/blog-posts.ts).
-    { loc: "https://homeoffice.life/blog/home-office-r-500-completo-2026", priority: 0.8, changefreq: "monthly" },
-    { loc: "https://homeoffice.life/blog/setup-r-3000-vs-r-30000-vale-pena", priority: 0.8, changefreq: "monthly" },
-    { loc: "https://homeoffice.life/blog/por-que-sua-nota-ia-ta-baixa-6-erros", priority: 0.8, changefreq: "monthly" },
-    { loc: "https://homeoffice.life/termos", priority: 0.3, changefreq: "monthly" },
-    { loc: "https://homeoffice.life/privacidade", priority: 0.3, changefreq: "monthly" },
-    { loc: "https://homeoffice.life/relatar-conteudo", priority: 0.3, changefreq: "monthly" },
+    { loc: "https://homeofficelife.com.br/blog/home-office-r-500-completo-2026", priority: 0.8, changefreq: "monthly" },
+    { loc: "https://homeofficelife.com.br/blog/setup-r-3000-vs-r-30000-vale-pena", priority: 0.8, changefreq: "monthly" },
+    { loc: "https://homeofficelife.com.br/blog/por-que-sua-nota-ia-ta-baixa-6-erros", priority: 0.8, changefreq: "monthly" },
+    { loc: "https://homeofficelife.com.br/termos", priority: 0.3, changefreq: "monthly" },
+    { loc: "https://homeofficelife.com.br/privacidade", priority: 0.3, changefreq: "monthly" },
+    { loc: "https://homeofficelife.com.br/relatar-conteudo", priority: 0.3, changefreq: "monthly" },
   ];
 
   let setupUrls = [];
@@ -208,7 +208,7 @@ async function handleSitemap(_req, res) {
       if (r.ok) {
         const rows = await r.json();
         setupUrls = rows.map((row) => ({
-          loc: `https://homeoffice.life/setup/${row.slug}`,
+          loc: `https://homeofficelife.com.br/setup/${row.slug}`,
           lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
           priority: 0.6,
           changefreq: "weekly",
@@ -432,5 +432,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`HomeOffice.life server listening on http://0.0.0.0:${PORT}`);
+  console.log(`HomeOfficeLife server listening on http://0.0.0.0:${PORT}`);
 });

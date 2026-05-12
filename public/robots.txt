@@ -13,4 +13,4 @@ Disallow: /postar
 Disallow: /honeypot
 Disallow: /setups/_internal/
 
-Sitemap: https://homeoffice.life/sitemap.xml
+Sitemap: https://homeofficelife.com.br/sitemap.xml

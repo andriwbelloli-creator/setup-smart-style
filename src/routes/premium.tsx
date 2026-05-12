@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/premium")({
   head: () => ({
     meta: [
-      { title: "Premium · HomeOffice.life" },
+      { title: "Premium · HomeOfficeLife" },
       {
         name: "description",
         content:

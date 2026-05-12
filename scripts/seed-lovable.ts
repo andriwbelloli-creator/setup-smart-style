@@ -32,22 +32,22 @@ type LUser = {
 };
 
 const USERS: LUser[] = [
-  { email: "matheus.code@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "matheus.code",
+  { email: "matheus.code@homeoffice.test", password: "HomeOfficeLifeSeed!2026", username: "matheus.code",
     display_name: "Matheus Code", bio: "Dev backend, foco profundo e teclados silenciosos.",
     career: "dev", city: "São Paulo, SP", avatar_url: "https://i.pravatar.cc/200?img=12" },
-  { email: "gabi.streams@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "gabi.streams",
+  { email: "gabi.streams@homeoffice.test", password: "HomeOfficeLifeSeed!2026", username: "gabi.streams",
     display_name: "Gabi Streams", bio: "Streamer e criadora de conteúdo. RGB no talo.",
     career: "creator", city: "Curitiba, PR", avatar_url: "https://i.pravatar.cc/200?img=47" },
-  { email: "ana.designer@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "ana.designer",
+  { email: "ana.designer@homeoffice.test", password: "HomeOfficeLifeSeed!2026", username: "ana.designer",
     display_name: "Ana Designer", bio: "Designer minimalista. Tudo branco, zero distração.",
     career: "designer", city: "Belo Horizonte, MG", avatar_url: "https://i.pravatar.cc/200?img=45" },
-  { email: "joao.cria@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "joao.cria",
+  { email: "joao.cria@homeoffice.test", password: "HomeOfficeLifeSeed!2026", username: "joao.cria",
     display_name: "João Cria", bio: "Criador focado em vídeo e podcast.",
     career: "creator", city: "Rio de Janeiro, RJ", avatar_url: "https://i.pravatar.cc/200?img=33" },
-  { email: "bia.pequena@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "bia.pequena",
+  { email: "bia.pequena@homeoffice.test", password: "HomeOfficeLifeSeed!2026", username: "bia.pequena",
     display_name: "Bia Pequena", bio: "Remota em apê de 32m². Setup que cabe em 80cm.",
     career: "remoto", city: "Porto Alegre, RS", avatar_url: "https://i.pravatar.cc/200?img=20" },
-  { email: "rafa.home@homeoffice.test", password: "HomeOffice.lifeSeed!2026", username: "rafa.home",
+  { email: "rafa.home@homeoffice.test", password: "HomeOfficeLifeSeed!2026", username: "rafa.home",
     display_name: "Rafa Home", bio: "PM com reuniões o dia todo. Madeira, plantas e luz quente.",
     career: "pm", city: "Florianópolis, SC", avatar_url: "https://i.pravatar.cc/200?img=8" },
 ];

@@ -28,7 +28,7 @@ export const Route = createFileRoute("/setup/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [] };
     const s = loaderData.setup;
-    const url = `https://homeoffice.life/setup/${s.slug || s.id}`;
+    const url = `https://homeofficelife.com.br/setup/${s.slug || s.id}`;
     const description = s.description
       ? s.description.slice(0, 200)
       : `Setup de ${s.author} em ${s.city}: ${s.styles.slice(0, 3).join(", ")}. Orçamento R$ ${s.budget.toLocaleString("pt-BR")}.`;
@@ -39,8 +39,8 @@ export const Route = createFileRoute("/setup/$slug")({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Início", item: "https://homeoffice.life/" },
-        { "@type": "ListItem", position: 2, name: "Galeria", item: "https://homeoffice.life/galeria" },
+        { "@type": "ListItem", position: 1, name: "Início", item: "https://homeofficelife.com.br/" },
+        { "@type": "ListItem", position: 2, name: "Galeria", item: "https://homeofficelife.com.br/galeria" },
         { "@type": "ListItem", position: 3, name: s.title, item: url },
       ],
     };
@@ -54,9 +54,9 @@ export const Route = createFileRoute("/setup/$slug")({
       author: { "@type": "Person", name: s.author.replace(/^@/, "") },
       publisher: {
         "@type": "Organization",
-        name: "HomeOffice.life",
-        url: "https://homeoffice.life",
-        logo: { "@type": "ImageObject", url: "https://homeoffice.life/og-image.jpg" },
+        name: "HomeOfficeLife",
+        url: "https://homeofficelife.com.br",
+        logo: { "@type": "ImageObject", url: "https://homeofficelife.com.br/og-image.jpg" },
       },
       ...(s.score && {
         aggregateRating: {
@@ -86,7 +86,7 @@ export const Route = createFileRoute("/setup/$slug")({
             price: p.price,
             availability: "https://schema.org/InStock",
             seller: { "@type": "Organization", name: p.store },
-            url: `https://homeoffice.life/r/${p.id}`,
+            url: `https://homeofficelife.com.br/r/${p.id}`,
           },
           aggregateRating: p.rating
             ? { "@type": "AggregateRating", ratingValue: p.rating, ratingCount: 50 }
@@ -96,7 +96,7 @@ export const Route = createFileRoute("/setup/$slug")({
     };
     return {
       meta: [
-        { title: `${s.title} — ${s.author} · HomeOffice.life` },
+        { title: `${s.title} — ${s.author} · HomeOfficeLife` },
         { name: "description", content: description },
         { name: "keywords", content: `${s.styles.join(", ")}, home office, setup ${s.authorRole}, ${s.city}, R$ ${s.budget.toLocaleString("pt-BR")}` },
         { property: "og:title", content: `${s.title} · Setup ${s.styles[0] || "home office"} de ${s.author}` },
@@ -106,7 +106,7 @@ export const Route = createFileRoute("/setup/$slug")({
         { property: "og:image:height", content: "1100" },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
-        { property: "og:site_name", content: "HomeOffice.life" },
+        { property: "og:site_name", content: "HomeOfficeLife" },
         { property: "og:locale", content: "pt_BR" },
         { property: "article:author", content: s.author },
         { property: "twitter:image", content: s.image },
@@ -236,7 +236,7 @@ function SetupDetail() {
     setShareOpen((v) => !v);
   };
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-  const shareText = `${setup.title} — vi esse setup no HomeOffice.life e amei`;
+  const shareText = `${setup.title} — vi esse setup no HomeOfficeLife e amei`;
   const shareLinks = {
     whatsapp: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
     twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
@@ -560,7 +560,7 @@ function SetupDetail() {
               {/* Disclosure de afiliado — obrigatório CONAR + CDC art. 36 */}
               {setup.products.length > 0 && (
                 <p className="mt-5 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
-                  O HomeOffice.life é mantido por comissões de afiliados. Podemos
+                  O HomeOfficeLife é mantido por comissões de afiliados. Podemos
                   receber uma porcentagem se você comprar através dos
                   nossos links, <strong>sem custo extra para você</strong>.
                 </p>

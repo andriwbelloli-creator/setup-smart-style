@@ -29,7 +29,7 @@ export function estimateMonthlyRental(totalPriceBrl: number, durationMonths = 12
  *   - Email pro parceiro contendo: dados do cliente, setup de interesse,
  *     prazo, orçamento estimado
  *   - Email de confirmação pro cliente
- *   - CC: comercial@homeoffice.life
+ *   - CC: comercial@homeofficelife.com.br
  *
  * Critério de roteamento:
  *   1. Pega parceiros active que aceitam o lead_type

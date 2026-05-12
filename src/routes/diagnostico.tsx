@@ -7,7 +7,7 @@ import { Sparkles, ShieldCheck, Zap, ListChecks, Info, ShieldAlert } from "lucid
 export const Route = createFileRoute("/diagnostico")({
   head: () => ({
     meta: [
-      { title: "Diagnóstico IA do seu setup · HomeOffice.life" },
+      { title: "Diagnóstico IA do seu setup · HomeOfficeLife" },
       { name: "description", content: "Envie a foto do seu home office e receba nota e sugestões de ergonomia, iluminação, cabos, organização e produtividade." },
       { property: "og:title", content: "Diagnóstico IA do seu setup" },
       { property: "og:description", content: "Avaliação completa em 30 segundos, com sugestões de produtos brasileiros." },

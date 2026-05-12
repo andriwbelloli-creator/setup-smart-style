@@ -23,9 +23,9 @@ const PAGE_SIZE = 9;
 export const Route = createFileRoute("/galeria")({
   head: () => ({
     meta: [
-      { title: "Galeria — Setups brasileiros · HomeOffice.life" },
+      { title: "Galeria — Setups brasileiros · HomeOfficeLife" },
       { name: "description", content: "Descubra setups de home office por estilo: minimalista, gamer, MacBook, dev, designer, apê pequeno e mais." },
-      { property: "og:title", content: "Galeria de setups — HomeOffice.life" },
+      { property: "og:title", content: "Galeria de setups — HomeOfficeLife" },
       { property: "og:description", content: "Inspiração real de devs, designers e creators brasileiros." },
     ],
   }),

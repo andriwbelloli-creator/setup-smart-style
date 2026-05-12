@@ -62,7 +62,7 @@ export function Navbar() {
             <Sparkles className="h-4 w-4" />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="font-display text-lg font-bold tracking-tight">HomeOffice.life</span>
+            <span className="font-display text-lg font-bold tracking-tight">HomeOfficeLife</span>
             <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">br · home office</span>
           </div>
         </Link>

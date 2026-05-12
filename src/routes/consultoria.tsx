@@ -26,7 +26,7 @@ type Service = {
   ctaLabel: string;
 };
 
-const CONTACT_EMAIL = "contato@homeoffice.life";
+const CONTACT_EMAIL = "contato@homeofficelife.com.br";
 
 // Stripe Payment Links (Test mode atualmente — quando migrar pra prod,
 // criar 3 links equivalentes em dashboard.stripe.com/payment-links
@@ -95,9 +95,9 @@ const SERVICES: Service[] = [
 export const Route = createFileRoute("/consultoria")({
   head: () => ({
     meta: [
-      { title: "Consultoria 1:1 · HomeOffice.life" },
-      { name: "description", content: "Consultoria personalizada de home office: chamada 30min (R$ 99), análise + PDF (R$ 199) ou setup completo (R$ 599). Pela equipe HomeOffice.life." },
-      { property: "og:title", content: "Consultoria 1:1 de Home Office · HomeOffice.life" },
+      { title: "Consultoria 1:1 · HomeOfficeLife" },
+      { name: "description", content: "Consultoria personalizada de home office: chamada 30min (R$ 99), análise + PDF (R$ 199) ou setup completo (R$ 599). Pela equipe HomeOfficeLife." },
+      { property: "og:title", content: "Consultoria 1:1 de Home Office · HomeOfficeLife" },
       { property: "og:description", content: "Especialista BR analisa seu setup e monta plano de upgrade sob medida. A partir de R$ 99." },
     ],
   }),
