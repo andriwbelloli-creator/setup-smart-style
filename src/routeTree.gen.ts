@@ -17,6 +17,7 @@ import { Route as PostarRouteImport } from './routes/postar'
 import { Route as PerfilRouteImport } from './routes/perfil'
 import { Route as OrcamentoRouteImport } from './routes/orcamento'
 import { Route as GaleriaRouteImport } from './routes/galeria'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -66,6 +67,11 @@ const GaleriaRoute = GaleriaRouteImport.update({
   path: '/galeria',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DiagnosticoRoute = DiagnosticoRouteImport.update({
   id: '/diagnostico',
   path: '/diagnostico',
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/comunidade': typeof ComunidadeRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
   '/orcamento': typeof OrcamentoRoute
   '/perfil': typeof PerfilRoute
@@ -169,6 +178,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/comunidade'
     | '/diagnostico'
+    | '/favoritos'
     | '/galeria'
     | '/orcamento'
     | '/perfil'
@@ -187,6 +197,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/comunidade'
     | '/diagnostico'
+    | '/favoritos'
     | '/galeria'
     | '/orcamento'
     | '/perfil'
@@ -205,6 +216,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/comunidade'
     | '/diagnostico'
+    | '/favoritos'
     | '/galeria'
     | '/orcamento'
     | '/perfil'
@@ -224,6 +236,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   ComunidadeRoute: typeof ComunidadeRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
+  FavoritosRoute: typeof FavoritosRoute
   GaleriaRoute: typeof GaleriaRoute
   OrcamentoRoute: typeof OrcamentoRoute
   PerfilRoute: typeof PerfilRoute
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/galeria'
       fullPath: '/galeria'
       preLoaderRoute: typeof GaleriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/diagnostico': {
@@ -369,6 +389,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   ComunidadeRoute: ComunidadeRoute,
   DiagnosticoRoute: DiagnosticoRoute,
+  FavoritosRoute: FavoritosRoute,
   GaleriaRoute: GaleriaRoute,
   OrcamentoRoute: OrcamentoRoute,
   PerfilRoute: PerfilRoute,

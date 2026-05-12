@@ -7,6 +7,7 @@ import { useLikes, useSaves } from "@/hooks/use-saved";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { supabase } from "@/integrations/supabase/client";
 import { WatermarkOverlay } from "@/components/setup/WatermarkOverlay";
+import { ShareButton } from "@/components/setup/ShareButton";
 
 export function SetupCard({
   s,
@@ -101,6 +102,12 @@ export function SetupCard({
             >
               <Bookmark className={`h-3.5 w-3.5 ${saved ? "fill-current" : ""}`} /> {s.saves + (saved ? 1 : 0)}
             </button>
+            <ShareButton
+              title={s.title}
+              url={typeof window !== "undefined" ? `${window.location.origin}/setup/${s.slug}` : `/setup/${s.slug}`}
+              size="icon"
+              className="!h-6 !w-6 border border-border"
+            />
           </div>
         </div>
         <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
