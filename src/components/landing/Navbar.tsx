@@ -21,7 +21,6 @@ const MAIN_LINKS = [
   { to: "/galeria", label: "Galeria" },
   { to: "/marketplace", label: "Marketplace" },
   { to: "/kits", label: "Kits" },
-  { to: "/consultoria", label: "Consultoria" },
   { to: "/blog", label: "Blog" },
   { to: "/orcamento", label: "Orçamentos" },
   { to: "/comunidade", label: "Comunidade" },

@@ -306,3 +306,121 @@ export async function fetchMyListings(sellerId: string): Promise<MarketplaceList
     .order("created_at", { ascending: false });
   return ((data as any[]) || []) as MarketplaceListing[];
 }
+
+// =====================================================
+// CROSS-SELLING IA / Setup → Marketplace
+// =====================================================
+// Dada uma lista de produtos (do setup ou da IA), busca anúncios no
+// marketplace que match por categoria + palavras-chave do nome. Retorna
+// um Map productId -> melhor match (menor preço encontrado).
+//
+// Heurística de match: extraímos as 2 primeiras palavras significativas
+// do nome do produto e fazemos um or-ilike. Imperfeito mas suficiente
+// pra MVP. Filtra só listings active com preço < ref_price (sempre vale
+// a pena exibir se mais barato).
+//
+// Categoria mapeamento: produtos do setup têm category livre ("Monitor",
+// "Cadeira"); marketplace tem categorias com slugs. Mapeamos no client.
+const CATEGORY_TO_MARKETPLACE_SLUG: Record<string, string> = {
+  Monitor: "monitores",
+  Cadeira: "cadeiras",
+  Mesa: "mesas",
+  Teclado: "teclados",
+  Mouse: "mouses",
+  Áudio: "audio",
+  Audio: "audio",
+  Iluminação: "iluminacao",
+  Iluminacao: "iluminacao",
+  Webcam: "webcams",
+  Notebook: "notebooks",
+};
+
+export type CrossSellInput = {
+  product_id: string;
+  category: string;
+  name: string;
+  ref_price: number;
+};
+
+export type CrossSellMatch = {
+  product_id: string;
+  listing: MarketplaceListing;
+  savings: number;
+};
+
+function extractKeywords(name: string): string[] {
+  // Pega palavras com 4+ letras, ignorando palavras muito genéricas
+  const stopwords = new Set([
+    "para", "com", "polegadas", "pulgadas", "high", "definition", "monitor",
+    "cadeira", "mesa", "novo", "modelo", "sem", "fios",
+  ]);
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9á-ú\s]/gi, " ")
+    .split(/\s+/)
+    .filter((w) => w.length >= 4 && !stopwords.has(w))
+    .slice(0, 2);
+}
+
+export async function fetchCrossSellMatches(
+  products: CrossSellInput[],
+): Promise<Map<string, CrossSellMatch>> {
+  const matches = new Map<string, CrossSellMatch>();
+  if (products.length === 0) return matches;
+
+  // 1) Resolve categorias do marketplace que aparecem nos produtos
+  const allSlugs = new Set<string>();
+  for (const p of products) {
+    const slug = CATEGORY_TO_MARKETPLACE_SLUG[p.category];
+    if (slug) allSlugs.add(slug);
+  }
+  if (allSlugs.size === 0) return matches;
+
+  const { data: cats } = await (supabase as any)
+    .from("marketplace_categories")
+    .select("id, slug")
+    .in("slug", Array.from(allSlugs));
+  const catBySlug = new Map<string, string>(
+    ((cats as any[]) || []).map((c) => [c.slug as string, c.id as string]),
+  );
+
+  // 2) Busca listings active das categorias relevantes (1 query batch)
+  const catIds = Array.from(catBySlug.values());
+  if (catIds.length === 0) return matches;
+
+  const { data: listings } = await (supabase as any)
+    .from("marketplace_listings")
+    .select(LISTING_SELECT)
+    .in("category_id", catIds)
+    .eq("status", "active")
+    .order("price", { ascending: true });
+
+  const allListings = ((listings as any[]) || []) as MarketplaceListing[];
+
+  // 3) Pra cada produto, busca melhor match no client
+  for (const p of products) {
+    const slug = CATEGORY_TO_MARKETPLACE_SLUG[p.category];
+    if (!slug) continue;
+    const catId = catBySlug.get(slug);
+    if (!catId) continue;
+    const keywords = extractKeywords(p.name);
+    if (keywords.length === 0) continue;
+
+    const candidates = allListings.filter(
+      (l) =>
+        l.category_id === catId &&
+        Number(l.price) < p.ref_price &&
+        keywords.some((kw) => l.title.toLowerCase().includes(kw)),
+    );
+    if (candidates.length === 0) continue;
+    // Já vem ordenado por preço asc → primeiro é o mais barato com match
+    const best = candidates[0];
+    matches.set(p.product_id, {
+      product_id: p.product_id,
+      listing: best,
+      savings: Math.round(p.ref_price - Number(best.price)),
+    });
+  }
+
+  return matches;
+}
