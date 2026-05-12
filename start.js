@@ -179,9 +179,17 @@ async function handleSitemap(_req, res) {
     { loc: "https://deskly.life/", priority: 1.0, changefreq: "daily" },
     { loc: "https://deskly.life/galeria", priority: 0.9, changefreq: "daily" },
     { loc: "https://deskly.life/diagnostico", priority: 0.9, changefreq: "weekly" },
+    { loc: "https://deskly.life/kits", priority: 0.9, changefreq: "weekly" },
+    { loc: "https://deskly.life/blog", priority: 0.9, changefreq: "weekly" },
+    { loc: "https://deskly.life/consultoria", priority: 0.8, changefreq: "weekly" },
     { loc: "https://deskly.life/orcamento", priority: 0.8, changefreq: "weekly" },
     { loc: "https://deskly.life/comunidade", priority: 0.7, changefreq: "daily" },
     { loc: "https://deskly.life/premium", priority: 0.7, changefreq: "monthly" },
+    // Blog posts — hardcoded slugs (atualizar manualmente quando publicar
+    // novo post no src/data/blog-posts.ts).
+    { loc: "https://deskly.life/blog/home-office-r-500-completo-2026", priority: 0.8, changefreq: "monthly" },
+    { loc: "https://deskly.life/blog/setup-r-3000-vs-r-30000-vale-pena", priority: 0.8, changefreq: "monthly" },
+    { loc: "https://deskly.life/blog/por-que-sua-nota-ia-ta-baixa-6-erros", priority: 0.8, changefreq: "monthly" },
     { loc: "https://deskly.life/termos", priority: 0.3, changefreq: "monthly" },
     { loc: "https://deskly.life/privacidade", priority: 0.3, changefreq: "monthly" },
   ];

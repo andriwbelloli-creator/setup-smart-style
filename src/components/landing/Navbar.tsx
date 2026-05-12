@@ -21,6 +21,7 @@ const MAIN_LINKS = [
   { to: "/kits", label: "Kits" },
   { to: "/diagnostico", label: "Diagnóstico IA" },
   { to: "/consultoria", label: "Consultoria" },
+  { to: "/blog", label: "Blog" },
   { to: "/orcamento", label: "Orçamentos" },
   { to: "/comunidade", label: "Comunidade" },
 ] as const;

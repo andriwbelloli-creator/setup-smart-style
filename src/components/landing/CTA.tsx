@@ -52,6 +52,7 @@ export function Footer() {
             <Link to="/diagnostico" className="hover:text-foreground">Diagnóstico</Link>
             <Link to="/orcamento" className="hover:text-foreground">Orçamentos</Link>
             <Link to="/consultoria" className="hover:text-foreground">Consultoria</Link>
+            <Link to="/blog" className="hover:text-foreground">Blog</Link>
             <Link to="/comunidade" className="hover:text-foreground">Comunidade</Link>
             <Link to="/premium" className="hover:text-foreground">Premium</Link>
             <Link to="/termos" className="hover:text-foreground">Termos</Link>
