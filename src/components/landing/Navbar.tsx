@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Sparkles, LogOut, User } from "lucide-react";
+import { Sparkles, LogOut, User, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,7 @@ const linkBase = "text-sm font-medium text-muted-foreground transition-smooth ho
 
 export function Navbar() {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
   const navigate = useNavigate();
   const handleSignOut = async () => {
     await signOut();
@@ -66,6 +68,20 @@ export function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link to="/diagnostico">Diagnóstico IA</Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuLabel className="text-xs uppercase tracking-wider text-muted-foreground">Admin</DropdownMenuLabel>
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard/admin">
+                          <Crown className="mr-2 h-4 w-4" /> Painel admin
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/dashboard/afiliados">Afiliados</Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
                     <LogOut className="mr-2 h-4 w-4" /> Sair

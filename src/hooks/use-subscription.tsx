@@ -51,6 +51,20 @@ export function useSubscription(): SubscriptionState {
     }
     let cancelled = false;
     (async () => {
+      // admins bypassam plano e ganham tier=pro automaticamente
+      const { data: roleRow } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      if (cancelled) return;
+      if (roleRow) {
+        setTier("pro");
+        setStatus("active");
+        setLoading(false);
+        return;
+      }
       const { data, error } = await supabase
         .from("subscriptions")
         .select("tier, status")
