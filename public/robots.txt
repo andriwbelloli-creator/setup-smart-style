@@ -7,4 +7,10 @@ Disallow: /reset-password
 Disallow: /perfil
 Disallow: /postar
 
+# Honeypot — crawlers que respeitam robots.txt nunca chegam aqui.
+# Acessos a /honeypot são sempre bots/scrapers ignorando o robots,
+# e levam ban automático do IP no servidor.
+Disallow: /honeypot
+Disallow: /setups/_internal/
+
 Sitemap: https://deskly.life/sitemap.xml

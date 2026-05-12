@@ -43,6 +43,80 @@ function applySecurityHeaders(res) {
 const SUPABASE_URL =
   process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || "";
 const SUPABASE_ANON = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
+const SUPABASE_SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+
+// =============================================================
+// Bot detection (honeypot) + rate limit por IP
+// =============================================================
+// In-memory store: válido pelo lifetime do processo. Render reinicia
+// diariamente em tier free, então um bot precisa pagar o custo de
+// detecção a cada novo deploy — aceitável.
+const bannedIps = new Set();
+const ipHits = new Map(); // ip -> [{ts, path}]
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX_HITS_REDIRECT = 20; // /r/:id máximo por minuto por IP
+const TARPIT_DELAY_MS = 5_000; // delay artificial para IPs banidos
+
+function clientIp(req) {
+  const xff = req.headers["x-forwarded-for"];
+  if (xff) return String(xff).split(",")[0].trim();
+  return req.socket?.remoteAddress || "unknown";
+}
+
+function ipShortHash(ip) {
+  // não-criptográfico, só pra não logar IP raw no DB junto
+  let h = 5381;
+  for (let i = 0; i < ip.length; i++) h = (h * 33) ^ ip.charCodeAt(i);
+  return ("00000000" + (h >>> 0).toString(16)).slice(-8);
+}
+
+function trackHit(ip, path) {
+  const now = Date.now();
+  const arr = (ipHits.get(ip) || []).filter((h) => now - h.ts < RATE_WINDOW_MS);
+  arr.push({ ts: now, path });
+  ipHits.set(ip, arr);
+  return arr.length;
+}
+
+async function logBotTrap(req, ip, trapType) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/bot_traps`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_SERVICE,
+        Authorization: `Bearer ${SUPABASE_SERVICE}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        ip,
+        ip_hash: ipShortHash(ip),
+        user_agent: (req.headers["user-agent"] || "").slice(0, 200),
+        referer: (req.headers["referer"] || "").slice(0, 200),
+        trap_type: trapType,
+        request_path: (req.url || "").slice(0, 200),
+      }),
+    });
+  } catch {
+    // silencioso — não queremos quebrar a resposta por falha de log
+  }
+}
+
+async function handleHoneypot(req, res) {
+  const ip = clientIp(req);
+  bannedIps.add(ip);
+  await logBotTrap(req, ip, "honeypot_link");
+  // resposta 200 verossímil, demorada (tarpit) — bots gastam tempo
+  await new Promise((r) => setTimeout(r, TARPIT_DELAY_MS));
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  res.end(`<!doctype html><html><head><title>Setup raro</title>
+<meta name="robots" content="noindex,nofollow"></head>
+<body><h1>Carregando...</h1><p>Aguarde.</p></body></html>`);
+}
 
 async function handleAffiliateRedirect(req, res, productId) {
   if (!SUPABASE_URL || !SUPABASE_ANON) {
@@ -158,10 +232,36 @@ const server = createServer(async (req, res) => {
     // 1. Headers de segurança em toda resposta
     applySecurityHeaders(res);
 
-    // 2. Affiliate cloaking: /r/<product-uuid>
     const path = (req.url || "").split("?")[0];
+    const ip = clientIp(req);
+
+    // 2a. Honeypot: link invisível só bots clicam
+    if (path === "/honeypot" || path === "/setups/_internal/draft") {
+      await handleHoneypot(req, res);
+      return;
+    }
+
+    // 2b. Affiliate cloaking: /r/<product-uuid>
     const match = path.match(/^\/r\/([a-z0-9-]{6,64})$/i);
     if (match) {
+      // IP já banido → tarpit
+      if (bannedIps.has(ip)) {
+        await new Promise((r) => setTimeout(r, TARPIT_DELAY_MS));
+        res.statusCode = 429;
+        res.setHeader("Retry-After", "60");
+        res.end("rate limited");
+        return;
+      }
+      // Rate limit por IP no endpoint /r/
+      const hits = trackHit(ip, path);
+      if (hits > RATE_MAX_HITS_REDIRECT) {
+        bannedIps.add(ip);
+        logBotTrap(req, ip, "rate_limit_r"); // fire & forget
+        res.statusCode = 429;
+        res.setHeader("Retry-After", "60");
+        res.end("rate limited");
+        return;
+      }
       await handleAffiliateRedirect(req, res, match[1]);
       return;
     }

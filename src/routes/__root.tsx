@@ -4,6 +4,7 @@ import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CookieBanner } from "@/components/CookieBanner";
+import { HoneypotLink } from "@/components/HoneypotLink";
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/600.css";
@@ -84,6 +85,7 @@ function RootComponent() {
       <Outlet />
       <Toaster />
       <CookieBanner />
+      <HoneypotLink />
     </AuthProvider>
   );
 }

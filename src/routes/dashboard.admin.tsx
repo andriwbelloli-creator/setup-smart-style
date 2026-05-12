@@ -15,6 +15,7 @@ import {
   Sparkles,
   Crown,
   ShieldAlert,
+  Bug,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/admin")({
@@ -69,6 +70,8 @@ type Metrics = {
   mrrCents: number;
   topSetups: Array<{ id: string; slug: string; title: string; clicks: number }>;
   recentUsers: Array<{ id: string; display_name: string; username: string; created_at: string }>;
+  botTraps: number;
+  recentTraps: Array<{ ip_hash: string; trap_type: string; user_agent: string; detected_at: string }>;
 };
 
 async function fetchCount(table: string, filters?: (q: any) => any): Promise<number> {
@@ -219,6 +222,29 @@ function AdminDashboard() {
         .order("created_at", { ascending: false })
         .limit(8);
 
+      // Bot traps (acessível só pra admin via RLS)
+      let botTraps = 0;
+      let recentTraps: Metrics["recentTraps"] = [];
+      try {
+        const q1 = supabase.from("bot_traps").select("*", { count: "exact", head: true });
+        const trapCountQuery = startIso ? q1.gte("detected_at", startIso) : q1;
+        const { count: trapCount } = await trapCountQuery;
+        botTraps = trapCount ?? 0;
+        const { data: traps } = await supabase
+          .from("bot_traps")
+          .select("ip_hash, trap_type, user_agent, detected_at")
+          .order("detected_at", { ascending: false })
+          .limit(10);
+        recentTraps = ((traps as any[]) || []).map((t) => ({
+          ip_hash: t.ip_hash,
+          trap_type: t.trap_type,
+          user_agent: t.user_agent ?? "",
+          detected_at: t.detected_at,
+        }));
+      } catch {
+        // tabela ainda não criada — não bloqueia o dashboard
+      }
+
       if (cancelled) return;
       setMetrics({
         users,
@@ -240,6 +266,8 @@ function AdminDashboard() {
         mrrCents,
         topSetups,
         recentUsers: (recent || []) as any,
+        botTraps,
+        recentTraps,
       });
       setLoading(false);
     })();
@@ -436,6 +464,52 @@ function AdminDashboard() {
                   ))}
                 </ul>
               </div>
+            </div>
+
+            {/* Bot traps (segurança) */}
+            <div className="mt-10 rounded-3xl border border-border bg-card p-6 shadow-soft">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Bug className="h-5 w-5 text-destructive" />
+                  <h2 className="font-display text-lg font-bold">Bots detectados</h2>
+                </div>
+                <span className="rounded-full bg-destructive/10 px-3 py-1 text-xs font-bold text-destructive">
+                  {metrics.botTraps} total
+                </span>
+              </div>
+              {metrics.recentTraps.length === 0 ? (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Nenhum bot caiu na armadilha ainda. Boas notícias.
+                </p>
+              ) : (
+                <ul className="mt-4 space-y-2">
+                  {metrics.recentTraps.map((t, i) => (
+                    <li
+                      key={i}
+                      className="grid grid-cols-[80px_120px_1fr_120px] items-center gap-3 rounded-xl border border-border bg-background p-3 text-xs"
+                    >
+                      <span className="font-mono font-bold text-muted-foreground">
+                        {t.ip_hash}
+                      </span>
+                      <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-center font-semibold text-destructive">
+                        {t.trap_type}
+                      </span>
+                      <span className="truncate text-muted-foreground" title={t.user_agent}>
+                        {t.user_agent || "—"}
+                      </span>
+                      <span className="text-right text-muted-foreground">
+                        {new Date(t.detected_at).toLocaleString("pt-BR")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p className="mt-4 text-xs text-muted-foreground">
+                Bots banidos automaticamente até o próximo restart do servidor (~24h).
+                Acessos a <code className="rounded bg-secondary px-1">/honeypot</code> ou rate
+                limit excedido em <code className="rounded bg-secondary px-1">/r/:id</code>
+                {" "}disparam a captura.
+              </p>
             </div>
 
             <div className="mt-10 flex flex-wrap gap-3">
