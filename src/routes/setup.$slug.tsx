@@ -289,63 +289,97 @@ function SetupDetail() {
 
             {setup.description && <p className="mt-6 text-base leading-relaxed text-muted-foreground">{setup.description}</p>}
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button onClick={() => likes.toggle(setup.id)} className={`gap-2 shadow-elegant ${liked ? "bg-coral text-coral-foreground hover:opacity-90" : "bg-gradient-hero"}`}>
-                <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} /> {liked ? "Curtido" : "Curtir"} ({setup.likes + (liked ? 1 : 0)})
-              </Button>
-              <Button onClick={() => saves.toggle(setup.id)} variant="outline" className="gap-2">
-                <Bookmark className={`h-4 w-4 ${saved ? "fill-current text-primary" : ""}`} /> {saved ? "Salvo" : "Salvar"}
-              </Button>
-              <div className="relative">
-                <Button onClick={share} variant="outline" className="gap-2"><Share2 className="h-4 w-4" /> Compartilhar</Button>
-                {shareOpen && (
-                  <div className="absolute left-0 top-full z-30 mt-2 w-56 rounded-2xl border border-border bg-card p-2 shadow-elegant">
-                    <a href={shareLinks.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
-                      <span className="text-lg">💬</span> WhatsApp
-                    </a>
-                    <a href={shareLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
-                      <span className="text-lg">𝕏</span> Twitter
-                    </a>
-                    <a href={shareLinks.telegram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
-                      <span className="text-lg">✈️</span> Telegram
-                    </a>
-                    <a href={shareLinks.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
-                      <span className="text-lg">📘</span> Facebook
-                    </a>
-                    <button onClick={copyLink} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm hover:bg-secondary">
-                      <span className="text-lg">🔗</span> Copiar link
-                    </button>
-                  </div>
+            {/* Action bar — agrupada e mobile-friendly */}
+            <div className="mt-6 space-y-3">
+              {/* Linha primária: CTAs principais (montar parecido + comparar) */}
+              <div className="flex flex-wrap gap-2">
+                {myFirstSlug ? (
+                  <Button asChild className="gap-2 bg-gradient-hero shadow-elegant">
+                    <Link to="/comparar" search={{ setups: `${myFirstSlug},${setup.slug}` }}>
+                      <ArrowLeftRight className="h-4 w-4" /> Comparar com o meu setup
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button asChild className="gap-2 bg-gradient-hero shadow-elegant">
+                    <Link to="/orcamento"><Sparkles className="h-4 w-4" /> Quero montar parecido</Link>
+                  </Button>
                 )}
-              </div>
-              <Button asChild variant="secondary" className="gap-2 bg-coral text-coral-foreground hover:opacity-90">
-                <Link to="/orcamento"><Sparkles className="h-4 w-4" /> Quero montar parecido</Link>
-              </Button>
-              <Button asChild variant="outline" className="gap-2">
-                <Link to="/comparar" search={{ setups: setup.slug }}>
-                  <ArrowLeftRight className="h-4 w-4" /> Comparar com outro
-                </Link>
-              </Button>
-              {myFirstSlug && (
-                <Button asChild className="gap-2 bg-gradient-hero">
-                  <Link to="/comparar" search={{ setups: `${myFirstSlug},${setup.slug}` }}>
-                    <ArrowLeftRight className="h-4 w-4" /> Comparar com o meu setup
+                <Button asChild variant="outline" className="gap-2">
+                  <Link to="/comparar" search={{ setups: setup.slug }}>
+                    <ArrowLeftRight className="h-4 w-4" /> <span className="hidden sm:inline">Comparar com </span>outro
                   </Link>
                 </Button>
-              )}
-              {isAdmin && (
+                {myFirstSlug && (
+                  <Button asChild variant="ghost" className="gap-2 text-coral hover:bg-coral/10 hover:text-coral">
+                    <Link to="/orcamento"><Sparkles className="h-4 w-4" /> Montar parecido</Link>
+                  </Button>
+                )}
+              </div>
+
+              {/* Linha secundária: ações sociais (icon-only em mobile) */}
+              <div className="flex items-center gap-2">
                 <Button
-                  type="button"
-                  onClick={handleDeleteSetup}
-                  disabled={deletingSetup}
-                  variant="outline"
-                  className="ml-auto gap-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                  title="Excluir setup (admin)"
+                  onClick={() => likes.toggle(setup.id)}
+                  variant={liked ? "default" : "outline"}
+                  size="sm"
+                  className={`gap-2 ${liked ? "bg-coral text-coral-foreground hover:opacity-90" : ""}`}
+                  aria-label={liked ? "Descurtir" : "Curtir"}
                 >
-                  {deletingSetup ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-                  Excluir setup
+                  <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
+                  <span className="hidden sm:inline">{liked ? "Curtido" : "Curtir"}</span>
+                  <span>{setup.likes + (liked ? 1 : 0)}</span>
                 </Button>
-              )}
+                <Button
+                  onClick={() => saves.toggle(setup.id)}
+                  variant={saved ? "default" : "outline"}
+                  size="sm"
+                  className="gap-2"
+                  aria-label={saved ? "Remover dos favoritos" : "Salvar nos favoritos"}
+                >
+                  <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
+                  <span className="hidden sm:inline">{saved ? "Salvo" : "Salvar"}</span>
+                </Button>
+                <div className="relative">
+                  <Button onClick={share} variant="outline" size="sm" className="gap-2" aria-label="Compartilhar">
+                    <Share2 className="h-4 w-4" />
+                    <span className="hidden sm:inline">Compartilhar</span>
+                  </Button>
+                  {shareOpen && (
+                    <div className="absolute left-0 top-full z-30 mt-2 w-56 rounded-2xl border border-border bg-card p-2 shadow-elegant">
+                      <a href={shareLinks.whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                        <span className="text-lg">💬</span> WhatsApp
+                      </a>
+                      <a href={shareLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                        <span className="text-lg">𝕏</span> Twitter
+                      </a>
+                      <a href={shareLinks.telegram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                        <span className="text-lg">✈️</span> Telegram
+                      </a>
+                      <a href={shareLinks.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-secondary" onClick={() => setShareOpen(false)}>
+                        <span className="text-lg">📘</span> Facebook
+                      </a>
+                      <button onClick={copyLink} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm hover:bg-secondary">
+                        <span className="text-lg">🔗</span> Copiar link
+                      </button>
+                    </div>
+                  )}
+                </div>
+                {isAdmin && (
+                  <Button
+                    type="button"
+                    onClick={handleDeleteSetup}
+                    disabled={deletingSetup}
+                    variant="outline"
+                    size="sm"
+                    className="ml-auto gap-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    title="Excluir setup (admin)"
+                    aria-label="Excluir setup (admin)"
+                  >
+                    {deletingSetup ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                    <span className="hidden sm:inline">Excluir</span>
+                  </Button>
+                )}
+              </div>
             </div>
 
             {/* Comments */}

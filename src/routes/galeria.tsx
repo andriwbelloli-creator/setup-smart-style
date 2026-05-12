@@ -3,10 +3,11 @@ import { useEffect, useState, useMemo } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { SetupCard } from "@/components/setup/SetupCard";
+import { SetupCardSkeletonGrid } from "@/components/setup/SetupCardSkeleton";
 import { SETUPS, STYLES, ROLES, type Setup } from "@/data/setups";
 import { fetchPublishedSetups } from "@/lib/setups-db";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, SlidersHorizontal, Loader2, ChevronLeft, ChevronRight, Flame, Sparkles, Star, Wallet } from "lucide-react";
+import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, Flame, Sparkles, Star, Wallet, ImageOff } from "lucide-react";
 
 type SortKey = "popular" | "recent" | "score" | "budget_asc";
 
@@ -194,10 +195,21 @@ function Galeria() {
           </div>
         </div>
         {loading ? (
-          <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+          <SetupCardSkeletonGrid count={9} />
         ) : sorted.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center text-muted-foreground">
-            Nenhum setup encontrado. Tenta limpar os filtros.
+          <div className="rounded-3xl border border-dashed border-border bg-card p-12 text-center md:p-16">
+            <ImageOff className="mx-auto h-10 w-10 text-muted-foreground" />
+            <h2 className="mt-4 font-display text-xl font-bold">Nenhum setup encontrado</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Os filtros atuais não retornaram nada. Tenta soltar um pouco.
+            </p>
+            <button
+              type="button"
+              onClick={() => { setStyle("Todos"); setRole("Todos"); setBudget("Todos"); setQ(""); }}
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-smooth hover:opacity-90"
+            >
+              Limpar todos os filtros
+            </button>
           </div>
         ) : (
           <>
