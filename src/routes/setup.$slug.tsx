@@ -4,9 +4,11 @@ import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { findSetup, type Product, type Setup } from "@/data/setups";
 import { WatermarkOverlay } from "@/components/setup/WatermarkOverlay";
+import { RentalLeadModal } from "@/components/setup/RentalLeadModal";
+import { estimateMonthlyRental } from "@/lib/rental";
 import { fetchSetupBySlug } from "@/lib/setups-db";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
-import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight } from "lucide-react";
+import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight, CalendarClock, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
 import { useAuth } from "@/hooks/use-auth";
@@ -159,6 +161,8 @@ function SetupDetail() {
   const [commentBody, setCommentBody] = useState("");
   const [deletingSetup, setDeletingSetup] = useState(false);
   const [myFirstSlug, setMyFirstSlug] = useState<string | null>(null);
+  const [rentalOpen, setRentalOpen] = useState(false);
+  const monthlyRental = estimateMonthlyRental(total, 12);
 
   // Carrega 1º setup do user logado pra habilitar one-click "Comparar com meu"
   useEffect(() => {
@@ -483,6 +487,36 @@ function SetupDetail() {
               <div className="mt-2 text-3xl font-display font-bold">R$ {total.toLocaleString("pt-BR")}</div>
               <div className="text-xs text-muted-foreground">Soma dos produtos marcados</div>
 
+              {/* Card de Locação — B2B + B2C lead gen */}
+              {total > 0 && (
+                <div className="mt-5 rounded-2xl border-2 border-dashed border-coral/40 bg-coral/5 p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-coral text-coral-foreground shadow-soft">
+                      <CalendarClock className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-[11px] font-bold uppercase tracking-wider text-coral-foreground/80">
+                        Prefere alugar?
+                      </div>
+                      <div className="mt-0.5 font-display text-lg font-bold leading-tight">
+                        A partir de R$ {monthlyRental.toLocaleString("pt-BR")}
+                        <span className="text-xs font-medium text-muted-foreground">/mês</span>
+                      </div>
+                      <div className="mt-0.5 text-xs text-muted-foreground">
+                        Para você ou pra sua empresa (B2B)
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => setRentalOpen(true)}
+                    className="mt-3 w-full gap-2 bg-foreground text-background hover:opacity-90"
+                  >
+                    <Building2 className="h-4 w-4" />
+                    Solicitar cotação de aluguel
+                  </Button>
+                </div>
+              )}
+
               <div className="mt-5 space-y-3">
                 {setup.products.length === 0 && (
                   <p className="rounded-2xl border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
@@ -582,6 +616,13 @@ function SetupDetail() {
         )}
       </main>
       <Footer />
+      <RentalLeadModal
+        open={rentalOpen}
+        onOpenChange={setRentalOpen}
+        setupId={fromDb ? setup.id : undefined}
+        setupTitle={setup.title}
+        totalPriceBrl={total}
+      />
     </div>
   );
 }

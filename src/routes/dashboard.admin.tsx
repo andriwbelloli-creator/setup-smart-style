@@ -18,6 +18,9 @@ import {
   Bug,
   Shield,
   TrendingUp,
+  CalendarClock,
+  Building2,
+  User as UserIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/admin")({
@@ -79,6 +82,22 @@ type Metrics = {
   paywallHits: number;
   paywallConversions: number;
   paywallRecoveryRate: number;
+  rentalLeads: Array<{
+    id: string;
+    lead_type: "B2B" | "B2C";
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+    company_name: string | null;
+    employee_count: number | null;
+    rental_duration_months: number;
+    estimated_budget: number | null;
+    status: string;
+    created_at: string;
+    setup?: { slug: string; title: string } | null;
+    partner?: { name: string } | null;
+  }>;
+  rentalCounts: { pending: number; contacted: number; converted: number; lost: number };
 };
 
 async function fetchCount(table: string, filters?: (q: any) => any): Promise<number> {
@@ -95,6 +114,22 @@ function AdminDashboard() {
   const [range, setRange] = useState<Range>("30d");
   const [loading, setLoading] = useState(true);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
+
+  const updateLeadStatus = async (leadId: string, newStatus: string) => {
+    const { error } = await (supabase as any)
+      .from("rental_leads")
+      .update({ status: newStatus })
+      .eq("id", leadId);
+    if (error) {
+      console.warn("update lead status:", error.message);
+      return;
+    }
+    // Optimistic update
+    setMetrics((m) => m && {
+      ...m,
+      rentalLeads: m.rentalLeads.map((l) => l.id === leadId ? { ...l, status: newStatus } : l),
+    });
+  };
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth" });
@@ -296,6 +331,24 @@ function AdminDashboard() {
         // tabela ainda não criada — não bloqueia o dashboard
       }
 
+      // Rental leads (B2B + B2C)
+      let rentalLeads: Metrics["rentalLeads"] = [];
+      const rentalCounts = { pending: 0, contacted: 0, converted: 0, lost: 0 } as Metrics["rentalCounts"];
+      try {
+        const qLeads = (supabase as any)
+          .from("rental_leads")
+          .select("id, lead_type, customer_name, customer_email, customer_phone, company_name, employee_count, rental_duration_months, estimated_budget, status, created_at, setup:setups(slug,title), partner:rental_partners(name)")
+          .order("created_at", { ascending: false })
+          .limit(50);
+        const { data: leads } = startIso ? await qLeads.gte("created_at", startIso) : await qLeads;
+        rentalLeads = (leads || []) as any;
+        for (const l of rentalLeads) {
+          if (l.status in rentalCounts) rentalCounts[l.status as keyof Metrics["rentalCounts"]]++;
+        }
+      } catch (err) {
+        console.warn("rental_leads:", err);
+      }
+
       if (cancelled) return;
       setMetrics({
         users,
@@ -324,6 +377,8 @@ function AdminDashboard() {
         paywallHits,
         paywallConversions,
         paywallRecoveryRate,
+        rentalLeads,
+        rentalCounts,
       });
       setLoading(false);
     })();
@@ -550,6 +605,107 @@ function AdminDashboard() {
               </p>
             </div>
 
+            {/* Rental Leads — B2B + B2C lead gen */}
+            <div className="mt-10 rounded-3xl border border-border bg-card p-6 shadow-soft">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CalendarClock className="h-5 w-5 text-coral" />
+                  <h2 className="font-display text-lg font-bold">Leads de Locação</h2>
+                </div>
+                <div className="flex gap-2 text-xs font-semibold">
+                  <span className="rounded-full bg-secondary px-3 py-1">
+                    {metrics.rentalCounts.pending} pendentes
+                  </span>
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-primary">
+                    {metrics.rentalCounts.contacted} contactados
+                  </span>
+                  <span className="rounded-full bg-primary px-3 py-1 text-primary-foreground">
+                    {metrics.rentalCounts.converted} convertidos
+                  </span>
+                </div>
+              </div>
+
+              {metrics.rentalLeads.length === 0 ? (
+                <p className="mt-6 rounded-2xl border border-dashed border-border bg-background p-6 text-center text-sm text-muted-foreground">
+                  Sem leads de locação ainda. Apareceram em <code className="rounded bg-secondary px-1">/setup/&lt;slug&gt;</code> os usuários podem solicitar cotação.
+                </p>
+              ) : (
+                <div className="mt-5 overflow-x-auto">
+                  <table className="w-full min-w-[800px] text-xs">
+                    <thead>
+                      <tr className="border-b border-border text-left text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        <th className="py-2 pr-3">Data</th>
+                        <th className="py-2 pr-3">Tipo</th>
+                        <th className="py-2 pr-3">Cliente / Empresa</th>
+                        <th className="py-2 pr-3">Setup</th>
+                        <th className="py-2 pr-3">Prazo</th>
+                        <th className="py-2 pr-3">Orçamento</th>
+                        <th className="py-2 pr-3">Status</th>
+                        <th className="py-2 pr-3 text-right">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {metrics.rentalLeads.map((l) => (
+                        <tr key={l.id} className="border-b border-border/40 hover:bg-secondary/30">
+                          <td className="py-3 pr-3 whitespace-nowrap text-muted-foreground">
+                            {new Date(l.created_at).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
+                          </td>
+                          <td className="py-3 pr-3">
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                              l.lead_type === "B2B"
+                                ? "bg-coral/15 text-coral-foreground"
+                                : "bg-primary/10 text-primary"
+                            }`}>
+                              {l.lead_type === "B2B" ? <Building2 className="h-3 w-3" /> : <UserIcon className="h-3 w-3" />}
+                              {l.lead_type}
+                            </span>
+                          </td>
+                          <td className="py-3 pr-3">
+                            <div className="font-semibold">
+                              {l.lead_type === "B2B" ? l.company_name : l.customer_name}
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">
+                              {l.customer_email} · {l.customer_phone}
+                              {l.lead_type === "B2B" && l.employee_count ? ` · ${l.employee_count} setups` : ""}
+                            </div>
+                          </td>
+                          <td className="py-3 pr-3 text-muted-foreground">
+                            {l.setup ? (
+                              <Link to="/setup/$slug" params={{ slug: l.setup.slug }} className="text-primary hover:underline">
+                                {l.setup.title.slice(0, 20)}...
+                              </Link>
+                            ) : "—"}
+                          </td>
+                          <td className="py-3 pr-3 text-muted-foreground">{l.rental_duration_months}m</td>
+                          <td className="py-3 pr-3 text-muted-foreground">
+                            {l.estimated_budget ? `R$ ${Number(l.estimated_budget).toLocaleString("pt-BR")}` : "—"}
+                          </td>
+                          <td className="py-3 pr-3">
+                            <StatusBadge status={l.status} />
+                          </td>
+                          <td className="py-3 pr-3 text-right">
+                            <select
+                              value={l.status}
+                              onChange={(e) => updateLeadStatus(l.id, e.target.value)}
+                              className="h-7 rounded-md border border-border bg-background px-2 text-[10px] font-semibold"
+                            >
+                              <option value="pending">Pendente</option>
+                              <option value="contacted">Contactado</option>
+                              <option value="converted">Convertido</option>
+                              <option value="lost">Perdido</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <p className="mt-4 text-xs text-muted-foreground">
+                Leads B2B costumam ter ticket 5-10x maior. Priorize contato em &lt;24h pra maximizar conversão.
+              </p>
+            </div>
+
             {/* Bot traps (segurança) */}
             <div className="mt-10 rounded-3xl border border-border bg-card p-6 shadow-soft">
               <div className="flex items-center justify-between">
@@ -667,6 +823,27 @@ function AdminDashboard() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  pending: "bg-secondary text-foreground",
+  contacted: "bg-primary/15 text-primary",
+  converted: "bg-primary text-primary-foreground",
+  lost: "bg-destructive/10 text-destructive",
+};
+const STATUS_LABEL: Record<string, string> = {
+  pending: "Pendente",
+  contacted: "Contactado",
+  converted: "Convertido",
+  lost: "Perdido",
+};
+
+function StatusBadge({ status }: { status: string }) {
+  return (
+    <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${STATUS_STYLES[status] ?? "bg-secondary"}`}>
+      {STATUS_LABEL[status] ?? status}
+    </span>
   );
 }
 
