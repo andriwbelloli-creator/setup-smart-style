@@ -208,7 +208,7 @@ function AdminDashboard() {
           mrrCents += 990;
         } else if (s.tier === "pro") {
           subsPro++;
-          mrrCents += 2990;
+          mrrCents += 1990;
         }
       }
 
@@ -351,7 +351,7 @@ function AdminDashboard() {
                     </div>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Premium R$ 9,90 · Pro R$ 29,90
+                    Premium R$ 9,90 · Pro R$ 19,90
                   </div>
                 </div>
               </div>
