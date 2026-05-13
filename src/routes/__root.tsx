@@ -8,6 +8,7 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { HoneypotLink } from "@/components/HoneypotLink";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { MetaPixel } from "@/components/MetaPixel";
+import { PWAInstall } from "@/components/PWAInstall";
 import { queryClient } from "@/lib/query-client";
 
 // Componentes não-críticos pra paint inicial: lazy + Suspense vazio
@@ -61,11 +62,18 @@ export const Route = createRootRoute({
       { name: "twitter:title", content: "HomeOfficeLife — Avalie seu home office com IA" },
       { name: "twitter:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
       { name: "twitter:image", content: "https://homeofficelife.com.br/og-image.jpg" },
+      // PWA / mobile install metadata
+      { name: "theme-color", content: "#0d6e6e" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "apple-mobile-web-app-title", content: "HomeOfficeLife" },
+      { name: "mobile-web-app-capable", content: "yes" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
-      { rel: "apple-touch-icon", href: "/favicon.svg" },
+      { rel: "apple-touch-icon", href: "/icons/icon-180.png" },
+      { rel: "manifest", href: "/manifest.json" },
     ],
   }),
   shellComponent: RootShell,
@@ -101,6 +109,7 @@ function RootComponent() {
         <AuthProvider>
           <CanonicalTag />
           <MetaPixel />
+          <PWAInstall />
           <Outlet />
           <Toaster />
           <HoneypotLink />

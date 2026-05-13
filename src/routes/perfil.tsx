@@ -56,7 +56,7 @@ function Perfil() {
       if (tier && tier !== "free" && (data as any)?.status === "active") {
         toast.success(`Bem-vindo ao ${tier === "pro" ? "Pro" : "Premium"} 🎉`);
         if ((window as any).fbq) {
-          (window as any).fbq("track", "Subscribe", { currency: "BRL", value: tier === "pro" ? 49 : 19 });
+          (window as any).fbq("track", "Subscribe", { currency: "BRL", value: tier === "pro" ? 19.90 : 9.90 });
         }
         // Remove o query param sem reload pra evitar re-fire
         const url = new URL(window.location.href);
