@@ -1,0 +1,61 @@
+name: Supabase Deploy
+
+# Aplica migrations SQL + faz deploy das edge functions automaticamente
+# em todo push pra main que toque supabase/. Render auto-deploya o frontend.
+#
+# Secrets necessários (Settings → Secrets and variables → Actions):
+#   SUPABASE_ACCESS_TOKEN  — Personal Access Token (account → tokens)
+#   SUPABASE_DB_PASSWORD   — senha do DB (Settings → Database → Connection string)
+#   SUPABASE_PROJECT_ID    — icwgkbvwehkjmkuiecuj
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "supabase/migrations/**"
+      - "supabase/functions/**"
+      - "supabase/config.toml"
+      - ".github/workflows/supabase-deploy.yml"
+  workflow_dispatch: # permite rodar manualmente pelo botão "Run workflow"
+
+concurrency:
+  group: supabase-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+
+      - name: Push DB migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase db push --include-all
+
+      - name: Deploy edge functions (todas)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          set -e
+          # supabase functions deploy lê verify_jwt direto do config.toml
+          for fn_dir in supabase/functions/*/; do
+            fn_name=$(basename "$fn_dir")
+            if [ -f "$fn_dir/index.ts" ]; then
+              echo "==> Deploying $fn_name"
+              supabase functions deploy "$fn_name" \
+                --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+            fi
+          done
