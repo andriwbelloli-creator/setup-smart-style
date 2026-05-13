@@ -17,7 +17,7 @@ const corsHeaders = {
 
 // Mesmo rate limit do analyze-setup (compartilha o problema de queimar
 // crédito Gemini). Trackeamos via ai_analyses (não criamos tabela nova).
-const RATE_LIMIT_PER_HOUR = 30;
+const RATE_LIMIT_PER_HOUR = 200;
 const CONFIDENCE_THRESHOLD = 85;
 const MAX_PRODUCTS = 8;
 
@@ -210,7 +210,7 @@ Deno.serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-2.5-pro",
+          model: Deno.env.get("GEMINI_MODEL") ?? "gemini-2.5-pro",
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
             {

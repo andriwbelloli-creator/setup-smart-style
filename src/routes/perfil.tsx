@@ -36,6 +36,40 @@ function Perfil() {
     if (!authLoading && !user) navigate({ to: "/auth" });
   }, [authLoading, user, navigate]);
 
+  // Stripe success handler: detecta ?checkout=success, faz polling no
+  // tier do usuário até virar premium/pro (webhook do Stripe pode levar
+  // 1-30s), mostra toast + dispara conversão Meta Pixel + analytics.
+  useEffect(() => {
+    if (typeof window === "undefined" || !user) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") !== "success") return;
+    toast.message("Pagamento confirmado! Ativando seu Premium...", { duration: 4000 });
+    let attempts = 0;
+    const poll = async (): Promise<void> => {
+      attempts++;
+      const { data } = await supabase
+        .from("subscriptions")
+        .select("tier, status")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      const tier = (data as any)?.tier as "free" | "premium" | "pro" | undefined;
+      if (tier && tier !== "free" && (data as any)?.status === "active") {
+        toast.success(`Bem-vindo ao ${tier === "pro" ? "Pro" : "Premium"} 🎉`);
+        if ((window as any).fbq) {
+          (window as any).fbq("track", "Subscribe", { currency: "BRL", value: tier === "pro" ? 49 : 19 });
+        }
+        // Remove o query param sem reload pra evitar re-fire
+        const url = new URL(window.location.href);
+        url.searchParams.delete("checkout");
+        window.history.replaceState({}, "", url.toString());
+        return;
+      }
+      if (attempts < 15) setTimeout(poll, 2000); // 30s total
+      else toast.error("Demorou mais que o esperado. Recarregue a página em alguns minutos.");
+    };
+    poll();
+  }, [user]);
+
   useEffect(() => {
     if (!user) return;
     (async () => {
