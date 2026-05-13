@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/use-auth";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 import { track, trackPageView } from "@/lib/track";
 import { toast } from "sonner";
 import {
@@ -63,6 +64,7 @@ export const Route = createFileRoute("/marketplace/$id")({
 function ListingDetail() {
   const { id } = useParams({ from: "/marketplace/$id" });
   const { user } = useAuth();
+  const { isAdmin } = useIsAdmin();
   const navigate = useNavigate();
 
   const [listing, setListing] = useState<MarketplaceListing | null>(null);
@@ -129,6 +131,15 @@ function ListingDetail() {
     const { error } = await deleteListing(listing.id);
     if (error) return toast.error(error.message);
     toast.success("Anúncio apagado.");
+    navigate({ to: "/marketplace" });
+  };
+
+  const onAdminDelete = async () => {
+    if (!listing) return;
+    if (!confirm(`ADMIN: excluir o anúncio "${listing.title}"?\n\nVendedor: ${listing.seller?.display_name || listing.seller_id}.\nEsta ação é IRREVERSÍVEL.`)) return;
+    const { error } = await deleteListing(listing.id);
+    if (error) return toast.error(error.message);
+    toast.success("Anúncio excluído (admin).");
     navigate({ to: "/marketplace" });
   };
 
@@ -276,6 +287,22 @@ function ListingDetail() {
                 <Button disabled className="mt-5 h-12 w-full">
                   {listing.status === "sold" ? "Já foi vendido" : "Anúncio pausado"}
                 </Button>
+              )}
+
+              {isAdmin && !isOwner && (
+                <div className="mt-4 rounded-2xl border border-dashed border-destructive/40 bg-destructive/5 p-3">
+                  <div className="mb-2 text-[10px] font-bold uppercase tracking-wider text-destructive">
+                    Ações de admin
+                  </div>
+                  <Button
+                    onClick={onAdminDelete}
+                    variant="destructive"
+                    size="sm"
+                    className="w-full"
+                  >
+                    Excluir como admin (permanente)
+                  </Button>
+                </div>
               )}
 
               <p className="mt-3 flex items-start gap-2 text-xs text-muted-foreground">

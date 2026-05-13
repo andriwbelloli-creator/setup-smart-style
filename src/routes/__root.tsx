@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
 import { HoneypotLink } from "@/components/HoneypotLink";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { MetaPixel } from "@/components/MetaPixel";
 import { queryClient } from "@/lib/query-client";
 
 // Componentes não-críticos pra paint inicial: lazy + Suspense vazio
@@ -99,6 +100,7 @@ function RootComponent() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <CanonicalTag />
+          <MetaPixel />
           <Outlet />
           <Toaster />
           <HoneypotLink />

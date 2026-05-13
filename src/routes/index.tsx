@@ -4,19 +4,17 @@ import { Hero } from "@/components/landing/Hero";
 import { AnaliseIA } from "@/components/landing/AnaliseIA";
 import { MarketplaceSection } from "@/components/landing/MarketplaceSection";
 import { Galeria } from "@/components/landing/Galeria";
-import { Orcamento } from "@/components/landing/Orcamento";
 import { AntesDepois } from "@/components/landing/AntesDepois";
 import { CTA, Footer } from "@/components/landing/CTA";
 
-// Nova estrutura (auditoria UX 2026-05):
+// Ordem atual (paridade com versão Lovable, 2026-05-13):
 //  1. Hero IA com drop-zone (hook de aquisição)
-//  2. AnaliseIA (resultados — ÚNICO bloco repete um pouco da promessa, mas
-//     necessário porque renderiza o resultado real). Container compactado.
-//  3. MarketplaceSection (segunda posição — alta lucratividade, 6 cards)
-//  4. Galeria compacta (1 linha de 4 cards no desktop)
-//  5. Orçamento (kits por faixa de preço)
-//  6. Antes & Depois (transformação visual)
-//  7. CTA final focado em Premium (não mais repetindo IA)
+//  2. AnaliseIA (resultados reais)
+//  3. AntesDepois (prova social visual antes do marketplace)
+//  4. MarketplaceSection (oferta comercial)
+//  5. Galeria (inspiração da comunidade)
+//  6. CTA Comunidade (newsletter + criar conta)
+//  Orçamento sai da home (segue acessível em /orcamento).
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -67,10 +65,9 @@ function Index() {
       <main>
         <Hero />
         <AnaliseIA />
+        <AntesDepois />
         <MarketplaceSection />
         <Galeria />
-        <Orcamento />
-        <AntesDepois />
         <CTA />
       </main>
       <Footer />

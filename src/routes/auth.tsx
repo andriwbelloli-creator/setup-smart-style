@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { track } from "@/lib/track";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 
@@ -82,6 +83,12 @@ function AuthPage() {
       else toast.error(error.message);
       return;
     }
+    // Meta Pixel: registra novo cadastro (independente de confirmação de email)
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      (window as any).fbq("track", "CompleteRegistration", { method: "email" });
+    }
+    // Atribuição interna (analytics_events): captura UTM de quem cadastrou
+    track("sign_up", "auth", { method: "email", needs_verification: !data.session });
     // If session is null, email confirmation is required
     if (!data.session) {
       setPendingEmail(email);

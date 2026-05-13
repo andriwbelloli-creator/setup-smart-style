@@ -28,6 +28,8 @@ type Row = {
   anon_id: string | null;
   session_id: string | null;
   utm_source: string | null;
+  utm_medium: string | null;
+  utm_campaign: string | null;
   created_at: string;
   props: Record<string, unknown> | null;
 };
@@ -68,7 +70,7 @@ function AdminAnalytics() {
 
     (supabase as any)
       .from("analytics_events")
-      .select("id, service, event_name, user_id, anon_id, session_id, utm_source, created_at, props")
+      .select("id, service, event_name, user_id, anon_id, session_id, utm_source, utm_medium, utm_campaign, created_at, props")
       .gte("created_at", since)
       .order("created_at", { ascending: false })
       .limit(5000)
@@ -260,6 +262,65 @@ function AdminAnalytics() {
               </div>
             </section>
 
+            {/* Campanhas (UTM completo) */}
+            <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
+              <h2 className="font-display text-lg font-bold">Campanhas — tráfego por origem/mídia/campanha</h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Linhas com source detectado vão pra cima. Direto/orgânico aparece como "(direct)".
+                <code className="ml-1">CR</code> = cadastros / visitantes únicos.
+              </p>
+              {stats.campaigns.length === 0 ? (
+                <p className="mt-4 text-xs text-muted-foreground">Sem eventos com UTM no período.</p>
+              ) : (
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="text-left text-xs uppercase tracking-wider text-muted-foreground">
+                      <tr className="border-b border-border">
+                        <th className="py-2 pr-3">Source</th>
+                        <th className="py-2 pr-3">Medium</th>
+                        <th className="py-2 pr-3">Campanha</th>
+                        <th className="py-2 pr-3 text-right">Visitantes</th>
+                        <th className="py-2 pr-3 text-right">Sessões</th>
+                        <th className="py-2 pr-3 text-right">Eventos</th>
+                        <th className="py-2 pr-3 text-right">Cadastros</th>
+                        <th className="py-2 pr-3 text-right">CR</th>
+                        <th className="py-2 pr-3 text-right">IA / Ofertas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {stats.campaigns.map((c) => {
+                        const isPaid = c.source !== "(direct)";
+                        return (
+                          <tr key={`${c.source}|${c.medium}|${c.campaign}`} className="border-b border-border/40 last:border-0">
+                            <td className="py-2 pr-3 font-semibold">
+                              {isPaid ? c.source : <span className="text-muted-foreground">{c.source}</span>}
+                            </td>
+                            <td className="py-2 pr-3 text-xs text-muted-foreground">{c.medium}</td>
+                            <td className="py-2 pr-3 text-xs">{c.campaign}</td>
+                            <td className="py-2 pr-3 text-right font-semibold">{c.visitors.toLocaleString("pt-BR")}</td>
+                            <td className="py-2 pr-3 text-right text-muted-foreground">{c.sessions.toLocaleString("pt-BR")}</td>
+                            <td className="py-2 pr-3 text-right text-muted-foreground">{c.events.toLocaleString("pt-BR")}</td>
+                            <td className="py-2 pr-3 text-right font-bold">{c.signUps.toLocaleString("pt-BR")}</td>
+                            <td className="py-2 pr-3 text-right">
+                              <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${c.crSignUp >= 5 ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400" : c.crSignUp >= 1 ? "bg-amber-500/15 text-amber-700 dark:text-amber-400" : "bg-muted text-muted-foreground"}`}>
+                                {c.crSignUp.toFixed(1)}%
+                              </span>
+                            </td>
+                            <td className="py-2 pr-3 text-right text-xs text-muted-foreground">
+                              {c.iaResults} / {c.mpOffers}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <p className="mt-3 text-[11px] text-muted-foreground">
+                "Cadastros" requer evento <code>sign_up</code> disparado no /auth. "IA" = <code>ia_result_view</code>. "Ofertas" = <code>marketplace_offer_create</code>.
+              </p>
+            </section>
+
             {/* UTM sources */}
             <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
               <h2 className="font-display text-lg font-bold">Origem de tráfego (UTM)</h2>
@@ -356,6 +417,14 @@ function calcStats(rows: Row[]) {
   const iaFunnel = { pageView: 0, uploadStart: 0, resultView: 0, paywallView: 0, upgradeClick: 0 };
   const mpFunnel = { listView: 0, detailView: 0, offerCreate: 0, offerAccepted: 0, listingCreate: 0 };
 
+  // Campanhas: agrupa por (source | medium | campaign) e mede conversões
+  type CampaignAgg = {
+    source: string; medium: string; campaign: string;
+    events: number; visitors: Set<string>; sessions: Set<string>;
+    signUps: number; iaResults: number; mpOffers: number;
+  };
+  const campaignAgg: Record<string, CampaignAgg> = {};
+
   for (const r of rows) {
     byService[r.service] = (byService[r.service] || 0) + 1;
     const key = `${r.service}:${r.event_name}`;
@@ -371,6 +440,26 @@ function calcStats(rows: Row[]) {
       utmCounter[r.utm_source].count += 1;
       if (ident) utmCounter[r.utm_source].uniqueSet.add(ident);
     }
+
+    // Agrupa por triplo UTM (só conta se tem source — direto/orgânico vai em "(direct)")
+    const cSource = r.utm_source || "(direct)";
+    const cMedium = r.utm_medium || "(none)";
+    const cCampaign = r.utm_campaign || "(none)";
+    const cKey = `${cSource}|${cMedium}|${cCampaign}`;
+    if (!campaignAgg[cKey]) {
+      campaignAgg[cKey] = {
+        source: cSource, medium: cMedium, campaign: cCampaign,
+        events: 0, visitors: new Set(), sessions: new Set(),
+        signUps: 0, iaResults: 0, mpOffers: 0,
+      };
+    }
+    const ca = campaignAgg[cKey];
+    ca.events += 1;
+    if (ident) ca.visitors.add(ident);
+    if (r.session_id) ca.sessions.add(r.session_id);
+    if (r.service === "auth" && r.event_name === "sign_up") ca.signUps += 1;
+    if (r.service === "ia" && r.event_name === "ia_result_view") ca.iaResults += 1;
+    if (r.service === "marketplace" && r.event_name === "marketplace_offer_create") ca.mpOffers += 1;
 
     // Funis específicos
     if (r.service === "ia") {
@@ -410,5 +499,19 @@ function calcStats(rows: Row[]) {
     utmSources: Object.entries(utmCounter)
       .map(([source, v]) => ({ source, count: v.count, uniques: v.uniqueSet.size }))
       .sort((a, b) => b.count - a.count),
+    campaigns: Object.values(campaignAgg)
+      .map((c) => ({
+        source: c.source,
+        medium: c.medium,
+        campaign: c.campaign,
+        events: c.events,
+        visitors: c.visitors.size,
+        sessions: c.sessions.size,
+        signUps: c.signUps,
+        iaResults: c.iaResults,
+        mpOffers: c.mpOffers,
+        crSignUp: c.visitors.size > 0 ? (c.signUps / c.visitors.size) * 100 : 0,
+      }))
+      .sort((a, b) => b.visitors - a.visitors),
   };
 }
