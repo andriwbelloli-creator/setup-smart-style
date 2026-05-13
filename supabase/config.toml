@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.delete-account]
 verify_jwt = true
+
+[functions.send-offer-notification]
+verify_jwt = true

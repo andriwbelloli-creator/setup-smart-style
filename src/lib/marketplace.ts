@@ -231,7 +231,7 @@ export async function createOffer(input: {
   price_offered: number;
   message?: string;
 }) {
-  return (supabase as any)
+  const result = await (supabase as any)
     .from("marketplace_offers")
     .insert({
       listing_id: input.listing_id,
@@ -243,6 +243,11 @@ export async function createOffer(input: {
     })
     .select("id")
     .single();
+  // Fire-and-forget: notifica o vendedor por email via Resend.
+  if (result.data?.id) {
+    notifyOfferEvent(result.data.id, "created");
+  }
+  return result;
 }
 
 export async function fetchOffersForListing(listingId: string): Promise<MarketplaceOffer[]> {
@@ -273,10 +278,29 @@ export async function fetchMyOffers(buyerId: string): Promise<MarketplaceOffer[]
 }
 
 export async function updateOfferStatus(offerId: string, status: OfferStatus) {
-  return (supabase as any)
+  const result = await (supabase as any)
     .from("marketplace_offers")
     .update({ status })
     .eq("id", offerId);
+  // Fire-and-forget: notifica o comprador quando aceita/rejeita.
+  if (!result.error && (status === "accepted" || status === "rejected")) {
+    notifyOfferEvent(offerId, status);
+  }
+  return result;
+}
+
+/**
+ * Dispara email transacional via edge function send-offer-notification.
+ * Fire-and-forget: erros vão pro console, não bloqueiam a ação do user.
+ */
+function notifyOfferEvent(offerId: string, event: "created" | "accepted" | "rejected"): void {
+  queueMicrotask(() => {
+    (supabase as any).functions
+      .invoke("send-offer-notification", { body: { offer_id: offerId, event } })
+      .then(({ error }: { error: { message: string } | null }) => {
+        if (error) console.warn("[notify] offer event:", error.message);
+      });
+  });
 }
 
 // =====================================================
