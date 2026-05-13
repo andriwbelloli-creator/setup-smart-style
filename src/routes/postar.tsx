@@ -140,10 +140,24 @@ function Postar() {
       });
 
       const knownProducts = named.map((p) => ({ category: p.category, name: p.name }));
-      const { data, error } = await supabase.functions.invoke("detect-touchpoints", {
-        body: { imageBase64, knownProducts },
-      });
+      // Tenta Gemini primeiro (qualidade alta). Se rate-limit/quota → cai
+      // pra Cloud Vision API (cota separada). Body shape é idêntico.
+      const tryEndpoint = async (fn: "detect-touchpoints" | "detect-touchpoints-vision") => {
+        return supabase.functions.invoke(fn, { body: { imageBase64, knownProducts } });
+      };
+      let { data, error } = await tryEndpoint("detect-touchpoints");
+      const errMsg = error?.message || (data as any)?.error || "";
+      const isQuotaError =
+        errMsg.toLowerCase().includes("quota") ||
+        errMsg.toLowerCase().includes("rate") ||
+        errMsg.includes("429") ||
+        (data as any)?.gemini_status === 429;
+      if ((error || (data as any)?.error) && isQuotaError) {
+        if (!silent) toast.info("Gemini sem cota — usando Cloud Vision (mais simples).");
+        ({ data, error } = await tryEndpoint("detect-touchpoints-vision"));
+      }
       if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
 
       const detected = (data?.products || []) as Array<{
         name: string; category: string; x: number; y: number; confidence: number;
