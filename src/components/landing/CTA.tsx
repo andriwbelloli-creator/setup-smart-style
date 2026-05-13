@@ -17,7 +17,7 @@ export function CTA() {
             </h2>
             <p className="mt-3 text-base text-primary-foreground/85 md:text-lg">
               Análises ilimitadas, plano de ação detalhado e lista de compras priorizada.
-              A partir de <strong className="text-accent">R$ 19/mês</strong>.
+              A partir de <strong className="text-accent">R$ 9,90/mês</strong>.
             </p>
 
             <ul className="mx-auto mt-6 max-w-md space-y-1.5 text-left text-sm text-primary-foreground/85">
