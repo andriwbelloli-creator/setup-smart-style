@@ -1,20 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { Upload, Star, ArrowRight, Zap, ExternalLink, ImageIcon, Pencil, Loader2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Upload, Star, ArrowRight, Zap, ExternalLink, ImageIcon } from "lucide-react";
+import { useRef, useState } from "react";
 import heroImg from "@/assets/hero-setup.webp";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
-import { supabase } from "@/integrations/supabase/client";
-import { useIsAdmin } from "@/hooks/use-is-admin";
 import { toast } from "sonner";
-
-// Caminho fixo da capa dinâmica no bucket setups. Admin pode trocar
-// via botão "Editar capa" no canto da imagem (visível só se isAdmin).
-const HERO_DYNAMIC_PATH = "_landing/hero.webp";
-function heroDynamicUrl(): string {
-  const { data } = supabase.storage.from("setups").getPublicUrl(HERO_DYNAMIC_PATH);
-  return data.publicUrl;
-}
 
 // Amazon BR com filtro de categoria `i=computers` — única loja BR que
 // aceita filtro de categoria via query stable. Kabum rejeita facet query.
@@ -52,38 +42,7 @@ async function handleHeroFile(file: File) {
 
 export function Hero() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const heroFileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [imgSrc, setImgSrc] = useState<string>(heroImg);
-  const [uploadingHero, setUploadingHero] = useState(false);
-  const { isAdmin } = useIsAdmin();
-
-  // Se já existe imagem dinâmica em _landing/hero.webp, usa ela.
-  // HEAD-checa em background pra não impactar LCP (começa com static).
-  useEffect(() => {
-    const url = heroDynamicUrl();
-    fetch(url, { method: "HEAD", cache: "no-cache" })
-      .then((r) => { if (r.ok) setImgSrc(`${url}?v=${Date.now()}`); })
-      .catch(() => {});
-  }, []);
-
-  const onHeroFileChange = async (file: File | null) => {
-    if (!file || !isAdmin) return;
-    setUploadingHero(true);
-    try {
-      const up = await supabase.storage
-        .from("setups")
-        .upload(HERO_DYNAMIC_PATH, file, { contentType: file.type, upsert: true });
-      if (up.error) throw up.error;
-      const { data: pub } = supabase.storage.from("setups").getPublicUrl(HERO_DYNAMIC_PATH);
-      setImgSrc(`${pub.publicUrl}?v=${Date.now()}`);
-      toast.success("Capa do Hero trocada!");
-    } catch (e: any) {
-      toast.error(e?.message || "Falha ao trocar capa.");
-    } finally {
-      setUploadingHero(false);
-    }
-  };
 
   return (
     <section className="relative overflow-hidden bg-gradient-mesh">
@@ -167,8 +126,7 @@ export function Hero() {
               }}
             />
             <img
-              src={imgSrc}
-              onError={() => setImgSrc(heroImg)}
+              src={heroImg}
               alt="Setup home office com mesa de madeira, monitor ultrawide e parede turquesa"
               width={1600}
               height={1100}
@@ -177,27 +135,6 @@ export function Hero() {
               fetchPriority="high"
               className="h-full w-full object-cover transition-smooth group-hover:scale-105"
             />
-            {isAdmin && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => heroFileRef.current?.click()}
-                  disabled={uploadingHero}
-                  className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full bg-foreground/90 px-4 py-2 text-xs font-semibold text-background shadow-elegant transition-smooth hover:bg-foreground disabled:opacity-50"
-                  title="Trocar a capa do Hero (admin)"
-                >
-                  {uploadingHero ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Pencil className="h-3.5 w-3.5" />}
-                  {uploadingHero ? "Enviando..." : "Editar capa"}
-                </button>
-                <input
-                  ref={heroFileRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => onHeroFileChange(e.target.files?.[0] ?? null)}
-                />
-              </>
-            )}
 
             {/* Overlay com call-to-action grande */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center bg-foreground/55 backdrop-blur-[2px] transition-smooth ${dragOver ? "bg-primary/70" : "opacity-0 group-hover:opacity-100"}`}>
@@ -219,27 +156,27 @@ export function Hero() {
               rel="sponsored noopener noreferrer"
               aria-label="Ver LG Ultrawide 34 polegadas na Amazon BR"
               onClick={(e) => e.stopPropagation()}
-              className="group/tag absolute left-6 top-1/2 hidden animate-float rounded-2xl bg-card/95 p-3 shadow-elegant backdrop-blur transition-smooth hover:scale-105 hover:bg-card md:block"
+              className="group/tag absolute left-4 top-4 hidden animate-float rounded-xl bg-card/90 px-2.5 py-2 shadow-elegant backdrop-blur transition-smooth hover:scale-105 hover:bg-card md:block"
             >
               <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Monitor</div>
-              <div className="text-sm font-semibold">LG Ultrawide 34"</div>
-              <div className="mt-0.5 flex items-center gap-1 text-xs text-primary">
+              <div className="text-xs font-semibold">LG Ultrawide 34"</div>
+              <div className="mt-0.5 flex items-center gap-1 text-[11px] text-primary">
                 R$ 2.799 · Amazon BR <ExternalLink className="h-3 w-3 opacity-0 transition-smooth group-hover/tag:opacity-100" />
               </div>
             </a>
 
             {/* Score badge no canto inferior direito */}
-            <div className="absolute bottom-6 right-6 rounded-2xl bg-card p-4 shadow-elegant">
+            <div className="absolute bottom-4 right-4 rounded-xl bg-card/95 p-3 shadow-elegant backdrop-blur">
               <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Nota IA</div>
-              <div className="font-display text-3xl font-bold">
-                8.7<span className="text-base text-muted-foreground">/10</span>
+              <div className="font-display text-2xl font-bold leading-tight">
+                8.7<span className="text-sm text-muted-foreground">/10</span>
               </div>
-              <div className="mt-1 flex gap-1">
-                <span className="h-1.5 w-6 rounded-full bg-primary" />
-                <span className="h-1.5 w-6 rounded-full bg-primary" />
-                <span className="h-1.5 w-6 rounded-full bg-primary" />
-                <span className="h-1.5 w-6 rounded-full bg-primary" />
-                <span className="h-1.5 w-6 rounded-full bg-muted" />
+              <div className="mt-1 flex gap-0.5">
+                <span className="h-1 w-4 rounded-full bg-primary" />
+                <span className="h-1 w-4 rounded-full bg-primary" />
+                <span className="h-1 w-4 rounded-full bg-primary" />
+                <span className="h-1 w-4 rounded-full bg-primary" />
+                <span className="h-1 w-4 rounded-full bg-muted" />
               </div>
             </div>
           </label>
