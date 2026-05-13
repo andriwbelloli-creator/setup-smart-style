@@ -1,10 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { Upload, Star, ArrowRight, Zap, ExternalLink, ImageIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { Upload, Star, ArrowRight, Zap, ExternalLink, ImageIcon, Pencil, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import heroImg from "@/assets/hero-setup.webp";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
+import { supabase } from "@/integrations/supabase/client";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 import { toast } from "sonner";
+
+// Caminho fixo da capa dinâmica no bucket setups. Admin pode trocar
+// via botão "Editar capa" no canto da imagem (visível só se isAdmin).
+const HERO_DYNAMIC_PATH = "_landing/hero.webp";
+function heroDynamicUrl(): string {
+  const { data } = supabase.storage.from("setups").getPublicUrl(HERO_DYNAMIC_PATH);
+  return data.publicUrl;
+}
 
 // Amazon BR com filtro de categoria `i=computers` — única loja BR que
 // aceita filtro de categoria via query stable. Kabum rejeita facet query.
@@ -42,7 +52,38 @@ async function handleHeroFile(file: File) {
 
 export function Hero() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const heroFileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [imgSrc, setImgSrc] = useState<string>(heroImg);
+  const [uploadingHero, setUploadingHero] = useState(false);
+  const { isAdmin } = useIsAdmin();
+
+  // Se já existe imagem dinâmica em _landing/hero.webp, usa ela.
+  // HEAD-checa em background pra não impactar LCP (começa com static).
+  useEffect(() => {
+    const url = heroDynamicUrl();
+    fetch(url, { method: "HEAD", cache: "no-cache" })
+      .then((r) => { if (r.ok) setImgSrc(`${url}?v=${Date.now()}`); })
+      .catch(() => {});
+  }, []);
+
+  const onHeroFileChange = async (file: File | null) => {
+    if (!file || !isAdmin) return;
+    setUploadingHero(true);
+    try {
+      const up = await supabase.storage
+        .from("setups")
+        .upload(HERO_DYNAMIC_PATH, file, { contentType: file.type, upsert: true });
+      if (up.error) throw up.error;
+      const { data: pub } = supabase.storage.from("setups").getPublicUrl(HERO_DYNAMIC_PATH);
+      setImgSrc(`${pub.publicUrl}?v=${Date.now()}`);
+      toast.success("Capa do Hero trocada!");
+    } catch (e: any) {
+      toast.error(e?.message || "Falha ao trocar capa.");
+    } finally {
+      setUploadingHero(false);
+    }
+  };
 
   return (
     <section className="relative overflow-hidden bg-gradient-mesh">
@@ -126,7 +167,8 @@ export function Hero() {
               }}
             />
             <img
-              src={heroImg}
+              src={imgSrc}
+              onError={() => setImgSrc(heroImg)}
               alt="Setup home office com mesa de madeira, monitor ultrawide e parede turquesa"
               width={1600}
               height={1100}
@@ -135,6 +177,27 @@ export function Hero() {
               fetchPriority="high"
               className="h-full w-full object-cover transition-smooth group-hover:scale-105"
             />
+            {isAdmin && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => heroFileRef.current?.click()}
+                  disabled={uploadingHero}
+                  className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full bg-foreground/90 px-4 py-2 text-xs font-semibold text-background shadow-elegant transition-smooth hover:bg-foreground disabled:opacity-50"
+                  title="Trocar a capa do Hero (admin)"
+                >
+                  {uploadingHero ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Pencil className="h-3.5 w-3.5" />}
+                  {uploadingHero ? "Enviando..." : "Editar capa"}
+                </button>
+                <input
+                  ref={heroFileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => onHeroFileChange(e.target.files?.[0] ?? null)}
+                />
+              </>
+            )}
 
             {/* Overlay com call-to-action grande */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center bg-foreground/55 backdrop-blur-[2px] transition-smooth ${dragOver ? "bg-primary/70" : "opacity-0 group-hover:opacity-100"}`}>
