@@ -14,6 +14,8 @@ export function CookieBanner() {
 
   const accept = () => {
     window.localStorage.setItem(STORAGE_KEY, new Date().toISOString());
+    // Sinaliza pro MetaPixel (e outros listeners) que consent foi dado
+    window.dispatchEvent(new CustomEvent("deskly:cookie-accepted"));
     setVisible(false);
   };
 

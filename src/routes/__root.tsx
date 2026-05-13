@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
 import { HoneypotLink } from "@/components/HoneypotLink";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { MetaPixel } from "@/components/MetaPixel";
 import { queryClient } from "@/lib/query-client";
 
 // Componentes não-críticos pra paint inicial: lazy + Suspense vazio
@@ -66,11 +67,6 @@ export const Route = createRootRoute({
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "apple-touch-icon", href: "/favicon.svg" },
     ],
-    scripts: [
-      {
-        children: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','517991158551582');fbq('track','PageView');`,
-      },
-    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -104,6 +100,7 @@ function RootComponent() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <CanonicalTag />
+          <MetaPixel />
           <Outlet />
           <Toaster />
           <HoneypotLink />
