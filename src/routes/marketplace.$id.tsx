@@ -25,6 +25,7 @@ import {
   createOffer,
   updateOfferStatus,
   updateListingStatus,
+  updateListingContact,
   deleteListing,
   type MarketplaceListing,
   type MarketplaceOffer,
@@ -72,6 +73,9 @@ function ListingDetail() {
   const [imgIdx, setImgIdx] = useState(0);
 
   const [offerModalOpen, setOfferModalOpen] = useState(false);
+  const [editingContact, setEditingContact] = useState(false);
+  const [contactDraft, setContactDraft] = useState("");
+  const [savingContact, setSavingContact] = useState(false);
   const [offers, setOffers] = useState<MarketplaceOffer[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
 
@@ -132,6 +136,22 @@ function ListingDetail() {
     if (error) return toast.error(error.message);
     toast.success("Anúncio apagado.");
     navigate({ to: "/marketplace" });
+  };
+
+  const onSaveContact = async () => {
+    if (!listing) return;
+    const v = contactDraft.trim();
+    if (v.length < 5) {
+      toast.error("Contato precisa ter pelo menos 5 caracteres.");
+      return;
+    }
+    setSavingContact(true);
+    const { error } = await updateListingContact(listing.id, v);
+    setSavingContact(false);
+    if (error) return toast.error(error.message);
+    setListing({ ...listing, contact: v });
+    setEditingContact(false);
+    toast.success("Contato atualizado.");
   };
 
   const onAdminDelete = async () => {
@@ -277,6 +297,64 @@ function ListingDetail() {
                 {formatBrl(Number(listing.price))}
               </div>
 
+              {isOwner && (
+                <div className="mt-5 rounded-2xl border border-dashed border-border bg-background p-3">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      Contato do anúncio
+                    </span>
+                    {!editingContact && (
+                      <button
+                        onClick={() => {
+                          setContactDraft(listing.contact || "");
+                          setEditingContact(true);
+                        }}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                      >
+                        <Pencil className="h-3 w-3" />
+                        {listing.contact ? "Editar" : "Adicionar"}
+                      </button>
+                    )}
+                  </div>
+                  {editingContact ? (
+                    <div className="space-y-2">
+                      <Input
+                        autoFocus
+                        value={contactDraft}
+                        onChange={(e) => setContactDraft(e.target.value)}
+                        placeholder="WhatsApp, telefone ou email"
+                        maxLength={200}
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={onSaveContact}
+                          disabled={savingContact || contactDraft.trim().length < 5}
+                          className="bg-gradient-hero"
+                        >
+                          {savingContact ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                          Salvar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setEditingContact(false)}
+                          disabled={savingContact}
+                        >
+                          Cancelar
+                        </Button>
+                      </div>
+                    </div>
+                  ) : listing.contact ? (
+                    <div className="break-all text-sm font-medium text-foreground">{listing.contact}</div>
+                  ) : (
+                    <div className="text-xs text-muted-foreground">
+                      Nenhum contato — compradores não conseguem te alcançar. Clique em "Adicionar".
+                    </div>
+                  )}
+                </div>
+              )}
+
               {isOwner ? (
                 <OwnerActions listing={listing} onStatus={onChangeStatus} onDelete={onDelete} />
               ) : listing.status === "active" ? (
@@ -327,6 +405,24 @@ function ListingDetail() {
                     )}
                   </div>
                 </div>
+                {listing.contact ? (
+                  user ? (
+                    <div className="mt-4 rounded-2xl border border-border bg-background p-3">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Contato direto</div>
+                      <div className="mt-1 break-all text-sm font-medium text-foreground">{listing.contact}</div>
+                      <p className="mt-2 text-[11px] text-muted-foreground">
+                        Negociação fora da plataforma. Sempre encontre em local público e teste o produto antes de pagar.
+                      </p>
+                    </div>
+                  ) : (
+                    <Link
+                      to="/auth"
+                      className="mt-4 block rounded-2xl border border-dashed border-border bg-background p-3 text-center text-xs text-muted-foreground hover:border-foreground/40"
+                    >
+                      Faça login pra ver o contato do vendedor →
+                    </Link>
+                  )
+                ) : null}
               </div>
             )}
           </div>

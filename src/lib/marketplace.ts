@@ -26,6 +26,7 @@ export type MarketplaceListing = {
   category_id: string;
   condition_id: string;
   images: string[];
+  contact: string;
   city: string | null;
   state: string | null;
   status: ListingStatus;
@@ -162,6 +163,7 @@ export type NewListingInput = {
   category_id: string;
   condition_id: string;
   images: string[];
+  contact: string;
   city?: string;
   state?: string;
 };
@@ -172,6 +174,14 @@ export async function createListing(sellerId: string, input: NewListingInput) {
     .insert({ seller_id: sellerId, status: "active", ...input })
     .select("id")
     .single();
+}
+
+/** Atualiza só o contato — usado pelo editor inline na página de detalhe. */
+export async function updateListingContact(id: string, contact: string) {
+  return (supabase as any)
+    .from("marketplace_listings")
+    .update({ contact })
+    .eq("id", id);
 }
 
 /**
