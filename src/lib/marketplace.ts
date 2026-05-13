@@ -176,6 +176,14 @@ export async function createListing(sellerId: string, input: NewListingInput) {
     .single();
 }
 
+/** Atualiza só o contato — usado pelo editor inline na página de detalhe. */
+export async function updateListingContact(id: string, contact: string) {
+  return (supabase as any)
+    .from("marketplace_listings")
+    .update({ contact })
+    .eq("id", id);
+}
+
 /**
  * Faz upload de uma imagem do anúncio. Caminho = {userId}/{uuid}.{ext}
  * para casar com a policy de storage (foldername[1] = uid).
