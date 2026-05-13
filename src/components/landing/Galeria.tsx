@@ -1,11 +1,23 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { SetupCard } from "@/components/setup/SetupCard";
-import { SETUPS } from "@/data/setups";
+import { SETUPS, type Setup } from "@/data/setups";
+import { fetchPublishedSetups } from "@/lib/setups-db";
 import { ArrowRight } from "lucide-react";
 
 const filtros = ["Todos", "Dev", "Designer", "Minimalista", "Gamer", "Creator", "Apê pequeno", "MacBook"];
 
 export function Galeria() {
+  const [setups, setSetups] = useState<Setup[]>(SETUPS.slice(0, 6));
+
+  useEffect(() => {
+    fetchPublishedSetups()
+      .then((rows) => {
+        if (rows.length > 0) setSetups([...rows, ...SETUPS].slice(0, 6));
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section id="galeria" className="py-24 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
@@ -40,7 +52,7 @@ export function Galeria() {
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {SETUPS.slice(0, 6).map((s) => <SetupCard key={s.id} s={s} />)}
+          {setups.map((s) => <SetupCard key={s.id} s={s} />)}
         </div>
 
         <div className="mt-12 text-center">

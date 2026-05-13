@@ -39,6 +39,7 @@ export function Navbar() {
           <Link to="/orcamento" className={linkBase} activeProps={{ className: "text-foreground" }}>Orçamentos</Link>
           <Link to="/diagnostico" className={linkBase} activeProps={{ className: "text-foreground" }}>Diagnóstico IA</Link>
           <Link to="/comunidade" className={linkBase} activeProps={{ className: "text-foreground" }}>Comunidade</Link>
+          <Link to="/premium" className="text-sm font-semibold text-primary transition-smooth hover:text-primary/80">Premium</Link>
         </nav>
         <div className="flex items-center gap-2">
           {user ? (

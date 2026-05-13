@@ -73,14 +73,26 @@ export async function fetchSetupBySlug(slug: string): Promise<Setup | null> {
     .select("*, profiles!setups_owner_id_fkey(username, display_name, avatar_url)")
     .eq("slug", slug)
     .maybeSingle();
-  if (!setup) {
-    const r = await supabase.from("setups").select("*").eq("slug", slug).maybeSingle();
-    if (!r.data) return null;
-    const products = await fetchProducts(r.data.id);
-    return rowToSetup(r.data as any, products);
-  }
-  const products = await fetchProducts((setup as any).id);
-  return rowToSetup(setup as any, products);
+  const row = setup
+    ? (setup as any)
+    : (await supabase.from("setups").select("*").eq("slug", slug).maybeSingle()).data;
+  if (!row) return null;
+  const [products, gallery] = await Promise.all([
+    fetchProducts(row.id),
+    fetchGallery(row.id),
+  ]);
+  const built = rowToSetup(row, products);
+  (built as any).gallery = gallery;
+  return built;
+}
+
+async function fetchGallery(setupId: string): Promise<string[]> {
+  const { data } = await supabase
+    .from("setup_images")
+    .select("url, position")
+    .eq("setup_id", setupId)
+    .order("position", { ascending: true });
+  return (data || []).map((r: any) => r.url).filter(Boolean);
 }
 
 async function fetchProducts(setupId: string): Promise<Product[]> {

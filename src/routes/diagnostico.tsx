@@ -25,7 +25,7 @@ function Diagnostico() {
           <div className="container mx-auto px-4 py-16 text-center md:px-6 md:py-24">
             <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
               <Sparkles className="h-3.5 w-3.5 text-accent" />
-              Diagnóstico por IA — grátis e sem cadastro
+              Diagnóstico por IA — grátis · login obrigatório
             </div>
             <h1 className="mx-auto mt-6 max-w-3xl font-display text-5xl font-bold leading-[1.05] tracking-tight md:text-6xl">
               Descubra a nota do seu home office em <span className="bg-gradient-warm bg-clip-text text-transparent">30 segundos</span>

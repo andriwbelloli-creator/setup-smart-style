@@ -3,6 +3,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/use-auth";
+import { CookieBanner } from "@/components/CookieBanner";
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/600.css";
@@ -38,18 +39,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Home Office Hub helps users build, evaluate, and enhance their home office setups with AI, real products, and community inspiration." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Home Office Hub helps users build, evaluate, and enhance their home office setups with AI, real products, and community inspiration." },
+      { title: "Deskly — Avalie seu home office com IA" },
+      { name: "description", content: "Plataforma brasileira para montar, avaliar e melhorar seu home office com IA, produtos reais (Amazon BR, Mercado Livre, Kabum, Magalu) e inspiração da comunidade." },
+      { property: "og:title", content: "Deskly — Avalie seu home office com IA" },
+      { property: "og:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Home Office Hub helps users build, evaluate, and enhance their home office setups with AI, real products, and community inspiration." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2e6e05eb-38af-4512-ab7c-e0e92f0b3fc9/id-preview-46390434--1b556193-f584-4151-87fd-c4574a7b1411.lovable.app-1777327340239.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2e6e05eb-38af-4512-ab7c-e0e92f0b3fc9/id-preview-46390434--1b556193-f584-4151-87fd-c4574a7b1411.lovable.app-1777327340239.png" },
+      { property: "og:url", content: "https://deskly.life" },
+      { property: "og:image", content: "https://deskly.life/og-image.jpg" },
+      { property: "og:locale", content: "pt_BR" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Deskly — Avalie seu home office com IA" },
+      { name: "twitter:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
+      { name: "twitter:image", content: "https://deskly.life/og-image.jpg" },
     ],
     links: [
       {
@@ -82,6 +83,7 @@ function RootComponent() {
     <AuthProvider>
       <Outlet />
       <Toaster />
+      <CookieBanner />
     </AuthProvider>
   );
 }

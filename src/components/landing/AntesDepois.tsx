@@ -1,11 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import beforeImg from "@/assets/before.jpg";
 import afterImg from "@/assets/after.jpg";
 import { ArrowLeftRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
+
+type Stats = { total: number; avgBudget: number };
+
+function fmtBRL(v: number): string {
+  return v >= 1000 ? `R$ ${(v / 1000).toFixed(1)}k` : `R$ ${v}`;
+}
 
 export function AntesDepois() {
   const [pos, setPos] = useState(50);
+  const [stats, setStats] = useState<Stats | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { count } = await supabase
+        .from("setups")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "published");
+      const { data } = await supabase
+        .from("setups")
+        .select("budget_brl")
+        .eq("status", "published");
+      const budgets = (data || []).map((r: any) => r.budget_brl).filter(Boolean);
+      const avg = budgets.length ? Math.round(budgets.reduce((a, b) => a + b, 0) / budgets.length) : 0;
+      if (active) setStats({ total: count ?? 0, avgBudget: avg });
+    })().catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <section id="antes-depois" className="py-24 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
@@ -23,15 +52,15 @@ export function AntesDepois() {
             </p>
             <div className="mt-8 grid grid-cols-3 gap-4">
               <div className="rounded-2xl bg-card p-4 shadow-soft">
-                <div className="font-display text-2xl font-bold text-primary">+340%</div>
-                <div className="text-xs text-muted-foreground">Engajamento médio</div>
+                <div className="font-display text-2xl font-bold text-primary">{stats?.total ?? "—"}</div>
+                <div className="text-xs text-muted-foreground">Setups na galeria</div>
               </div>
               <div className="rounded-2xl bg-card p-4 shadow-soft">
-                <div className="font-display text-2xl font-bold text-accent">2.1k</div>
-                <div className="text-xs text-muted-foreground">Transformações</div>
+                <div className="font-display text-2xl font-bold text-accent">6 lojas</div>
+                <div className="text-xs text-muted-foreground">Catálogo BR</div>
               </div>
               <div className="rounded-2xl bg-card p-4 shadow-soft">
-                <div className="font-display text-2xl font-bold text-coral">R$ 1.8k</div>
+                <div className="font-display text-2xl font-bold text-coral">{stats ? fmtBRL(stats.avgBudget) : "—"}</div>
                 <div className="text-xs text-muted-foreground">Investimento médio</div>
               </div>
             </div>

@@ -1,0 +1,84 @@
+name: Synthetic monitor (production)
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"  # every 15 minutes
+  workflow_dispatch:        # allow manual run
+
+jobs:
+  ping:
+    name: Probe production routes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: HTTP probe
+        id: probe
+        env:
+          BASE: ${{ vars.PROD_BASE_URL || 'https://deskly.life' }}
+          FALLBACK: https://monumental-marshmallow-4b5790.netlify.app
+        run: |
+          set -e
+          ROUTES=("/" "/galeria" "/diagnostico" "/orcamento" "/comunidade" "/auth" "/sitemap.xml" "/robots.txt")
+          BASE_OK=true
+          # Pick base URL (try primary, fallback if DNS not propagated yet)
+          if ! curl -fsSI --max-time 8 "$BASE/" > /dev/null 2>&1; then
+            echo "Primary $BASE unreachable, falling back to $FALLBACK"
+            BASE="$FALLBACK"
+          fi
+          echo "Using base: $BASE"
+          FAILED=()
+          for path in "${ROUTES[@]}"; do
+            status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 "$BASE$path")
+            if [[ "$status" != "200" && "$status" != "304" ]]; then
+              echo "::warning::$path returned HTTP $status"
+              FAILED+=("$path ($status)")
+            else
+              echo "✓ $path → $status"
+            fi
+          done
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "FAILED_ROUTES=${FAILED[*]}" >> $GITHUB_OUTPUT
+            echo "::error::Synthetic check failed for: ${FAILED[*]}"
+            exit 1
+          fi
+
+      - name: Supabase REST probe
+        env:
+          SUPABASE_URL: https://icwgkbvwehkjmkuiecuj.supabase.co
+          ANON_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          set -e
+          if [ -z "$ANON_KEY" ]; then
+            echo "::warning::SUPABASE_PUBLISHABLE_KEY secret not set — skipping Supabase probe"
+            exit 0
+          fi
+          resp=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
+            "$SUPABASE_URL/rest/v1/setups?select=id&limit=1" \
+            -H "apikey: $ANON_KEY")
+          if [[ "$resp" != "200" ]]; then
+            echo "::error::Supabase REST returned $resp"
+            exit 1
+          fi
+          echo "✓ Supabase REST OK"
+
+      - name: Edge function probe
+        env:
+          SUPABASE_URL: https://icwgkbvwehkjmkuiecuj.supabase.co
+          ANON_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          set -e
+          if [ -z "$ANON_KEY" ]; then
+            echo "::warning::SUPABASE_PUBLISHABLE_KEY secret not set — skipping edge function probe"
+            exit 0
+          fi
+          # We expect 401 (JWT required) — that confirms the function exists & enforces auth
+          resp=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 -X POST \
+            "$SUPABASE_URL/functions/v1/analyze-setup" \
+            -H "apikey: $ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"imageBase64":"data:image/png;base64,iVBORw0KGgo="}')
+          if [[ "$resp" != "401" && "$resp" != "200" ]]; then
+            echo "::error::analyze-setup edge function returned $resp (expected 401 or 200)"
+            exit 1
+          fi
+          echo "✓ Edge function reachable (HTTP $resp)"

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Don't index auth flows
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /perfil
+Disallow: /postar
+
+Sitemap: https://deskly.life/sitemap.xml
