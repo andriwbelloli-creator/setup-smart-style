@@ -142,7 +142,7 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Button asChild variant="ghost" size="sm">
                 <Link to="/auth">Entrar</Link>
               </Button>
               <Button asChild size="sm" className="hidden sm:inline-flex bg-gradient-hero shadow-elegant transition-smooth hover:shadow-glow">
@@ -166,18 +166,32 @@ export function Navbar() {
 
       {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden" style={{ height: "100dvh" }}>
           <div
             className="absolute inset-0 bg-foreground/60 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="absolute right-0 top-0 flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-background shadow-elegant">
+          <div
+            className="absolute right-0 top-0 flex w-[85%] max-w-sm flex-col overflow-y-auto bg-background shadow-elegant"
+            style={{ height: "100dvh", paddingBottom: "env(safe-area-inset-bottom)" }}
+          >
             <div className="flex items-center justify-between border-b border-border px-5 py-4">
               <span className="font-display text-lg font-bold">Menu</span>
               <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)} aria-label="Fechar menu">
                 <X className="h-5 w-5" />
               </Button>
             </div>
+
+            {!user && (
+              <div className="space-y-2 border-b border-border p-5">
+                <Button asChild variant="outline" className="w-full" onClick={() => setMobileOpen(false)}>
+                  <Link to="/auth">Entrar / Criar conta</Link>
+                </Button>
+                <Button asChild className="w-full bg-gradient-hero" onClick={() => setMobileOpen(false)}>
+                  <Link to="/diagnostico">Avaliar meu setup</Link>
+                </Button>
+              </div>
+            )}
 
             <nav className="flex flex-col p-5">
               {MAIN_LINKS.map((l) => (
@@ -200,7 +214,7 @@ export function Navbar() {
               </Link>
             </nav>
 
-            {user ? (
+            {user && (
               <div className="mt-auto border-t border-border p-5">
                 <div className="truncate pb-3 text-xs text-muted-foreground">{user.email}</div>
                 <div className="space-y-1">
@@ -228,15 +242,6 @@ export function Navbar() {
                 >
                   <LogOut className="h-4 w-4" /> Sair
                 </button>
-              </div>
-            ) : (
-              <div className="mt-auto space-y-2 border-t border-border p-5">
-                <Button asChild variant="outline" className="w-full" onClick={() => setMobileOpen(false)}>
-                  <Link to="/auth">Entrar</Link>
-                </Button>
-                <Button asChild className="w-full bg-gradient-hero" onClick={() => setMobileOpen(false)}>
-                  <Link to="/diagnostico">Avaliar meu setup</Link>
-                </Button>
               </div>
             )}
           </div>
