@@ -88,7 +88,18 @@ function DSAdmin() {
         (supabase as any).from("setup_products").select("id, price_brl, store, x, y").limit(10000),
       ]);
 
-      setData({ subs, setups, clicks, events, offers, listings, aiAnalyses, plans, products });
+      // Receita REAL — payment_events do Stripe webhook (apenas admin lê via RLS)
+      const { data: paymentsInRange } = await (supabase as any)
+        .from("payment_events")
+        .select("event_type, amount_cents, processed_at, user_id, provider")
+        .gte("processed_at", since)
+        .limit(5000);
+      const { data: paymentsAll } = await (supabase as any)
+        .from("payment_events")
+        .select("event_type, amount_cents, processed_at")
+        .limit(20000);
+
+      setData({ subs, setups, clicks, events, offers, listings, aiAnalyses, plans, products, paymentsInRange, paymentsAll });
       setLoading(false);
     })();
   }, [isAdmin, range]);
@@ -164,6 +175,79 @@ function DSAdmin() {
             </Section>
 
             {/* MRR Evolution */}
+            {/* RECEITA REAL — dados do Stripe webhook */}
+            <Section
+              title="💰 Receita real (Stripe)"
+              subtitle="Cobranças efetivamente processadas — sem estimativas. Vem de payment_events.event_type = 'checkout.session.completed' ou 'invoice.paid'."
+            >
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">No período</div>
+                  <div className="mt-1 font-display text-2xl font-bold">R$ {stats.revenue.realInRange.toFixed(2)}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">{stats.revenue.realTransactions} cobranças confirmadas</div>
+                </div>
+                <div className="rounded-2xl border border-border bg-background p-4">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">ARPU médio</div>
+                  <div className="mt-1 font-display text-2xl font-bold">R$ {stats.revenue.realArpu.toFixed(2)}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">por cobrança</div>
+                </div>
+                <div className="rounded-2xl border border-border bg-background p-4">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Lifetime total</div>
+                  <div className="mt-1 font-display text-2xl font-bold">R$ {stats.revenue.lifetimeRevenue.toFixed(2)}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">desde o início</div>
+                </div>
+                <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-4">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-destructive">Falhas no período</div>
+                  <div className="mt-1 font-display text-2xl font-bold">{stats.revenue.failedInRange}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">cartão recusado, etc.</div>
+                </div>
+              </div>
+
+              {stats.revenue.realTransactions > 0 ? (
+                <div className="mt-4">
+                  <h3 className="mb-2 text-sm font-semibold">Receita diária</h3>
+                  <ResponsiveContainer width="100%" height={220}>
+                    <BarChart data={stats.revenue.series}>
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                      <XAxis dataKey="day" fontSize={11} tickFormatter={(d) => d.slice(5)} />
+                      <YAxis fontSize={11} tickFormatter={(v) => `R$${v}`} />
+                      <Tooltip formatter={(v: any) => `R$ ${Number(v).toFixed(2)}`} />
+                      <Bar dataKey="amount" fill="#10b981" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="mt-4 rounded-2xl border border-dashed border-border bg-background p-6 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Nenhuma cobrança real registrada no período.
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Pode ser que: o Stripe esteja em modo TEST (cs_test_*), o webhook não esteja recebendo eventos, ou
+                    ninguém assinou ainda. Confere em
+                    <a href="https://dashboard.stripe.com/webhooks" target="_blank" rel="noopener" className="ml-1 text-primary hover:underline">
+                      dashboard.stripe.com/webhooks
+                    </a>.
+                  </p>
+                </div>
+              )}
+
+              {stats.revenue.providerBreakdown.length > 1 && (
+                <div className="mt-4">
+                  <h3 className="mb-2 text-sm font-semibold">Por gateway</h3>
+                  <div className="space-y-2">
+                    {stats.revenue.providerBreakdown.map((p: any) => (
+                      <div key={p.provider} className="flex items-center justify-between rounded-xl border border-border bg-background p-3">
+                        <span className="font-semibold capitalize">{p.provider}</span>
+                        <span className="text-sm text-muted-foreground">
+                          {p.count} cobranças · <strong className="text-foreground">R$ {p.revenue.toFixed(2)}</strong>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Section>
+
             <Section title="MRR mensal" subtitle="Receita recorrente projetada (com base nos pagantes ativos)">
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={stats.mrrSeries}>
@@ -357,6 +441,8 @@ function compute(d: any, days: number) {
   const aiAnalyses: any[] = d.aiAnalyses || [];
   const plans: any[] = d.plans || [];
   const products: any[] = d.products || [];
+  const paymentsInRange: any[] = d.paymentsInRange || [];
+  const paymentsAll: any[] = d.paymentsAll || [];
 
   const planByTier: Record<string, number> = {};
   for (const p of plans) planByTier[p.tier] = p.price_cents_brl;
@@ -497,6 +583,40 @@ function compute(d: any, days: number) {
   const productsWithTouchpoints = products.filter((p) => p.x >= 0 && p.y >= 0).length;
   const touchpointCoverage = products.length > 0 ? productsWithTouchpoints / products.length : 0;
 
+  // RECEITA REAL — payment_events com event_type que representa $$$ entrando
+  const REVENUE_EVENTS = new Set(["checkout.session.completed", "invoice.paid"]);
+  const realInRange = paymentsInRange.filter((p) => REVENUE_EVENTS.has(p.event_type));
+  const realRevenueCents = realInRange.reduce((s, p) => s + (Number(p.amount_cents) || 0), 0);
+  const realRevenue = realRevenueCents / 100;
+  const realTransactions = realInRange.length;
+  const realArpu = realTransactions > 0 ? realRevenue / realTransactions : 0;
+
+  // Histórico total (lifetime)
+  const lifetimeCents = paymentsAll
+    .filter((p) => REVENUE_EVENTS.has(p.event_type))
+    .reduce((s, p) => s + (Number(p.amount_cents) || 0), 0);
+  const lifetimeRevenue = lifetimeCents / 100;
+
+  // Time series — receita real diária no período
+  const revenueDayMap = emptyDayMap(days);
+  for (const p of realInRange) {
+    revenueDayMap.set(dayKey(p.processed_at), (revenueDayMap.get(dayKey(p.processed_at)) || 0) + (Number(p.amount_cents) || 0) / 100);
+  }
+  const realRevenueSeries = Array.from(revenueDayMap.entries()).map(([day, amount]) => ({ day, amount: Number(amount.toFixed(2)) }));
+
+  // Failed payments
+  const failedInRange = paymentsInRange.filter((p) => p.event_type === "invoice.payment_failed").length;
+
+  // Provider breakdown
+  const providerMap: Record<string, { count: number; revenue: number }> = {};
+  for (const p of realInRange) {
+    const k = p.provider || "stripe";
+    if (!providerMap[k]) providerMap[k] = { count: 0, revenue: 0 };
+    providerMap[k].count += 1;
+    providerMap[k].revenue += (Number(p.amount_cents) || 0) / 100;
+  }
+  const providerBreakdown = Object.entries(providerMap).map(([provider, v]) => ({ provider, ...v }));
+
   return {
     totalUsers, newUsersInRange, usersDeltaPct,
     mau, mauRetention,
@@ -509,6 +629,15 @@ function compute(d: any, days: number) {
     cohorts,
     mp: { active: mpActive, paused: mpPaused, sold: mpSold, offersPending, offersAccepted, acceptRate },
     catalog: { published, newInRange: setups.length, products: products.length, productsWithTouchpoints, touchpointCoverage },
+    revenue: {
+      realInRange: realRevenue,
+      realTransactions,
+      realArpu,
+      lifetimeRevenue,
+      failedInRange,
+      providerBreakdown,
+      series: realRevenueSeries,
+    },
   };
 }
 
