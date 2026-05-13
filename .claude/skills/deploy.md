@@ -59,13 +59,18 @@ Quando o usuário invocar essa skill, executa a sequência abaixo. **Não pergun
      ```
    - Se a migration for trivialmente idempotente (DROP IF EXISTS + CREATE, ADD COLUMN IF NOT EXISTS), tentar aplicar via Management API — se classifier bloquear, cair pro link manual.
 
-7. **Abrir PR pra main**:
-   - Branch atual: `git branch --show-current`
-   - Imprimir o link clicável:
+7. **Criar PR e auto-merge pra main**:
+   - Usar `gh` CLI (binário em `$HOME/.local/bin/gh`, já autenticado).
+   - Verificar se já existe PR aberto pra branch: `gh pr view --json number,state,url 2>/dev/null`
+     - Se existe e está OPEN: pular criação, ir direto pro merge.
+     - Senão: criar com `gh pr create --base main --head <branch> --title "<msg do último commit>" --body "<resumo gerado>"`
+   - Auto-merge com squash (espera CI passar se houver):
      ```
-     https://github.com/andriwbelloli-creator/setup-smart-style/compare/main...<branch>
+     gh pr merge --auto --squash --delete-branch
      ```
-   - Indicar nº de commits e arquivos mudados: `git log --oneline origin/main..HEAD | wc -l`
+   - Se `--auto` falhar (sem branch protection ou sem checks), cair pro merge imediato: `gh pr merge --squash --delete-branch`
+   - Imprimir URL do PR + status final.
+   - Se classifier bloquear `gh pr merge` em main, fallback é só imprimir o link de PR.
 
 ## Restrições
 
@@ -82,7 +87,12 @@ Resposta final curta, formato:
 ✅ commit <hash> · push <branch>
 ✅ deployed: detect-touchpoints, suggest-listing
 ⏳ migration pendente: 20260513_nome.sql → SQL Editor
-🔗 merge: https://github.com/andriwbelloli-creator/setup-smart-style/compare/main...<branch>
+✅ PR #<n> merged (squash, branch deletada): https://github.com/andriwbelloli-creator/setup-smart-style/pull/<n>
+```
+
+Se merge falhou ou foi enfileirado (auto-merge aguardando CI), substituir última linha por:
+```
+⏳ PR #<n> auto-merge habilitado (aguardando checks): https://github.com/.../pull/<n>
 ```
 
 Sem prosa adicional, sem perguntar próximos passos. Usuário invoca `/deploy` justamente pra evitar precisar confirmar cada etapa.
