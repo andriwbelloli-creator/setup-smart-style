@@ -23,3 +23,4 @@ verify_jwt = true
 
 [functions.detect-touchpoints-vision]
 verify_jwt = true
+
