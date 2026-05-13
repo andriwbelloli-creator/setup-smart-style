@@ -90,6 +90,30 @@ export async function fetchPublishedSetups(): Promise<Setup[]> {
     .eq("status", "published")
     .order("created_at", { ascending: false });
   const rows = await hydrateOwners(((data as any[]) || []) as DbSetupRow[]);
+
+  // Conta touchpoints válidos (x>=0 AND y>=0) por setup pra ordenar: setups
+  // com mais produtos posicionados pela IA aparecem primeiro. Setups novos
+  // sem touchpoints vão pro fim. Tiebreaker: created_at desc (já vem assim).
+  if (rows.length > 0) {
+    const setupIds = rows.map((r) => r.id);
+    const { data: tps } = await supabase
+      .from("setup_products")
+      .select("setup_id")
+      .in("setup_id", setupIds)
+      .gte("x", 0)
+      .gte("y", 0);
+    const counts = new Map<string, number>();
+    for (const tp of ((tps as any[]) || [])) {
+      counts.set(tp.setup_id, (counts.get(tp.setup_id) || 0) + 1);
+    }
+    rows.sort((a, b) => {
+      const ca = counts.get(a.id) || 0;
+      const cb = counts.get(b.id) || 0;
+      if (ca !== cb) return cb - ca;
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+  }
+
   return rows.map((row) => rowToSetup(row));
 }
 
