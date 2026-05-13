@@ -10,7 +10,7 @@ import { fetchSetupBySlug } from "@/lib/setups-db";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
 import { track, trackPageView } from "@/lib/track";
 import { fetchCrossSellMatches, formatBrl, type CrossSellMatch } from "@/lib/marketplace";
-import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight, CalendarClock, Building2 } from "lucide-react";
+import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight, CalendarClock, Building2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
 import { useAuth } from "@/hooks/use-auth";
@@ -165,6 +165,8 @@ function SetupDetail() {
   const [myFirstSlug, setMyFirstSlug] = useState<string | null>(null);
   const [rentalOpen, setRentalOpen] = useState(false);
   const [crossSells, setCrossSells] = useState<Map<string, CrossSellMatch>>(new Map());
+  const [isOwner, setIsOwner] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
 
   // Cross-selling: pra cada produto deste setup, verifica se tem usado
   // equivalente no marketplace por preço menor. Mostra badge "Economize R$X".
@@ -220,6 +222,58 @@ function SetupDetail() {
       });
     return () => { cancelled = true; };
   }, [user, setup.slug]);
+
+  // Detecta se o user logado é o dono deste setup pra habilitar edição.
+  useEffect(() => {
+    if (!user) { setIsOwner(false); return; }
+    let cancelled = false;
+    supabase
+      .from("setups")
+      .select("owner_id")
+      .eq("id", setup.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled) setIsOwner(data?.owner_id === user.id);
+      });
+    return () => { cancelled = true; };
+  }, [user, setup.id]);
+
+  const onCoverChange = async (file: File | null) => {
+    if (!file || !user || !isOwner) return;
+    setUploadingCover(true);
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
+      const up = await supabase.storage.from("setups").upload(path, file, { contentType: file.type });
+      if (up.error) throw up.error;
+      const { data: pub } = supabase.storage.from("setups").getPublicUrl(path);
+      const newUrl = pub.publicUrl;
+
+      const { error: upErr } = await supabase.from("setups").update({ cover_url: newUrl }).eq("id", setup.id);
+      if (upErr) throw upErr;
+
+      // Atualiza setup_images cover (position=0). Tenta update; se nada
+      // afetado, insere — cobre setups antigos que nasceram sem registro.
+      const { data: existing } = await supabase
+        .from("setup_images")
+        .select("id")
+        .eq("setup_id", setup.id)
+        .eq("position", 0)
+        .maybeSingle();
+      if (existing?.id) {
+        await supabase.from("setup_images").update({ url: newUrl }).eq("id", existing.id);
+      } else {
+        await supabase.from("setup_images").insert({ setup_id: setup.id, url: newUrl, position: 0 });
+      }
+      toast.success("Capa atualizada!");
+      // Reload pra refletir a nova imagem em todos os pontos (hero, og, etc.)
+      window.location.reload();
+    } catch (e: any) {
+      toast.error(e?.message || "Falha ao atualizar capa.");
+    } finally {
+      setUploadingCover(false);
+    }
+  };
 
   const handleDeleteSetup = async () => {
     if (!confirm(`Excluir o setup "${setup.title}"? Esta ação é permanente.`)) return;
@@ -317,6 +371,22 @@ function SetupDetail() {
               <div className="relative aspect-[16/11]">
                 <img src={heroImage} alt={`Setup completo de ${setup.author}: ${setup.title}`} className="h-full w-full object-cover transition-opacity duration-300" fetchPriority="high" decoding="async" />
                 <WatermarkOverlay position="tl" />
+                {isOwner && heroIdx === 0 && (
+                  <label
+                    className={`absolute right-3 top-3 z-10 inline-flex cursor-pointer items-center gap-2 rounded-full bg-foreground/90 px-4 py-2 text-xs font-semibold text-background shadow-elegant transition-smooth hover:bg-foreground ${uploadingCover ? "opacity-50 cursor-wait" : ""}`}
+                    title="Trocar a foto de capa"
+                  >
+                    {uploadingCover ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Pencil className="h-3.5 w-3.5" />}
+                    {uploadingCover ? "Enviando..." : "Editar capa"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      disabled={uploadingCover}
+                      onChange={(e) => onCoverChange(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                )}
                 {heroIdx === 0 && setup.products.map((p) => (
                   <button key={p.id} onClick={() => setActive(p)} style={{ left: `${p.x}%`, top: `${p.y}%` }}
                     className="group absolute -translate-x-1/2 -translate-y-1/2" aria-label={`Ver produto ${p.name}`}>
