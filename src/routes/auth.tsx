@@ -82,6 +82,10 @@ function AuthPage() {
       else toast.error(error.message);
       return;
     }
+    // Meta Pixel: registra novo cadastro (independente de confirmação de email)
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      (window as any).fbq("track", "CompleteRegistration", { method: "email" });
+    }
     // If session is null, email confirmation is required
     if (!data.session) {
       setPendingEmail(email);
