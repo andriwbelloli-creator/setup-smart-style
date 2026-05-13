@@ -327,6 +327,24 @@ function ListingDetail() {
                     )}
                   </div>
                 </div>
+                {listing.contact ? (
+                  user ? (
+                    <div className="mt-4 rounded-2xl border border-border bg-background p-3">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Contato direto</div>
+                      <div className="mt-1 break-all text-sm font-medium text-foreground">{listing.contact}</div>
+                      <p className="mt-2 text-[11px] text-muted-foreground">
+                        Negociação fora da plataforma. Sempre encontre em local público e teste o produto antes de pagar.
+                      </p>
+                    </div>
+                  ) : (
+                    <Link
+                      to="/auth"
+                      className="mt-4 block rounded-2xl border border-dashed border-border bg-background p-3 text-center text-xs text-muted-foreground hover:border-foreground/40"
+                    >
+                      Faça login pra ver o contato do vendedor →
+                    </Link>
+                  )
+                ) : null}
               </div>
             )}
           </div>

@@ -61,6 +61,7 @@ function AnunciarProduto() {
   const [conditionId, setConditionId] = useState<string>("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [contact, setContact] = useState("");
   const [images, setImages] = useState<PendingImage[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [authorshipConfirmed, setAuthorshipConfirmed] = useState(false);
@@ -171,6 +172,7 @@ function AnunciarProduto() {
     categoryId &&
     conditionId &&
     images.length >= 1 &&
+    contact.trim().length >= 5 &&
     authorshipConfirmed;
 
   const submit = async (e: React.FormEvent) => {
@@ -191,6 +193,7 @@ function AnunciarProduto() {
         category_id: categoryId,
         condition_id: conditionId,
         images: urls,
+        contact: contact.trim(),
         city: city.trim() || undefined,
         state: state.trim() || undefined,
       });
@@ -402,6 +405,19 @@ function AnunciarProduto() {
                 />
               </Field>
             </div>
+
+            <Field label="Contato (WhatsApp, telefone ou email)" required>
+              <Input
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                placeholder="Ex: (11) 91234-5678 ou wa.me/5511912345678 ou meu@email.com"
+                maxLength={200}
+                required
+              />
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                Visível só pra usuários logados. Vendedores que respondem em até 24h fecham 3x mais.
+              </p>
+            </Field>
 
             <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-border bg-background p-4 transition-smooth hover:border-foreground/40">
               <input

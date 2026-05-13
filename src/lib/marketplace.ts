@@ -26,6 +26,7 @@ export type MarketplaceListing = {
   category_id: string;
   condition_id: string;
   images: string[];
+  contact: string;
   city: string | null;
   state: string | null;
   status: ListingStatus;
@@ -162,6 +163,7 @@ export type NewListingInput = {
   category_id: string;
   condition_id: string;
   images: string[];
+  contact: string;
   city?: string;
   state?: string;
 };
