@@ -25,7 +25,7 @@ type Click = {
   product_id: string | null;
   setup_id: string | null;
   store: string;
-  created_at: string;
+  clicked_at: string;
 };
 
 type Range = "7d" | "30d" | "90d" | "all";
@@ -38,6 +38,15 @@ function rangeStart(r: Range): Date | null {
   return d;
 }
 
+const STORE_LABEL: Record<string, string> = {
+  amazon_br: "Amazon BR",
+  mercado_livre: "Mercado Livre",
+  kabum: "Kabum",
+  magalu: "Magalu",
+  pichau: "Pichau",
+  outro: "Outro",
+};
+
 function AffiliateDashboard() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -45,6 +54,7 @@ function AffiliateDashboard() {
   const [range, setRange] = useState<Range>("30d");
   const [clicks, setClicks] = useState<Click[]>([]);
   const [productsMap, setProductsMap] = useState<Record<string, { name: string; price_brl: number; store: string; setup_slug?: string }>>({});
+  const [liveCount, setLiveCount] = useState(0);
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth" });
@@ -55,8 +65,8 @@ function AffiliateDashboard() {
     (async () => {
       setLoading(true);
       const start = rangeStart(range);
-      let q = supabase.from("affiliate_clicks").select("id, product_id, setup_id, store, created_at").order("created_at", { ascending: false }).limit(5000);
-      if (start) q = q.gte("created_at", start.toISOString());
+      let q = supabase.from("affiliate_clicks").select("id, product_id, setup_id, store, clicked_at").order("clicked_at", { ascending: false }).limit(5000);
+      if (start) q = q.gte("clicked_at", start.toISOString());
       const { data: clicksData } = await q;
       const list = (clicksData || []) as Click[];
       setClicks(list);
@@ -77,6 +87,42 @@ function AffiliateDashboard() {
     })();
   }, [user, range]);
 
+  // Realtime: novos cliques aparecem sem reload
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("affiliate_clicks_live")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "affiliate_clicks" },
+        async (payload) => {
+          const click = payload.new as Click;
+          const start = rangeStart(range);
+          if (start && new Date(click.clicked_at) < start) return;
+          setClicks((prev) => (prev.some((c) => c.id === click.id) ? prev : [click, ...prev]));
+          setLiveCount((n) => n + 1);
+          if (click.product_id && !productsMap[click.product_id]) {
+            const { data } = await supabase
+              .from("setup_products")
+              .select("id, name, price_brl, store, setup_id, setups(slug)")
+              .eq("id", click.product_id)
+              .maybeSingle();
+            if (data) {
+              const d = data as any;
+              setProductsMap((prev) => ({
+                ...prev,
+                [d.id]: { name: d.name, price_brl: d.price_brl, store: d.store, setup_slug: d.setups?.slug },
+              }));
+            }
+          }
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, range, productsMap]);
+
   if (authLoading || !user) {
     return (
       <div className="min-h-screen bg-background">
@@ -87,31 +133,35 @@ function AffiliateDashboard() {
   }
 
   const totalClicks = clicks.length;
-  const clicksByStore: Record<string, number> = {};
   const clicksByProduct: Record<string, number> = {};
   const clicksBySetup: Record<string, number> = {};
+  // Breakdown por parceiro: cliques, soma de preços dos produtos clicados,
+  // comissão média e receita projetada (com conversão estimada).
+  const ESTIMATED_CONVERSION = 0.1;
+  type StoreRow = { store: string; clicks: number; pricedClicks: number; sumPrice: number; revenue: number };
+  const byStore: Record<string, StoreRow> = {};
   for (const c of clicks) {
-    clicksByStore[c.store] = (clicksByStore[c.store] || 0) + 1;
     if (c.product_id) clicksByProduct[c.product_id] = (clicksByProduct[c.product_id] || 0) + 1;
     if (c.setup_id) clicksBySetup[c.setup_id] = (clicksBySetup[c.setup_id] || 0) + 1;
-  }
-
-  // Receita projetada (assume 10% conversion sobre o ticket médio dos produtos clicados)
-  const ESTIMATED_CONVERSION = 0.1;
-  let projectedRevenue = 0;
-  for (const c of clicks) {
     const p = c.product_id ? productsMap[c.product_id] : null;
-    if (!p) continue;
-    const commission = COMMISSION_RATE[p.store] ?? 0.04;
-    projectedRevenue += p.price_brl * commission * ESTIMATED_CONVERSION;
+    // O store de um clique pode ser diferente do produto (raro, mas possível). Usa o do produto se existir.
+    const storeKey = p?.store ?? c.store;
+    if (!byStore[storeKey]) byStore[storeKey] = { store: storeKey, clicks: 0, pricedClicks: 0, sumPrice: 0, revenue: 0 };
+    byStore[storeKey].clicks += 1;
+    if (p) {
+      const commission = COMMISSION_RATE[p.store] ?? 0.04;
+      byStore[storeKey].pricedClicks += 1;
+      byStore[storeKey].sumPrice += p.price_brl;
+      byStore[storeKey].revenue += p.price_brl * commission * ESTIMATED_CONVERSION;
+    }
   }
+  const projectedRevenue = Object.values(byStore).reduce((s, r) => s + r.revenue, 0);
+  const storesRanked = Object.values(byStore).sort((a, b) => b.revenue - a.revenue || b.clicks - a.clicks);
 
   const topProducts = Object.entries(clicksByProduct)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10)
     .map(([id, count]) => ({ id, count, info: productsMap[id] }));
-
-  const topStores = Object.entries(clicksByStore).sort((a, b) => b[1] - a[1]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -120,7 +170,13 @@ function AffiliateDashboard() {
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="font-display text-3xl font-bold tracking-tight">Analytics de Afiliados</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Performance dos links de afiliados no HomeOfficeLife</p>
+            <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+              <span className="relative inline-flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              <span>Tempo real{liveCount > 0 ? ` · ${liveCount} clique${liveCount !== 1 ? "s" : ""} desde que abriu` : ""}</span>
+            </p>
           </div>
           <div className="flex gap-2 rounded-full bg-card p-1 shadow-soft">
             {(["7d", "30d", "90d", "all"] as Range[]).map((r) => (
@@ -146,20 +202,75 @@ function AffiliateDashboard() {
               <Stat icon={DollarSign} label="Receita projetada" value={`R$ ${projectedRevenue.toFixed(2)}`} hint="conversão estimada 10%" />
             </div>
 
-            <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            <div className="mt-10 rounded-3xl border border-border bg-card p-6 shadow-soft">
+              <div className="mb-4 flex items-end justify-between gap-4">
+                <div>
+                  <h2 className="font-display text-lg font-bold">Receita por parceiro</h2>
+                  <p className="text-xs text-muted-foreground">Quebra de R$ por loja · conversão estimada {Math.round(ESTIMATED_CONVERSION * 100)}%</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Total combinado</div>
+                  <div className="font-display text-xl font-bold">R$ {projectedRevenue.toFixed(2)}</div>
+                </div>
+              </div>
+              {storesRanked.length === 0 ? (
+                <p className="mt-4 text-sm text-muted-foreground">Sem cliques no período.</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="text-left text-xs uppercase tracking-wider text-muted-foreground">
+                      <tr className="border-b border-border">
+                        <th className="py-2 pr-3">Parceiro</th>
+                        <th className="py-2 pr-3">Cliques</th>
+                        <th className="py-2 pr-3">Ticket médio</th>
+                        <th className="py-2 pr-3">Comissão</th>
+                        <th className="py-2 pr-3 text-right">Receita projetada</th>
+                        <th className="py-2 pr-3 text-right">% do total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {storesRanked.map((s) => {
+                        const ticketAvg = s.pricedClicks > 0 ? s.sumPrice / s.pricedClicks : 0;
+                        const commissionPct = (COMMISSION_RATE[s.store] ?? 0.04) * 100;
+                        const sharePct = projectedRevenue > 0 ? (s.revenue / projectedRevenue) * 100 : 0;
+                        return (
+                          <tr key={s.store} className="border-b border-border/40 last:border-0">
+                            <td className="py-3 pr-3 font-semibold">{STORE_LABEL[s.store] ?? s.store}</td>
+                            <td className="py-3 pr-3">{s.clicks}</td>
+                            <td className="py-3 pr-3">{ticketAvg > 0 ? `R$ ${ticketAvg.toLocaleString("pt-BR", { maximumFractionDigits: 0 })}` : "—"}</td>
+                            <td className="py-3 pr-3">{commissionPct.toFixed(1)}%</td>
+                            <td className="py-3 pr-3 text-right font-bold">R$ {s.revenue.toFixed(2)}</td>
+                            <td className="py-3 pr-3 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                <span className="text-xs text-muted-foreground">{sharePct.toFixed(0)}%</span>
+                                <div className="h-2 w-16 overflow-hidden rounded-full bg-secondary">
+                                  <div className="h-full bg-gradient-hero" style={{ width: `${sharePct}%` }} />
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
               <div className="rounded-3xl border border-border bg-card p-6 shadow-soft">
                 <h2 className="font-display text-lg font-bold">Cliques por loja</h2>
-                {topStores.length === 0 ? (
+                {storesRanked.length === 0 ? (
                   <p className="mt-4 text-sm text-muted-foreground">Sem cliques no período.</p>
                 ) : (
                   <div className="mt-4 space-y-3">
-                    {topStores.map(([store, count]) => {
-                      const pct = totalClicks > 0 ? (count / totalClicks) * 100 : 0;
+                    {storesRanked.map((s) => {
+                      const pct = totalClicks > 0 ? (s.clicks / totalClicks) * 100 : 0;
                       return (
-                        <div key={store}>
+                        <div key={s.store}>
                           <div className="mb-1 flex items-center justify-between text-sm">
-                            <span className="font-semibold">{store}</span>
-                            <span className="text-muted-foreground">{count} clique{count !== 1 ? "s" : ""} · {pct.toFixed(0)}%</span>
+                            <span className="font-semibold">{STORE_LABEL[s.store] ?? s.store}</span>
+                            <span className="text-muted-foreground">{s.clicks} clique{s.clicks !== 1 ? "s" : ""} · {pct.toFixed(0)}%</span>
                           </div>
                           <div className="h-2 overflow-hidden rounded-full bg-secondary">
                             <div className="h-full bg-gradient-hero" style={{ width: `${pct}%` }} />
