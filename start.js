@@ -199,14 +199,21 @@ async function handleSitemap(_req, res) {
   ];
 
   let setupUrls = [];
+  let marketplaceUrls = [];
   try {
     if (SUPABASE_URL && SUPABASE_ANON) {
-      const r = await fetch(
-        `${SUPABASE_URL}/rest/v1/setups?select=slug,updated_at&status=eq.published&order=updated_at.desc&limit=10000`,
-        { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } },
-      );
-      if (r.ok) {
-        const rows = await r.json();
+      const [setupsR, listingsR] = await Promise.all([
+        fetch(
+          `${SUPABASE_URL}/rest/v1/setups?select=slug,updated_at&status=eq.published&order=updated_at.desc&limit=10000`,
+          { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } },
+        ),
+        fetch(
+          `${SUPABASE_URL}/rest/v1/marketplace_listings?select=id,updated_at&status=eq.active&order=updated_at.desc&limit=10000`,
+          { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } },
+        ),
+      ]);
+      if (setupsR.ok) {
+        const rows = await setupsR.json();
         setupUrls = rows.map((row) => ({
           loc: `https://homeofficelife.com.br/setup/${row.slug}`,
           lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
@@ -214,15 +221,24 @@ async function handleSitemap(_req, res) {
           changefreq: "weekly",
         }));
       }
+      if (listingsR.ok) {
+        const rows = await listingsR.json();
+        marketplaceUrls = rows.map((row) => ({
+          loc: `https://homeofficelife.com.br/marketplace/${row.id}`,
+          lastmod: row.updated_at ? new Date(row.updated_at).toISOString().slice(0, 10) : undefined,
+          priority: 0.5,
+          changefreq: "daily",
+        }));
+      }
     }
   } catch (err) {
-    console.error("[sitemap] failed to load setups:", err);
+    console.error("[sitemap] failed to load setups/listings:", err);
   }
 
   const xml =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    [...staticUrls, ...setupUrls]
+    [...staticUrls, ...setupUrls, ...marketplaceUrls]
       .map(
         (u) =>
           `  <url>\n` +
