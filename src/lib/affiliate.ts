@@ -9,6 +9,17 @@ const STORE_NORMALIZE: Record<string, Store> = {
   Kabum: "kabum",
   Magalu: "magalu",
   Pichau: "pichau",
+  // Parceiros de móveis/decoração — usados pelos novos touchpoints
+  // (cortinas, plantas, luminárias, papel de parede, estantes).
+  "Tok&Stok": "tokstok" as Store,
+  "Tok Stok": "tokstok" as Store,
+  "MadeiraMadeira": "madeira_madeira" as Store,
+  "Madeira Madeira": "madeira_madeira" as Store,
+  Westwing: "westwing" as Store,
+  "Leroy Merlin": "leroy_merlin" as Store,
+  Etna: "etna" as Store,
+  Camicado: "camicado" as Store,
+  Mobly: "mobly" as Store,
   Outro: "outro",
 };
 
@@ -27,8 +38,17 @@ const COMMISSION_RATE: Record<Store, number> = {
   kabum: 0.053,
   magalu: 0.04,
   pichau: 0.063,
+  // Parceiros móveis/decoração — taxas iniciais conservadoras (4–7%).
+  // Negociar via Lomadee/Awin/programa próprio antes de produzir.
+  tokstok: 0.05,
+  madeira_madeira: 0.06,
+  westwing: 0.07,
+  leroy_merlin: 0.04,
+  etna: 0.05,
+  camicado: 0.05,
+  mobly: 0.05,
   outro: 0.03,
-};
+} as Record<Store, number>;
 
 export function commissionForStore(store: Store, priceCents: number): number {
   const rate = COMMISSION_RATE[store] ?? 0.03;
