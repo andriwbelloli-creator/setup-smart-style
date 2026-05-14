@@ -56,12 +56,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-transparent">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 md:h-24 md:px-6">
+      <div className="container mx-auto flex h-24 items-center justify-between px-4 md:h-28 md:px-6">
         <Link to="/" className="flex items-center gap-3" aria-label="home office live — início">
           <img
             src="/logo-home-office-live.png"
             alt="home office live"
-            className="h-14 w-auto md:h-16"
+            className="h-16 w-auto md:h-20"
           />
           <span className="hidden border-l border-border pl-3 text-[10px] font-medium uppercase tracking-widest text-muted-foreground md:inline">
             br · home office
