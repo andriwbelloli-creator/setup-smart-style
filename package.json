@@ -20,6 +20,13 @@
     "test:e2e:smoke": "playwright test --grep @smoke",
     "test:e2e:ui": "playwright test --ui",
     "test:browserless": "bun run tests/browserless/homeoffice-analysis-flow.test.ts",
+    "qa:smoke": "bun run tests/browserless/homeoffice-analysis-flow.test.ts --mode=smoke",
+    "qa:full": "bun run tests/browserless/homeoffice-analysis-flow.test.ts --mode=full",
+    "qa:mobile": "bun run tests/browserless/homeoffice-mobile-flow.test.ts",
+    "qa:products": "bun run tests/browserless/product-click-flow.test.ts",
+    "qa:regression": "bun run tests/browserless/reference-setups-regression.test.ts",
+    "qa:auto-fix": "bun run tests/browserless/auto-fix-runner.ts",
+    "qa:all": "bun run qa:smoke && bun run qa:mobile && bun run qa:products",
     "test:all": "bun run test && bun run test:e2e:smoke"
   },
   "dependencies": {

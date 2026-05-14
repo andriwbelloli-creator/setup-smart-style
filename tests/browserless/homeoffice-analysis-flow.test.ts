@@ -33,7 +33,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, validateEnv } from "./browserless.config";
 import { buildError, type QAError } from "./lib/severity";
-import { emptyChecks, writeResult, type QAChecks } from "./lib/reporter";
+import { emptyChecks, writeResult, generateRunId, type QAChecks, type QAMode } from "./lib/reporter";
 
 const log = {
   info: (s: string, d = "") => console.log(`[INFO] ${s}${d ? ": " + d : ""}`),
@@ -333,7 +333,14 @@ async function main(): Promise<number> {
   const attempt = +(process.env.QA_ATTEMPT || "1");
   const maxAttempts = +(process.env.QA_MAX_RETRIES || "3");
 
+  // Mode via CLI flag (--mode=smoke|full|regression) ou env var
+  const modeArg = process.argv.find((a) => a.startsWith("--mode="))?.split("=")[1];
+  const mode: QAMode = (modeArg as QAMode) || (process.env.QA_RUN_MODE as QAMode) || "smoke";
+  const runId = generateRunId();
+
   log.info("connecting", config.appBaseUrl);
+  log.info("mode", mode);
+  log.info("run_id", runId);
   log.info("attempt", `${attempt}/${maxAttempts}`);
 
   const wsEndpoint = config.browserlessWsEndpoint(config.browserlessToken);
@@ -388,6 +395,8 @@ async function main(): Promise<number> {
     const result = await writeResult({
       attempt,
       maxAttempts,
+      mode,
+      runId,
       appBaseUrl: config.appBaseUrl,
       checks: finalChecks,
       errors: allErrors,
@@ -416,6 +425,8 @@ async function main(): Promise<number> {
       await writeResult({
         attempt,
         maxAttempts,
+        mode,
+        runId,
         appBaseUrl: config.appBaseUrl,
         checks: finalChecks,
         errors: [
