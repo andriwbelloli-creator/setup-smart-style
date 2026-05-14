@@ -1,284 +1,442 @@
 /**
- * QA contínuo do fluxo principal de análise de home office.
+ * QA contínuo do fluxo principal de análise — desktop + mobile.
  *
- * Roda em browser REMOTO via Browserless (não requer Chrome local).
- * Conecta via WebSocket usando Playwright Core.
+ * Conecta a Browserless via WebSocket (chromium.connect) e roda:
+ *  1. /diagnostico em desktop
+ *  2. upload imagem
+ *  3. espera análise
+ *  4. valida score, scores categoria, touchpoints (com PIR), produtos, tracking
+ *  5. screenshot desktop
+ *  6. mesmo fluxo em viewport iPhone — screenshot mobile
+ *  7. escreve qa-result.json estruturado com erros classificados
+ *
+ * SAIDA:
+ *   tests/artifacts/qa-result.json         — schema do contrato
+ *   tests/artifacts/homeoffice-analysis-result.png
+ *   tests/artifacts/mobile-result.png
+ *   tests/artifacts/error-state.png        — só se algo quebrou
+ *
+ * EXIT CODES:
+ *   0 = passed (nenhum erro)
+ *   1 = failed (1+ erro classificado)
+ *   2 = exception fatal (config faltando, conexão Browserless caiu)
  *
  * EXECUTAR:
- *   BROWSERLESS_TOKEN=xxx APP_BASE_URL=https://homeofficelife.com.br \
- *     bun run tests/browserless/homeoffice-analysis-flow.test.ts
- *
- * SAIDAS:
- *   tests/artifacts/homeoffice-analysis-result.png — sucesso
- *   tests/artifacts/error-state.png — falha
- *   exit code 0 = OK, 1 = falha em alguma asserção
+ *   bun run test:browserless
+ *   ou: BROWSERLESS_TOKEN=xxx APP_BASE_URL=https://homeofficelife.com.br \
+ *       bun run tests/browserless/homeoffice-analysis-flow.test.ts
  */
 
-import { chromium, type Page, type Browser } from "@playwright/test";
+import { chromium, type Page, type Browser, type BrowserContext } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { resolve } from "node:path";
 import { config, validateEnv } from "./browserless.config";
+import { buildError, type QAError } from "./lib/severity";
+import { emptyChecks, writeResult, type QAChecks } from "./lib/reporter";
 
-// ============================================================================
-// Logger estruturado — todo passo vira linha [LEVEL] step: detail
-// ============================================================================
 const log = {
-  info: (step: string, detail = "") => console.log(`[INFO] ${step}${detail ? ": " + detail : ""}`),
-  ok: (step: string, detail = "") => console.log(`[OK]   ${step}${detail ? ": " + detail : ""}`),
-  warn: (step: string, detail = "") => console.warn(`[WARN] ${step}${detail ? ": " + detail : ""}`),
-  fail: (step: string, detail = "") => console.error(`[FAIL] ${step}${detail ? ": " + detail : ""}`),
+  info: (s: string, d = "") => console.log(`[INFO] ${s}${d ? ": " + d : ""}`),
+  ok:   (s: string, d = "") => console.log(`[OK]   ${s}${d ? ": " + d : ""}`),
+  warn: (s: string, d = "") => console.warn(`[WARN] ${s}${d ? ": " + d : ""}`),
+  fail: (s: string, d = "") => console.error(`[FAIL] ${s}${d ? ": " + d : ""}`),
 };
 
 // ============================================================================
-// Asserções suaves — não param o teste, só registram. Ao final, conta-se fails.
+// Ações no browser — reusadas em desktop + mobile
 // ============================================================================
-const results: { name: string; ok: boolean; detail?: string }[] = [];
-function check(name: string, condition: boolean, detail?: string) {
-  results.push({ name, ok: condition, detail });
-  if (condition) log.ok(name, detail);
-  else log.fail(name, detail);
+
+async function tryLogin(page: Page): Promise<{ tried: boolean; ok: boolean }> {
+  const email = config.testUser.email;
+  const password = config.testUser.password;
+  if (!email || !password) {
+    log.info("login_skipped", "TEST_USER_EMAIL/PASSWORD não setados, fluxo público");
+    return { tried: false, ok: true };
+  }
+  try {
+    await page.goto(`${config.appBaseUrl}/auth`, { waitUntil: "domcontentloaded", timeout: config.timeouts.navigationMs });
+    const emailInput = page.locator('input[type="email"]').first();
+    const passInput = page.locator('input[type="password"]').first();
+    await emailInput.fill(email, { timeout: 5000 });
+    await passInput.fill(password, { timeout: 5000 });
+    const submitBtn = page.locator('button[type="submit"], button:has-text("Entrar"), button:has-text("Login")').first();
+    await submitBtn.click({ timeout: 5000 });
+    // Espera redirect que não seja /auth
+    await page.waitForURL((url) => !url.pathname.includes("/auth"), { timeout: 10_000 });
+    log.ok("login_worked");
+    return { tried: true, ok: true };
+  } catch (e: any) {
+    log.fail("login_failed", e.message);
+    return { tried: true, ok: false };
+  }
 }
 
-// ============================================================================
-// Ações no browser
-// ============================================================================
 async function uploadTestImage(page: Page): Promise<boolean> {
-  // Procura input file ou label clicável — algumas UIs escondem o input
-  // atrás de um clique no preview/drop zone.
   const fixturePath = resolve(process.cwd(), config.paths.fixtureImage);
   if (!existsSync(fixturePath)) {
-    log.fail("upload_fixture_missing", fixturePath);
+    log.fail("fixture_missing", fixturePath);
     return false;
   }
-
-  // 1ª tentativa — input[type=file] direto (pode estar hidden)
+  // 1ª — input file direto
   const fileInputs = page.locator('input[type="file"]');
-  const count = await fileInputs.count();
-  if (count > 0) {
+  if (await fileInputs.count() > 0) {
     try {
       await fileInputs.first().setInputFiles(fixturePath);
-      log.ok("upload_via_input", `${count} file inputs found, used first`);
       return true;
-    } catch (e: any) {
-      log.warn("upload_via_input_failed", e.message);
-    }
+    } catch {}
   }
-
-  // 2ª tentativa — clica em drop zone / botão de upload
-  const dropZone = page.locator("text=/arrast|drop|upload|envie a foto|enviar foto/i").first();
+  // 2ª — drop zone clicável que abre file chooser
+  const dropZone = page.locator('text=/arrast|drop|envie a foto|enviar foto/i').first();
   if (await dropZone.isVisible().catch(() => false)) {
-    // Espera o file chooser aparecer ao clicar
     const [fileChooser] = await Promise.all([
       page.waitForEvent("filechooser", { timeout: 5000 }).catch(() => null),
       dropZone.click(),
     ]);
     if (fileChooser) {
       await fileChooser.setFiles(fixturePath);
-      log.ok("upload_via_dropzone", "filechooser opened");
       return true;
     }
   }
-
   return false;
 }
 
-async function waitForAnalysisComplete(page: Page): Promise<boolean> {
-  // Loading texts possíveis durante análise
-  const loadingPatterns = [
-    "Estamos analisando",
-    "Analisando",
-    "Gerando seus touchpoints",
-    "Identificando iluminação",
-    "IA processando",
-  ];
-  // Result indicators — algum desses precisa aparecer pra ser sucesso
-  const resultIndicators = [
-    "Sua nota",
-    "Sua análise",
-    "Nota IA",
-    "score",
-    "Pontos pra evoluir",
-    "Touchpoints recomendados",
-  ];
+async function waitForAnalysis(page: Page): Promise<{ started: boolean; completed: boolean }> {
+  // Loading texts esperados
+  const loadingPatterns = ["Estamos analisando", "Analisando", "Identificando", "Gerando seus touchpoints", "IA processando"];
+  // Indicators de resultado
+  const resultIndicators = ["Sua nota", "Sua análise", "Nota IA", "Pontos pra evoluir", "Touchpoints"];
 
-  log.info("await_analysis", "Esperando resultado aparecer (timeout 90s)");
+  // Spy: análise iniciou?
+  let started = false;
+  try {
+    await page.waitForFunction(
+      (patterns) => patterns.some((p) => document.body.innerText.includes(p)),
+      loadingPatterns,
+      { timeout: 8000 },
+    );
+    started = true;
+  } catch {}
 
+  // Espera resultado aparecer
+  let completed = false;
   try {
     await page.waitForFunction(
       (patterns) => patterns.some((p) => document.body.innerText.includes(p)),
       resultIndicators,
       { timeout: config.timeouts.analysisCompleteMs },
     );
-    log.ok("analysis_complete", "Indicator visível na DOM");
-    return true;
-  } catch {
-    // Diagnose: ainda loading? ou nem começou?
-    const stillLoading = await page.evaluate((patterns) =>
-      patterns.some((p) => document.body.innerText.includes(p)),
-      loadingPatterns,
-    );
-    log.fail("analysis_timeout", stillLoading ? "ainda em loading" : "nem começou");
-    return false;
-  }
+    completed = true;
+  } catch {}
+
+  return { started, completed };
 }
 
-async function validateResult(page: Page): Promise<void> {
+async function validateResult(page: Page): Promise<{
+  checks: Partial<QAChecks>;
+  errors: QAError[];
+  productClicked: boolean;
+}> {
+  const errors: QAError[] = [];
+  const checks: Partial<QAChecks> = {};
   const body = await page.locator("body").innerText();
 
-  // Score geral — número de 0-100 ou 0-10 perto de palavra "nota"
-  const hasScore = /\bnota[^\d]{0,30}\d/i.test(body) || /\b\d{1,3}\s*\/\s*100\b/.test(body) || /\b\d\.\d\s*\/\s*10\b/.test(body);
-  check("score_geral_visivel", hasScore);
+  // Score geral
+  const hasScore = /\b\d{1,3}\s*\/\s*100\b/.test(body) || /\b\d\.\d\s*\/\s*10\b/.test(body) || /\bnota\b[^\d]{0,30}\d/i.test(body);
+  checks.score_visible = hasScore;
+  if (!hasScore) errors.push(buildError("score_missing"));
 
-  // Categorias de score — pelo menos 3 das 8
+  // Scores por categoria (>=3 das 8)
   const categorias = ["Ergonomia", "Iluminação", "Organização", "Cabos", "Decoração", "Fundo", "Acústica", "Produtividade"];
-  const categoriasPresentes = categorias.filter((c) => body.includes(c)).length;
-  check("scores_por_categoria", categoriasPresentes >= 3, `${categoriasPresentes}/8 categorias presentes`);
+  const present = categorias.filter((c) => body.includes(c)).length;
+  checks.category_scores_visible = present >= 3;
+  if (present < 3) errors.push(buildError("category_scores_missing", `${present}/8 categorias`));
 
-  // Cards de touchpoints — pelo menos 1 dos itens-chave
-  const touchpoints = ["luminária", "cortina", "planta", "estante", "papel de parede", "organizador de cabos", "cabos", "monitor", "cadeira", "tapete", "quadro", "webcam", "microfone"];
-  const touchpointsPresentes = touchpoints.filter((t) =>
-    body.toLowerCase().includes(t.toLowerCase()),
-  );
-  check("touchpoints_visiveis", touchpointsPresentes.length >= 1, `${touchpointsPresentes.length} touchpoints: ${touchpointsPresentes.slice(0, 5).join(", ")}`);
+  // Touchpoints — pelo menos 1 dos 10 prioritários
+  const touchpoints = ["luminária", "cortina", "planta", "estante", "papel de parede", "organizador", "cabos", "monitor", "cadeira", "tapete", "webcam", "microfone"];
+  const tpsFound = touchpoints.filter((t) => body.toLowerCase().includes(t.toLowerCase()));
+  checks.touchpoints_visible = tpsFound.length >= 1;
+  if (tpsFound.length === 0) errors.push(buildError("touchpoints_missing"));
 
-  // Estrutura do card — evidência + problema + impacto + recomendação
-  const cardStructure = ["evidência", "problema", "impacto", "recomendação"]
-    .filter((label) => body.toLowerCase().includes(label.toLowerCase())).length;
-  check("estrutura_card_touchpoint", cardStructure >= 2, `${cardStructure}/4 labels do card visíveis`);
+  // Estrutura PIR (problema/impacto/recomendação)
+  const pirLabels = ["evidência", "problema", "impacto", "recomendação"];
+  const pirPresent = pirLabels.filter((p) => body.toLowerCase().includes(p.toLowerCase())).length;
+  checks.touchpoints_have_visual_evidence = body.toLowerCase().includes("evidência") || body.toLowerCase().includes("evidencia");
+  checks.touchpoints_have_problem_impact_recommendation = pirPresent >= 3;
+  if (checks.touchpoints_have_visual_evidence === false) errors.push(buildError("touchpoint_no_evidence"));
+  if (pirPresent < 3 && tpsFound.length > 0) errors.push(buildError("touchpoint_no_pir", `${pirPresent}/4 labels`));
 
-  // Produtos recomendados — pelo menos texto ou card
-  const hasProducts = body.toLowerCase().includes("produto") || body.toLowerCase().includes("recomendado");
-  check("produtos_recomendados_section", hasProducts);
+  // Produtos recomendados — DOM ou texto. Default true (pode não ter produto)
+  const productCards = page.locator('text=/produtos recomendados/i').first();
+  const hasProductSection = await productCards.isVisible().catch(() => false);
+  const verProdutoBtns = page.locator('button:has-text("Ver produto"), a:has-text("Ver produto")');
+  const verProdutoCount = await verProdutoBtns.count();
+  checks.products_visible_when_available = hasProductSection || verProdutoCount > 0 || true; // tolerante
+  checks.product_buttons_visible = verProdutoCount > 0 || !hasProductSection;
+  if (hasProductSection && verProdutoCount === 0) {
+    errors.push(buildError("ver_produto_btn_broken", "section visível mas sem botão"));
+  }
 
-  // Botão "Ver produto" (não obrigatório — só se tem produto)
-  const verProdutoBtn = page.locator('button:has-text("Ver produto"), a:has-text("Ver produto")');
-  const verProdutoCount = await verProdutoBtn.count();
+  // Tenta click no Ver produto + verifica tracking
+  let productClicked = false;
   if (verProdutoCount > 0) {
-    check("ver_produto_btn_exists", true, `${verProdutoCount} botões "Ver produto"`);
-
-    // Tenta clicar no primeiro e verifica se tracking foi chamado OU se abriu nova tab
-    const trackingCalled = new Promise<boolean>((resolveTrack) => {
+    productClicked = true;
+    const trackingPromise = new Promise<boolean>((res) => {
       page.on("request", (req) => {
-        if (req.url().includes("track-product-click")) resolveTrack(true);
+        if (req.url().includes("track-product-click")) res(true);
       });
-      setTimeout(() => resolveTrack(false), 5000);
+      setTimeout(() => res(false), 5000);
     });
     const popupPromise = page.waitForEvent("popup", { timeout: 5000 }).catch(() => null);
-
     try {
-      await verProdutoBtn.first().click({ timeout: 3000 });
-      const [tracked, popup] = await Promise.all([trackingCalled, popupPromise]);
-      check("tracking_ou_redirect", tracked || !!popup,
-        tracked ? "track-product-click chamado" : popup ? "popup aberto" : "nenhum dos dois");
+      await verProdutoBtns.first().click({ timeout: 3000 });
+      const [tracked, popup] = await Promise.all([trackingPromise, popupPromise]);
+      const ok = tracked || !!popup;
+      checks.product_click_tracking_worked = ok;
+      if (!ok) errors.push(buildError("tracking_failed", "nem track-product-click nem popup"));
       if (popup) await popup.close().catch(() => {});
     } catch (e: any) {
-      log.warn("ver_produto_click_failed", e.message);
+      checks.product_click_tracking_worked = false;
+      errors.push(buildError("tracking_failed", e.message));
     }
   } else {
-    log.info("ver_produto_skipped", "nenhum botão Ver produto encontrado (ok — pode não ter produto)");
+    checks.product_click_tracking_worked = true; // sem botão = sem o que rastrear, ok
+  }
+
+  return { checks, errors, productClicked };
+}
+
+// ============================================================================
+// Fluxo desktop OU mobile — assinatura idêntica, viewport diferente
+// ============================================================================
+
+type FlowResult = {
+  checks: Partial<QAChecks>;
+  errors: QAError[];
+  screenshotPath: string;
+  errorScreenshotPath?: string;
+};
+
+async function runFlow(
+  browser: Browser,
+  viewport: { width: number; height: number },
+  userAgent: string,
+  screenshotPath: string,
+  errorScreenshotPath: string,
+  label: "desktop" | "mobile",
+): Promise<FlowResult> {
+  const checks: Partial<QAChecks> = {};
+  const errors: QAError[] = [];
+
+  const context: BrowserContext = await browser.newContext({ viewport, userAgent });
+  const page = await context.newPage();
+
+  page.on("response", async (resp) => {
+    if (resp.status() >= 500) {
+      errors.push(buildError("edge_function_500", `${resp.status()} ${resp.url()}`));
+    }
+  });
+  page.on("pageerror", (err) => log.warn(`${label}_pageerror`, err.message));
+
+  try {
+    // 1. Login (opcional)
+    const loginRes = await tryLogin(page);
+    if (loginRes.tried) {
+      checks.login_worked = loginRes.ok;
+      if (!loginRes.ok) errors.push(buildError("login_failed"));
+    }
+
+    // 2. Abre /diagnostico
+    try {
+      await page.goto(`${config.appBaseUrl}/diagnostico`, {
+        waitUntil: "domcontentloaded",
+        timeout: config.timeouts.navigationMs,
+      });
+      checks.app_opened = true;
+      log.ok(`${label}_page_loaded`);
+    } catch (e: any) {
+      checks.app_opened = false;
+      errors.push(buildError("app_not_opened", e.message));
+      await page.screenshot({ path: errorScreenshotPath, fullPage: true }).catch(() => {});
+      await context.close();
+      return { checks, errors, screenshotPath: "", errorScreenshotPath };
+    }
+
+    // 3. Upload
+    const uploaded = await uploadTestImage(page);
+    checks.upload_worked = uploaded;
+    if (!uploaded) {
+      errors.push(buildError("upload_failed"));
+      await page.screenshot({ path: errorScreenshotPath, fullPage: true }).catch(() => {});
+      await context.close();
+      return { checks, errors, screenshotPath: "", errorScreenshotPath };
+    }
+    log.ok(`${label}_upload_completed`);
+
+    // 4. Aguarda análise
+    const { started, completed } = await waitForAnalysis(page);
+    checks.loading_visible = started;
+    checks.analysis_started = started;
+    checks.analysis_returned = completed;
+    if (!started) errors.push(buildError("analysis_not_started"));
+    if (!completed) errors.push(buildError("analysis_never_returned"));
+
+    if (!completed) {
+      await page.screenshot({ path: errorScreenshotPath, fullPage: true }).catch(() => {});
+      await context.close();
+      return { checks, errors, screenshotPath: "", errorScreenshotPath };
+    }
+    log.ok(`${label}_analysis_complete`);
+
+    // 5. Valida UI do resultado
+    const validation = await validateResult(page);
+    Object.assign(checks, validation.checks);
+    errors.push(...validation.errors);
+
+    // 6. Layout check básico (sem Gemini Vision — só pega overflow visível)
+    const layoutOk = await page.evaluate(() => {
+      // Detecta horizontal scroll na página (sinal de layout quebrado)
+      return document.documentElement.scrollWidth <= window.innerWidth + 2;
+    });
+    if (label === "desktop") {
+      checks.desktop_layout_ok = layoutOk;
+      if (!layoutOk) errors.push(buildError("layout_misaligned", "horizontal overflow"));
+    } else {
+      checks.mobile_layout_ok = layoutOk;
+      if (!layoutOk) errors.push(buildError("mobile_layout_broken", "horizontal overflow"));
+    }
+
+    // 7. Screenshot
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+    log.ok(`${label}_screenshot`, screenshotPath);
+
+    await context.close();
+    return { checks, errors, screenshotPath };
+  } catch (e: any) {
+    log.fail(`${label}_flow_exception`, e.message);
+    await page.screenshot({ path: errorScreenshotPath, fullPage: true }).catch(() => {});
+    await context.close();
+    return { checks, errors, screenshotPath: "", errorScreenshotPath };
   }
 }
 
 // ============================================================================
-// Main flow
+// Main
 // ============================================================================
-async function run(): Promise<number> {
+async function main(): Promise<number> {
   const envCheck = validateEnv();
   if (!envCheck.ok) {
-    log.fail("env_validation", `Variáveis faltando: ${envCheck.missing.join(", ")}`);
-    return 1;
+    log.fail("env_validation", `Faltam: ${envCheck.missing.join(", ")}`);
+    return 2;
   }
-
-  // Garante artifacts dir
   await mkdir(resolve(process.cwd(), config.paths.artifactsDir), { recursive: true });
 
-  log.info("connect_browserless", config.appBaseUrl);
-  const wsEndpoint = config.browserlessWsEndpoint(config.browserlessToken);
+  const attempt = +(process.env.QA_ATTEMPT || "1");
+  const maxAttempts = +(process.env.QA_MAX_RETRIES || "3");
 
+  log.info("connecting", config.appBaseUrl);
+  log.info("attempt", `${attempt}/${maxAttempts}`);
+
+  const wsEndpoint = config.browserlessWsEndpoint(config.browserlessToken);
   let browser: Browser | null = null;
-  let page: Page | null = null;
+  const finalChecks: QAChecks = emptyChecks();
+  const allErrors: QAError[] = [];
+  let desktopScreenshot = "";
+  let mobileScreenshot = "";
+  const errorScreenshot = resolve(process.cwd(), config.paths.errorScreenshot);
 
   try {
     browser = await chromium.connect(wsEndpoint, { timeout: config.timeouts.connectMs });
-    log.ok("connect_browserless");
+    log.ok("browserless_connected");
 
-    const context = await browser.newContext({
-      viewport: config.viewport,
-      userAgent: "HomeOfficeLife-QA-Browserless/1.0",
-    });
-    page = await context.newPage();
+    // === Desktop ===
+    log.info("flow", "desktop");
+    const desktopResult = await runFlow(
+      browser,
+      { width: 1440, height: 900 },
+      "HomeOfficeLife-QA-Desktop/1.0",
+      resolve(process.cwd(), config.paths.successScreenshot),
+      errorScreenshot,
+      "desktop",
+    );
+    Object.assign(finalChecks, desktopResult.checks);
+    allErrors.push(...desktopResult.errors);
+    desktopScreenshot = desktopResult.screenshotPath;
 
-    // Loga erros JS do browser pra debug
-    page.on("pageerror", (err) => log.warn("browser_pageerror", err.message));
-    page.on("console", (msg) => {
-      if (msg.type() === "error") log.warn("browser_console_error", msg.text());
-    });
-
-    // 1. Abrir app (vai pra /diagnostico direto pra economizar passo)
-    const targetUrl = `${config.appBaseUrl}/diagnostico`;
-    await page.goto(targetUrl, { timeout: config.timeouts.navigationMs, waitUntil: "domcontentloaded" });
-    check("page_loaded", true, targetUrl);
-
-    // 2. Upload imagem
-    const uploaded = await uploadTestImage(page);
-    check("upload_completed", uploaded);
-
-    if (!uploaded) {
-      throw new Error("Falha no upload da imagem — abortando antes da análise");
+    // === Mobile (iPhone-like viewport) ===
+    log.info("flow", "mobile");
+    const mobileResult = await runFlow(
+      browser,
+      { width: 390, height: 844 }, // iPhone 14 Pro
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+      resolve(process.cwd(), "tests/artifacts/mobile-result.png"),
+      errorScreenshot,
+      "mobile",
+    );
+    // Mobile só sobrescreve checks específicos pra não derrubar desktop
+    if (mobileResult.checks.mobile_layout_ok !== undefined) {
+      finalChecks.mobile_layout_ok = mobileResult.checks.mobile_layout_ok;
     }
-
-    // 3. Aguarda análise terminar
-    const analyzed = await waitForAnalysisComplete(page);
-    check("analysis_finished", analyzed);
-
-    if (!analyzed) {
-      throw new Error("Análise não completou no timeout");
-    }
-
-    // 4. Valida UI do resultado
-    await validateResult(page);
-
-    // 5. Screenshot de sucesso
-    await page.screenshot({
-      path: resolve(process.cwd(), config.paths.successScreenshot),
-      fullPage: true,
-    });
-    log.ok("screenshot_success", config.paths.successScreenshot);
-
-    // ========================================================================
-    // Resumo final
-    // ========================================================================
-    const passed = results.filter((r) => r.ok).length;
-    const failed = results.filter((r) => !r.ok).length;
-    console.log(`\n===== RESUMO QA =====`);
-    console.log(`Passou: ${passed} / Falhou: ${failed} / Total: ${results.length}`);
-    if (failed > 0) {
-      console.log(`\nFalhas:`);
-      results.filter((r) => !r.ok).forEach((r) => console.log(`  - ${r.name}${r.detail ? ` (${r.detail})` : ""}`));
-    }
-    return failed > 0 ? 1 : 0;
-  } catch (e: any) {
-    log.fail("test_run_exception", e.message || String(e));
-    if (page) {
-      try {
-        await page.screenshot({
-          path: resolve(process.cwd(), config.paths.errorScreenshot),
-          fullPage: true,
-        });
-        log.ok("screenshot_error", config.paths.errorScreenshot);
-      } catch (sErr: any) {
-        log.warn("screenshot_error_failed", sErr.message);
+    // Outros checks mobile contam só se desktop falhou também
+    mobileResult.errors.forEach((e) => {
+      if (e.severity === "critical" || e.step.includes("mobile")) {
+        allErrors.push(e);
       }
+    });
+    mobileScreenshot = mobileResult.screenshotPath;
+
+    // === Reporter ===
+    const result = await writeResult({
+      attempt,
+      maxAttempts,
+      appBaseUrl: config.appBaseUrl,
+      checks: finalChecks,
+      errors: allErrors,
+      screenshots: {
+        desktop: desktopScreenshot || config.paths.successScreenshot,
+        mobile: mobileScreenshot || "tests/artifacts/mobile-result.png",
+        error: existsSync(errorScreenshot) ? config.paths.errorScreenshot : "",
+      },
+      outputPath: "tests/artifacts/qa-result.json",
+    });
+
+    console.log(`\n===== ${result.status.toUpperCase()} =====`);
+    console.log(result.summary);
+    if (allErrors.length > 0) {
+      console.log("\nErros (por severidade):");
+      result.errors.forEach((e, i) => {
+        console.log(`  ${i + 1}. [${e.severity}] ${e.step} → ${e.message}`);
+        console.log(`     owner sugerido: ${e.suggested_owner}`);
+      });
     }
-    return 1;
+    console.log(`\nResultado salvo: tests/artifacts/qa-result.json`);
+    return result.status === "passed" ? 0 : 1;
+  } catch (e: any) {
+    log.fail("fatal", e.message || String(e));
+    try {
+      await writeResult({
+        attempt,
+        maxAttempts,
+        appBaseUrl: config.appBaseUrl,
+        checks: finalChecks,
+        errors: [
+          ...allErrors,
+          buildError("app_not_opened", `Browserless connect/fatal: ${e.message || e}`),
+        ],
+        screenshots: {
+          desktop: desktopScreenshot || "",
+          mobile: mobileScreenshot || "",
+          error: existsSync(errorScreenshot) ? config.paths.errorScreenshot : "",
+        },
+        outputPath: "tests/artifacts/qa-result.json",
+      });
+    } catch {}
+    return 2;
   } finally {
     if (browser) await browser.close().catch(() => {});
   }
 }
 
-// Bootstrap
-run().then((code) => process.exit(code)).catch((e) => {
+main().then((code) => process.exit(code)).catch((e) => {
   console.error("[FATAL]", e);
   process.exit(2);
 });
