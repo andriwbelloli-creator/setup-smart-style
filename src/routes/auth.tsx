@@ -69,7 +69,9 @@ function AuthPage() {
       email,
       password,
       options: {
-        emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        // /auth/callback chama exchangeCodeForSession; raiz não trata o ?code.
+        emailRedirectTo:
+          typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
         data: {
           display_name: displayName || email.split("@")[0],
           consent_terms_version: POLICY_VERSION,
@@ -107,7 +109,8 @@ function AuthPage() {
       type: "signup",
       email: pendingEmail,
       options: {
-        emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        emailRedirectTo:
+          typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
       },
     });
     setSubmitting(false);
