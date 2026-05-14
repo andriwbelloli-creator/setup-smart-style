@@ -8,14 +8,15 @@ import { ArrowRight } from "lucide-react";
 const filtros = ["Todos", "Dev", "Designer", "Minimalista", "Gamer", "Creator", "Apê pequeno", "MacBook"];
 
 export function Galeria() {
-  // 4 cards no desktop (1 linha) — compactação UX pós-auditoria.
-  // Scroll horizontal no mobile pra não estourar vertical.
-  const [setups, setSetups] = useState<Setup[]>(SETUPS.slice(0, 4));
+  // 6 cards em 2 colunas (3 linhas) no desktop — posicionada acima da Loja
+  // pra puxar inspiração antes do CTA comercial. Mobile mantém scroll
+  // horizontal pra não estourar vertical.
+  const [setups, setSetups] = useState<Setup[]>(SETUPS.slice(0, 6));
 
   useEffect(() => {
     fetchPublishedSetups()
       .then((rows) => {
-        if (rows.length > 0) setSetups([...rows, ...SETUPS].slice(0, 4));
+        if (rows.length > 0) setSetups([...rows, ...SETUPS].slice(0, 6));
       })
       .catch(() => {});
   }, []);
@@ -53,8 +54,8 @@ export function Galeria() {
           ))}
         </div>
 
-        {/* Desktop: grid 1 linha × 4 cols. Mobile: scroll horizontal. */}
-        <div className="mt-6 hidden gap-5 md:grid md:grid-cols-2 lg:grid-cols-4">
+        {/* Desktop: grid 2 cols (3 linhas × 6 cards). Mobile: scroll horizontal. */}
+        <div className="mt-6 hidden gap-5 md:grid md:grid-cols-2">
           {setups.map((s) => <SetupCard key={s.id} s={s} />)}
         </div>
         <div className="mt-6 -mx-4 flex gap-4 overflow-x-auto px-4 pb-3 md:hidden">

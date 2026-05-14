@@ -7,12 +7,12 @@ import { Galeria } from "@/components/landing/Galeria";
 import { AntesDepois } from "@/components/landing/AntesDepois";
 import { CTA, Footer } from "@/components/landing/CTA";
 
-// Ordem atual (paridade com versão Lovable, 2026-05-13):
+// Ordem atual (2026-05-13, ajuste UX):
 //  1. Hero IA com drop-zone (hook de aquisição)
 //  2. AnaliseIA (resultados reais)
-//  3. AntesDepois (prova social visual antes do marketplace)
-//  4. MarketplaceSection (oferta comercial)
-//  5. Galeria (inspiração da comunidade)
+//  3. AntesDepois (prova social visual)
+//  4. Galeria (inspiração — 2 colunas, acima da loja pra puxar inspiração antes do CTA comercial)
+//  5. MarketplaceSection (oferta comercial)
 //  6. CTA Comunidade (newsletter + criar conta)
 //  Orçamento sai da home (segue acessível em /orcamento).
 const orgSchema = {
@@ -66,8 +66,8 @@ function Index() {
         <Hero />
         <AnaliseIA />
         <AntesDepois />
-        <MarketplaceSection />
         <Galeria />
+        <MarketplaceSection />
         <CTA />
       </main>
       <Footer />
