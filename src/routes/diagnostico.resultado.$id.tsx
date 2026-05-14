@@ -102,14 +102,25 @@ function ResultadoAnalise() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="container py-24 text-center">
-          <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
-          <div className="mx-auto mt-6 max-w-md space-y-2 text-sm text-muted-foreground">
-            <p>Estamos analisando seu ambiente...</p>
-            <p className="text-xs">Identificando iluminação, ergonomia, cabos e decoração...</p>
-            <p className="text-xs">Gerando seus touchpoints personalizados...</p>
+        <main id="main-content" className="container mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-14">
+          {/* Loading com skeleton — percepção de velocidade */}
+          <div className="skeleton mb-6 h-4 w-32" />
+          <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
+            <div className="skeleton aspect-[4/3] w-full rounded-3xl" />
+            <div className="space-y-4">
+              <div className="skeleton h-40 w-full rounded-3xl" />
+              <div className="skeleton h-64 w-full rounded-3xl" />
+            </div>
           </div>
-        </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="skeleton h-56 w-full rounded-3xl" />
+            ))}
+          </div>
+          <p className="mt-8 text-center text-xs text-muted-foreground" role="status" aria-live="polite">
+            Analisando ergonomia, iluminação, cabos e decoração...
+          </p>
+        </main>
       </div>
     );
   }

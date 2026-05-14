@@ -114,6 +114,10 @@ function RootComponent() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
+          {/* Skip-to-content — WCAG 2.4.1 (Bypass Blocks). Aparece só com Tab. */}
+          <a href="#main-content" className="skip-to-content">
+            Pular para o conteúdo
+          </a>
           <CanonicalTag />
           <MetaPixel />
           <PWAInstall />
