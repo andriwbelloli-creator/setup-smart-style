@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import {
   AlertTriangle, ShoppingBag, ExternalLink, Info,
 } from "lucide-react";
 import type {
-  Touchpoint, NotRecommendedTouchpoint, Priority, ClaudeResult,
+  Touchpoint, NotRecommendedTouchpoint, Priority, ClaudeResult, RecommendedProduct,
 } from "@/types/homeoffice-analysis";
 
 export const Route = createFileRoute("/diagnostico/resultado/$id")({
@@ -478,9 +479,6 @@ function Field({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
-import type { RecommendedProduct } from "@/types/homeoffice-analysis";
-import { toast } from "sonner";
 
 function ProductCard({
   product,

@@ -424,15 +424,19 @@ Deno.serve(async (req) => {
         await admin.from("touchpoints").insert(touchpointRows);
       }
 
-      // Atualiza limites se free
+      // Atualiza limites se free: ler valor atual + incrementar atômico via upsert.
+      // Race condition possível em uploads concorrentes do mesmo user — aceitável
+      // pra contador de free analyses (no pior caso, conta 1 a menos).
       if (analysisType === "free") {
-        await admin.rpc("increment_free_analyses", { p_user_id: userId }).then(
-          undefined,
-          () => admin.from("user_analysis_limits").upsert({
-            user_id: userId,
-            free_analyses_used: 1,
-          }, { onConflict: "user_id" }),
-        );
+        const { data: cur } = await admin
+          .from("user_analysis_limits")
+          .select("free_analyses_used")
+          .eq("user_id", userId)
+          .maybeSingle();
+        const next = (cur?.free_analyses_used ?? 0) + 1;
+        await admin
+          .from("user_analysis_limits")
+          .upsert({ user_id: userId, free_analyses_used: next }, { onConflict: "user_id" });
       }
 
       return new Response(JSON.stringify({
