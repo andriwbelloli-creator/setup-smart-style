@@ -36,3 +36,7 @@ supabase/.temp/
 
 # Screenshots gerados pelos testes Browserless — não versionar
 tests/artifacts/
+
+# Claude Code local config (preview servers com paths absolutos da máquina)
+.claude/launch.json
+.claude/settings.local.json
