@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, Crown, Bookmark, ArrowLeftRight, Menu, X } from "lucide-react";
+import { Logo } from "@/components/brand/Logo";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import {
@@ -55,17 +56,13 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/85 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/" className="flex items-center gap-3" aria-label="home office live — início">
-          <img
-            src="/logo-home-office-live.png"
-            alt="home office live"
-            className="h-10 w-auto md:h-12"
-          />
-          <span className="hidden border-l border-border pl-3 text-[10px] font-medium uppercase tracking-widest text-muted-foreground md:inline">
-            br · home office
-          </span>
+        <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-85" aria-label="homeoffice.life — início">
+          {/* Mobile: só o ícone (h + sparkle) pra economizar espaço */}
+          <Logo size={32} variant="icon" className="md:hidden" />
+          {/* Desktop: lockup completo */}
+          <Logo size={28} variant="full" className="hidden md:block" />
         </Link>
 
         {/* Desktop nav */}
