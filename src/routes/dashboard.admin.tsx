@@ -435,9 +435,14 @@ function AdminDashboard() {
             <p className="mt-1 text-sm text-muted-foreground">
               Métricas em tempo real da plataforma HomeOfficeLife
             </p>
-            <Link to="/dashboard/admin/analytics" className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">
-              → Ver Analytics dos 4 serviços (eventos)
-            </Link>
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+              <Link to="/dashboard/admin/analytics" className="inline-block text-sm font-semibold text-primary hover:underline">
+                → Analytics dos 4 serviços
+              </Link>
+              <Link to="/dashboard/admin/heatmap" className="inline-block text-sm font-semibold text-primary hover:underline">
+                → Mapa de calor
+              </Link>
+            </div>
           </div>
           <div className="flex gap-2 rounded-full bg-card p-1 shadow-soft">
             {(["7d", "30d", "90d", "all"] as Range[]).map((r) => (

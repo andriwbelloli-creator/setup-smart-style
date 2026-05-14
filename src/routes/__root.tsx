@@ -15,6 +15,9 @@ import { queryClient } from "@/lib/query-client";
 // pra não bloquear o LCP. Cada um vira chunk próprio.
 const CookieBanner    = lazy(() => import("@/components/CookieBanner").then((m) => ({ default: m.CookieBanner })));
 const ExitIntentModal = lazy(() => import("@/components/ExitIntentModal").then((m) => ({ default: m.ExitIntentModal })));
+const FeedbackWidget  = lazy(() => import("@/components/FeedbackWidget").then((m) => ({ default: m.FeedbackWidget })));
+const NPSWidget       = lazy(() => import("@/components/NPSWidget").then((m) => ({ default: m.NPSWidget })));
+import { useHeatmapTracking } from "@/hooks/use-heatmap-tracking";
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/600.css";
@@ -103,6 +106,10 @@ function CanonicalTag() {
 }
 
 function RootComponent() {
+  // Heatmap tracking: click + scroll depth. Hook é no-op se cookie consent
+  // ainda não foi aceito (LGPD).
+  useHeatmapTracking();
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -116,6 +123,8 @@ function RootComponent() {
           <Suspense fallback={null}>
             <CookieBanner />
             <ExitIntentModal />
+            <FeedbackWidget />
+            <NPSWidget />
           </Suspense>
         </AuthProvider>
       </QueryClientProvider>
