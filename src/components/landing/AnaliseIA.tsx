@@ -62,6 +62,10 @@ export function AnaliseIA() {
   // ver preview, esperar análise — mas resultados ficam borrados
   // com CTA de login. Maior conversão de signup que pedir auth antes.
   const [needsLoginToSeeResults, setNeedsLoginToSeeResults] = useState(false);
+  // Guardamos o data URL pra disparar a "análise detalhada" (pipeline novo
+  // com touchpoints + produtos) sem ter que subir a foto de novo.
+  const [lastDataUrl, setLastDataUrl] = useState<string | null>(null);
+  const [deepLoading, setDeepLoading] = useState(false);
 
   const handleFile = async (file?: File) => {
     if (!file) return;
@@ -127,6 +131,7 @@ export function AnaliseIA() {
     setAiTip(null);
     try {
       const dataUrl = await fileToDataUrl(file);
+      setLastDataUrl(dataUrl);
       const { data, error } = await supabase.functions.invoke("analyze-setup", {
         body: { imageBase64: dataUrl },
       });
@@ -185,6 +190,39 @@ export function AnaliseIA() {
     setAiTip(null);
     setAllTips([]);
     setNeedsLoginToSeeResults(false);
+    setLastDataUrl(null);
+  };
+
+  // Análise detalhada: dispara o pipeline novo (Gemini Vision + motor
+  // de regras + product matching) e navega pra /diagnostico/resultado/{id}.
+  // É OPCIONAL — o usuário pode ficar só com o resultado inline.
+  const runDeepAnalysis = async () => {
+    if (!lastDataUrl || !user || deepLoading) return;
+    setDeepLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("analyze-homeoffice-image", {
+        body: {
+          image_base64: lastDataUrl,
+          analysis_type: subscription.canUse("unlimited_analysis") ? "premium" : "free",
+          profile_type: "geral",
+        },
+      });
+      if (error) throw error;
+      if (data?.error || !data?.analysis_id) {
+        throw new Error(data?.error || "Sem analysis_id na resposta");
+      }
+      track("ia_deep_analysis_click", "ia", {
+        tier: subscription.tier,
+        touchpoints_count: data.touchpoints_recomendados?.length ?? 0,
+      });
+      navigate({ to: "/diagnostico/resultado/$id", params: { id: data.analysis_id } });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Erro ao gerar análise detalhada";
+      console.warn("deep analysis:", e);
+      toast.error(msg);
+    } finally {
+      setDeepLoading(false);
+    }
   };
 
   // Compartilhar a nota: Web Share API nativa em mobile, clipboard em desktop.
@@ -318,7 +356,18 @@ export function AnaliseIA() {
               <>
                 <img src={preview} alt="Seu setup" className="absolute inset-0 h-full w-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent" />
-                <div className="relative z-10 ml-auto mr-0 flex items-center gap-2 self-end">
+                <div className="relative z-10 ml-auto mr-0 flex flex-wrap items-center gap-2 self-end">
+                  {analyzed && !needsLoginToSeeResults && lastDataUrl && (
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); runDeepAnalysis(); }}
+                      disabled={deepLoading}
+                      className="flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-xs font-bold text-background shadow-elegant backdrop-blur transition-smooth hover:scale-105 disabled:opacity-60"
+                      aria-label="Análise detalhada com produtos recomendados"
+                    >
+                      <Sparkles className="h-3 w-3" /> {deepLoading ? "Gerando..." : "Análise detalhada"}
+                    </button>
+                  )}
                   {analyzed && !needsLoginToSeeResults && (
                     <button
                       type="button"

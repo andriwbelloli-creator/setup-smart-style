@@ -178,10 +178,18 @@ function ResultadoAnalise() {
         </Link>
 
         <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
-          {/* Imagem analisada */}
-          <div className="rounded-3xl border border-border bg-card shadow-elegant overflow-hidden">
-            <img src={analysis.image_url} alt="Setup analisado" className="w-full object-cover" />
-          </div>
+          {/* Imagem analisada. Skip se for placeholder de upload base64. */}
+          {analysis.image_url && !analysis.image_url.startsWith("data:") ? (
+            <div className="rounded-3xl border border-border bg-card shadow-elegant overflow-hidden">
+              <img src={analysis.image_url} alt="Setup analisado" className="w-full object-cover" />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center rounded-3xl border border-dashed border-border bg-card/40 p-8 text-center">
+              <p className="text-xs text-muted-foreground">
+                Imagem analisada localmente — não foi armazenada no servidor pra privacidade.
+              </p>
+            </div>
+          )}
 
           {/* Score geral */}
           <div className="space-y-4">

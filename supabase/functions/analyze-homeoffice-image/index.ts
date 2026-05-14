@@ -251,12 +251,15 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
+    // Aceita tanto image_url (com fetch server-side) quanto image_base64
+    // (data URL ou base64 puro). Pelo menos um dos dois é obrigatório.
     const imageUrl: string | undefined = body.image_url;
+    const imageBase64Input: string | undefined = body.image_base64 || body.imageBase64;
     const analysisType: "free" | "premium" = body.analysis_type === "premium" ? "premium" : "free";
     const profileType: ProfileType = VALID_PROFILES.includes(body.profile_type) ? body.profile_type : "geral";
 
-    if (!imageUrl || typeof imageUrl !== "string") {
-      return new Response(JSON.stringify({ error: "image_url obrigatório" }), {
+    if (!imageUrl && !imageBase64Input) {
+      return new Response(JSON.stringify({ error: "image_url ou image_base64 obrigatório" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -272,12 +275,13 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const admin = createClient(supabaseUrl, serviceKey);
 
-    // Cria registro inicial em processing
+    // Cria registro inicial em processing (image_url pode ser placeholder
+    // quando o caller mandou base64 inline — frontend renderiza preview local).
     const { data: analysisRow, error: insertErr } = await admin
       .from("analyses")
       .insert({
         user_id: userId,
-        image_url: imageUrl,
+        image_url: imageUrl || "data:base64",
         status: "processing",
         analysis_type: analysisType,
         profile_type: profileType,
@@ -294,8 +298,17 @@ Deno.serve(async (req) => {
     const analysisId = analysisRow.id;
 
     try {
-      // 1. Gemini
-      const imageB64 = await fetchImageBase64(imageUrl);
+      // 1. Gemini. Usa base64 inline se veio do client (zero round-trip);
+      //    senão baixa do image_url via fetch.
+      let imageB64: string;
+      if (imageBase64Input) {
+        // Pode vir como data URL (data:image/jpeg;base64,XXX) ou só XXX
+        imageB64 = imageBase64Input.includes(",")
+          ? imageBase64Input.split(",", 2)[1]
+          : imageBase64Input;
+      } else {
+        imageB64 = await fetchImageBase64(imageUrl!);
+      }
       const geminiResult = await callGeminiVision(imageB64, geminiKey);
 
       // 2. Motor de regras
