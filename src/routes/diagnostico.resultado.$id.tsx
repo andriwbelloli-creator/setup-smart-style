@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
@@ -509,6 +509,41 @@ function ProductCard({
   analysisId?: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const cardRef = useRef<HTMLButtonElement | null>(null);
+  const impressionTracked = useRef(false);
+
+  // Tracking de impressão: insere em product_impressions quando o card aparece
+  // 50%+ visível pela primeira vez. Mede CTR (clicks / impressions) por produto.
+  // Fire-and-forget — não bloqueia UX se falhar.
+  useEffect(() => {
+    if (!product.id || impressionTracked.current) return;
+    const el = cardRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting && entry.intersectionRatio >= 0.5) {
+          impressionTracked.current = true;
+          obs.disconnect();
+          supabase
+            .from("product_impressions" as any)
+            .insert({
+              product_id: product.id,
+              analysis_id: analysisId,
+              touchpoint_id: touchpointId,
+              partner_name: product.partner_name,
+              source: "analysis_result",
+            } as any)
+            .then(({ error }: any) => {
+              if (error) console.warn("[impression]", error.message);
+            });
+        }
+      },
+      { threshold: 0.5 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [product.id, analysisId, touchpointId, product.partner_name]);
 
   async function handleClick(e: React.MouseEvent) {
     e.preventDefault();
@@ -551,6 +586,7 @@ function ProductCard({
 
   return (
     <button
+      ref={cardRef}
       type="button"
       onClick={handleClick}
       disabled={loading}
