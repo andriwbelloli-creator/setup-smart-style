@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import { track, trackPageView } from "@/lib/track";
 import {
   createListing,
@@ -54,17 +55,26 @@ function AnunciarProduto() {
   const [categories, setCategories] = useState<MarketplaceCategory[]>([]);
   const [conditions, setConditions] = useState<MarketplaceCondition[]>([]);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<string>("");
-  const [categoryId, setCategoryId] = useState<string>("");
-  const [conditionId, setConditionId] = useState<string>("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [contact, setContact] = useState("");
+  // Form fields são persistidos em localStorage (TTL 7d) — usuário não perde
+  // o rascunho ao recarregar/navegar. clearAll() é chamado após publicar.
+  const [title, setTitle, clearTitle] = usePersistedState("anunciar:title", "");
+  const [description, setDescription, clearDescription] = usePersistedState("anunciar:description", "");
+  const [price, setPrice, clearPrice] = usePersistedState<string>("anunciar:price", "");
+  const [categoryId, setCategoryId, clearCategoryId] = usePersistedState<string>("anunciar:categoryId", "");
+  const [conditionId, setConditionId, clearConditionId] = usePersistedState<string>("anunciar:conditionId", "");
+  const [city, setCity, clearCity] = usePersistedState("anunciar:city", "");
+  const [state, setState, clearState] = usePersistedState("anunciar:state", "");
+  const [contact, setContact, clearContact] = usePersistedState("anunciar:contact", "");
+  const [authorshipConfirmed, setAuthorshipConfirmed, clearAuthorship] = usePersistedState("anunciar:authorshipConfirmed", false);
+  // Images têm File objects — não dá pra serializar em localStorage.
   const [images, setImages] = useState<PendingImage[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [authorshipConfirmed, setAuthorshipConfirmed] = useState(false);
+
+  const clearAllPersisted = () => {
+    clearTitle(); clearDescription(); clearPrice();
+    clearCategoryId(); clearConditionId();
+    clearCity(); clearState(); clearContact(); clearAuthorship();
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -207,6 +217,7 @@ function AnunciarProduto() {
         image_count: images.length,
       });
       toast.success("Anúncio publicado!");
+      clearAllPersisted();
       navigate({ to: "/marketplace/$id", params: { id: data.id } });
     } catch (err: any) {
       console.error(err);
