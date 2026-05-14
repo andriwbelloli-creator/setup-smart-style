@@ -342,14 +342,11 @@ export function AnaliseIA() {
             ref={dragRef}
             onDragOver={(e) => { e.preventDefault(); }}
             onDrop={(e) => {
-              if (!requireAuthBeforeUpload(e)) return;
+              // handleFile já cuida do path anônimo (preview borrado + CTA login).
               e.preventDefault();
               handleFile(e.dataTransfer.files?.[0]);
             }}
-            onClick={(e) => {
-              if (!requireAuthBeforeUpload(e)) return;
-              inputRef.current?.click();
-            }}
+            onClick={() => inputRef.current?.click()}
             className="group relative flex min-h-[240px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-border bg-card p-6 text-center transition-smooth hover:border-primary hover:bg-primary/5"
           >
             {preview ? (
