@@ -46,8 +46,8 @@ CREATE POLICY "Admins manage QA fixtures"
   ON public.touchpoint_qa_fixtures
   FOR ALL
   TO authenticated
-  USING (EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()))
-  WITH CHECK (EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()));
+  USING (public.has_role(auth.uid(), 'admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'));
 
 
 CREATE TABLE IF NOT EXISTS public.touchpoint_qa_runs (
@@ -77,7 +77,7 @@ CREATE POLICY "Admins read QA runs"
   ON public.touchpoint_qa_runs
   FOR SELECT
   TO authenticated
-  USING (EXISTS (SELECT 1 FROM public.admin_users WHERE user_id = auth.uid()));
+  USING (public.has_role(auth.uid(), 'admin'));
 
 -- Inserts são feitos pelo service_role da edge function, não precisa RLS write.
 
