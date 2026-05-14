@@ -10,7 +10,7 @@ import { fetchSetupBySlug } from "@/lib/setups-db";
 import { trackAffiliateClick, affiliateHref, normalizeStore } from "@/lib/affiliate";
 import { track, trackPageView } from "@/lib/track";
 import { fetchCrossSellMatches, formatBrl, type CrossSellMatch } from "@/lib/marketplace";
-import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Plus, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight, CalendarClock, Building2, Pencil } from "lucide-react";
+import { Heart, Bookmark, Share2, MapPin, Star, ExternalLink, Sparkles, Send, Loader2, Trash2, Radio, ArrowLeftRight, CalendarClock, Building2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLikes, useSaves } from "@/hooks/use-saved";
 import { useAuth } from "@/hooks/use-auth";
@@ -387,15 +387,58 @@ function SetupDetail() {
                     />
                   </label>
                 )}
-                {heroIdx === 0 && setup.products.map((p) => (
-                  <button key={p.id} onClick={() => setActive(p)} style={{ left: `${p.x}%`, top: `${p.y}%` }}
-                    className="group absolute -translate-x-1/2 -translate-y-1/2" aria-label={`Ver produto ${p.name}`}>
-                    <span className="absolute inset-0 -m-1 animate-ping rounded-full bg-accent/60" />
-                    <span className={`relative flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-accent text-accent-foreground shadow-elegant transition-smooth group-hover:scale-110 ${active?.id === p.id ? "ring-4 ring-accent/40" : ""}`}>
-                      <Plus className="h-4 w-4" />
+                {heroIdx === 0 && setup.products.map((p, idx) => {
+                  // Clampa coordenadas pra dentro do quadro (3-97%) e disambígua
+                  // duplicatas com offset pequeno em espiral, pra todo touchpoint
+                  // ficar visível e clicável mesmo com dados ruins.
+                  const clamp = (v: number) => Math.max(3, Math.min(97, v));
+                  const dupCount = setup.products.slice(0, idx).filter(
+                    (q) => q.x === p.x && q.y === p.y,
+                  ).length;
+                  const offset = dupCount * 5; // 5% por duplicata
+                  const left = clamp(p.x + (offset * Math.cos(dupCount * 1.2)));
+                  const top = clamp(p.y + (offset * Math.sin(dupCount * 1.2)));
+                  return (
+                  <a
+                    key={p.id}
+                    href={affiliateHref(p.id)}
+                    target="_blank"
+                    rel="sponsored noopener noreferrer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      trackAffiliateClick({
+                        productId: p.id,
+                        setupId: setup.id,
+                        store: normalizeStore(p.store),
+                      });
+                    }}
+                    onContextMenu={(e) => {
+                      // Botão direito (desktop) ou long-press (mobile via system menu)
+                      // mostra detalhes do produto sem sair pra afiliada.
+                      e.preventDefault();
+                      setActive(p);
+                    }}
+                    style={{ left: `${left}%`, top: `${top}%` }}
+                    className="group absolute -translate-x-1/2 -translate-y-1/2 touch-manipulation"
+                    aria-label={`Comprar ${p.name} em ${p.store}`}
+                    title={`${p.name} · R$ ${p.price.toLocaleString("pt-BR")} · ${p.store}`}
+                  >
+                    {/* Halo pequeno só no hover/active — sem animate-ping que polui */}
+                    <span
+                      className={`absolute inset-0 -m-1.5 rounded-full bg-accent/30 transition-opacity ${
+                        active?.id === p.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                      }`}
+                    />
+                    <span
+                      className={`relative flex h-7 w-7 items-center justify-center rounded-full border-2 border-background bg-accent text-accent-foreground shadow-elegant transition-smooth group-hover:scale-110 sm:h-8 sm:w-8 ${
+                        active?.id === p.id ? "ring-2 ring-accent/50" : ""
+                      }`}
+                    >
+                      <ExternalLink className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     </span>
-                  </button>
-                ))}
+                  </a>
+                  );
+                })}
               </div>
             </div>
             {allImages.length > 1 && (
