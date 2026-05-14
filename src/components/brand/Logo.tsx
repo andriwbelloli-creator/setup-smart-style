@@ -33,7 +33,7 @@ export function Logo({
   variant = "full",
   tone = "brand",
   className,
-  label = "homeoffice.life — home office avaliado por IA",
+  label = "homeofficelife — home office avaliado por IA",
 }: Props) {
   // Cores: brand usa CSS vars (acompanha tema/dark mode). White hardcoded.
   const primary = tone === "white" ? "#FFFFFF" : "var(--color-primary)";
@@ -78,7 +78,7 @@ export function Logo({
           fill={primary}
           letterSpacing="-0.02em"
         >
-          homeoffice<tspan fontWeight={500}>.life</tspan>
+          homeoffice<tspan fontWeight={500}>life</tspan>
         </text>
       )}
     </svg>
