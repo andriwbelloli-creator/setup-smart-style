@@ -449,22 +449,20 @@ function TouchpointCard({ t }: { t: TouchpointRow }) {
         </div>
       </footer>
 
-      {/* HOOK: Product Matching futuro injeta <RecommendedProducts /> aqui */}
+      {/* Product Matching: cards de produtos recomendados, clique vai por
+          track-product-click pra registrar antes de redirecionar. */}
       {t.recommended_products && t.recommended_products.length > 0 && (
         <div className="mt-2 space-y-2 border-t border-border/40 pt-3">
           <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Produtos recomendados
           </h4>
-          {t.recommended_products.map((p, i) => (
-            <a key={i} href={p.url} target="_blank" rel="noopener sponsored"
-               className="flex items-center gap-2 rounded-xl border border-border p-2 text-xs hover:border-primary">
-              {p.image_url && <img src={p.image_url} alt="" className="h-10 w-10 rounded-lg object-cover" />}
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-semibold">{p.product_name}</div>
-                <div className="text-muted-foreground">{p.partner_name} · {p.price_range || (p.price ? `R$ ${p.price}` : "")}</div>
-              </div>
-              <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
-            </a>
+          {t.recommended_products.map((p) => (
+            <ProductCard
+              key={p.id || p.product_name}
+              product={p}
+              touchpointId={t.id}
+              analysisId={t.analysis_id}
+            />
           ))}
         </div>
       )}
@@ -478,6 +476,94 @@ function Field({ label, value }: { label: string; value: string }) {
       <dt className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</dt>
       <dd className="text-sm leading-snug">{value}</dd>
     </div>
+  );
+}
+
+import type { RecommendedProduct } from "@/types/homeoffice-analysis";
+import { toast } from "sonner";
+
+function ProductCard({
+  product,
+  touchpointId,
+  analysisId,
+}: {
+  product: RecommendedProduct;
+  touchpointId?: string;
+  analysisId?: string;
+}) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    try {
+      // Abre a aba ANTES da chamada async — alguns navegadores bloqueiam
+      // window.open chamado em callback de promise (popup blocker).
+      const win = window.open("", "_blank", "noopener,noreferrer");
+      const { data, error } = await supabase.functions.invoke("track-product-click", {
+        body: {
+          product_id: product.id,
+          analysis_id: analysisId,
+          touchpoint_id: touchpointId,
+          source: "analysis_result",
+        },
+      });
+      if (error || !data?.destination_url) {
+        // Fallback: usa URL que veio do backend ao montar a página (já validada lá).
+        // NUNCA usa URL arbitrária do client.
+        if (win) {
+          win.location.href = product.url;
+        } else {
+          window.location.href = product.url;
+        }
+        return;
+      }
+      if (win) {
+        win.location.href = data.destination_url;
+      } else {
+        window.location.href = data.destination_url;
+      }
+    } catch (err) {
+      console.warn("track-product-click:", err);
+      toast.error("Não conseguimos abrir o produto agora. Tenta de novo.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={loading}
+      className="flex w-full items-center gap-2 rounded-xl border border-border p-2 text-left text-xs transition-smooth hover:border-primary hover:bg-primary/5 disabled:opacity-60"
+    >
+      {product.image_url && (
+        <img src={product.image_url} alt="" className="h-10 w-10 rounded-lg object-cover" />
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="truncate font-semibold">{product.product_name}</div>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <span>{product.partner_name}</span>
+          {(product.price_range || product.price) && (
+            <>
+              <span>·</span>
+              <span>{product.price_range || `R$ ${product.price}`}</span>
+            </>
+          )}
+          {product.is_affiliate && (
+            <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+              afiliado
+            </span>
+          )}
+        </div>
+        {product.reason && (
+          <div className="mt-1 line-clamp-2 italic text-muted-foreground/80">"{product.reason}"</div>
+        )}
+      </div>
+      <ExternalLink className={`h-3.5 w-3.5 flex-shrink-0 text-muted-foreground ${loading ? "animate-pulse" : ""}`} />
+    </button>
   );
 }
 

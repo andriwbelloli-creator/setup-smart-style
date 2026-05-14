@@ -22,6 +22,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { applyRules, type GeminiSignals, type ProfileType } from "../_shared/touchpoint-rules.ts";
+import { matchProducts, normalizeTouchpointKey, type MatchedProduct } from "../_shared/product-matching.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -332,11 +333,30 @@ Deno.serve(async (req) => {
         }
       }
 
+      // 4. Product Matching — anexa produtos reais do catálogo a cada touchpoint
+      //    recomendado. Nada de URL inventada — tudo vem da tabela recommended_products.
+      const touchpointsComProdutos = await Promise.all(
+        rulesResult.recommended.map(async (t) => {
+          try {
+            const products = await matchProducts(admin, {
+              touchpoint_key: normalizeTouchpointKey(t.item),
+              profile_type: profileType,
+              commercial_category: t.commercial_category,
+              priority: t.priority,
+            });
+            return { ...t, recommended_products: products };
+          } catch (matchErr) {
+            console.warn(`matchProducts(${t.item}):`, matchErr);
+            return { ...t, recommended_products: [] as MatchedProduct[] };
+          }
+        }),
+      );
+
       const scores = rulesResult.weighted_scores;
       const finalResult = {
         overall_score: scores.overall,
         scores,
-        touchpoints_recomendados: rulesResult.recommended,
+        touchpoints_recomendados: touchpointsComProdutos,
         touchpoints_nao_recomendados: rulesResult.not_recommended,
         observacoes_objetivas: geminiResult.observacoes_objetivas,
         nivel_confianca_geral: geminiResult.nivel_confianca_geral,
