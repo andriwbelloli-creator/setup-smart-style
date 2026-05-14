@@ -61,7 +61,7 @@ export function Navbar() {
           <img
             src="/logo-home-office-live.png"
             alt="home office live"
-            className="h-8 w-auto md:h-9"
+            className="h-10 w-auto md:h-12"
           />
           <span className="hidden border-l border-border pl-3 text-[10px] font-medium uppercase tracking-widest text-muted-foreground md:inline">
             br · home office
