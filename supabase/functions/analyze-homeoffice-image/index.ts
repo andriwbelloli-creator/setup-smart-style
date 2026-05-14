@@ -128,8 +128,9 @@ async function fetchImageBase64(url: string): Promise<string> {
 }
 
 async function callGeminiVision(imageB64: string, apiKey: string): Promise<GeminiSignals> {
+  const model = Deno.env.get("GEMINI_MODEL") ?? "gemini-2.5-pro";
   const r = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -214,7 +215,7 @@ ${CLAUDE_OUTPUT_HINT}`;
       "content-type": "application/json",
     },
     body: JSON.stringify({
-      model: "claude-3-5-sonnet-20241022",
+      model: Deno.env.get("CLAUDE_MODEL") ?? "claude-sonnet-4-6",
       max_tokens: 2000,
       temperature: 0.4,
       system: CLAUDE_SYSTEM,

@@ -215,8 +215,9 @@ Para cada produto que conseguir localizar com confidence >= ${CONFIDENCE_THRESHO
 
 NÃO inclua produtos que não consegue localizar. NÃO invente produtos novos.`;
 
+  const model = Deno.env.get("GEMINI_MODEL") ?? "gemini-2.5-pro";
   const r = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
