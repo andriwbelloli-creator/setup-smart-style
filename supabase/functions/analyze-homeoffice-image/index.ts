@@ -161,8 +161,81 @@ async function callGeminiVision(imageB64: string, apiKey: string): Promise<Gemin
   return parsed as GeminiSignals;
 }
 
-// HOOK PARA FASE 2 (Claude premium) — implementado no próximo commit:
-// async function callClaudePremium(signals, rules, profile, apiKey) { ... }
+// Claude premium — análise consultiva. Só roda quando analysis_type=premium
+// e ANTHROPIC_API_KEY tá configurada. Falha gracefully: análise free sempre
+// passa, premium degrada pra free se Claude estiver fora.
+
+const CLAUDE_SYSTEM = `Você é um consultor especialista em ergonomia, decoração, produtividade e ambientes profissionais de home office. Com base nos sinais visuais detectados e nos touchpoints já definidos pelo motor de regras, gere uma análise premium, humana e consultiva. Não adicione novos touchpoints sem evidência. Organize o plano de ação por prioridade, impacto e investimento. Adapte a linguagem ao perfil profissional informado. Retorne apenas JSON válido, sem markdown ou comentários.`;
+
+const CLAUDE_OUTPUT_HINT = `{
+  "resumo_consultivo": "string — 2 a 3 frases empáticas falando do estado geral do setup",
+  "diagnostico_geral": "string — explicação consultiva do que está bom e do que precisa evoluir",
+  "principais_forcas": ["string"],
+  "principais_problemas": ["string"],
+  "plano_de_acao": [
+    {
+      "ordem": 1,
+      "acao": "string",
+      "motivo": "string",
+      "impacto_esperado": "string",
+      "investimento_estimado": "string",
+      "prioridade": "high | medium | low"
+    }
+  ],
+  "recomendacao_por_perfil": "string",
+  "mensagem_final": "string"
+}`;
+
+async function callClaudePremium(
+  signals: GeminiSignals,
+  rules: ReturnType<typeof applyRules>,
+  profile: ProfileType,
+  apiKey: string,
+): Promise<any> {
+  const userPrompt = `PERFIL PROFISSIONAL: ${profile}
+
+SINAIS DETECTADOS PELA IA VISUAL:
+${JSON.stringify(signals, null, 2)}
+
+TOUCHPOINTS GERADOS PELO MOTOR DE REGRAS (NÃO adicione novos, só refine):
+${JSON.stringify(rules, null, 2)}
+
+Tarefa: produza uma análise premium, consultiva e humana NO FORMATO EXATO abaixo. Use linguagem adaptada ao perfil ${profile}. Ordene o plano de ação por prioridade (high → medium → low) e dentro de cada bloco por impacto/custo.
+
+Formato de retorno (responda APENAS com este JSON):
+${CLAUDE_OUTPUT_HINT}`;
+
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 2000,
+      temperature: 0.4,
+      system: CLAUDE_SYSTEM,
+      messages: [{ role: "user", content: userPrompt }],
+    }),
+  });
+  if (!r.ok) throw new Error(`Claude HTTP ${r.status}: ${await r.text()}`);
+  const data = await r.json();
+  const text = data.content?.[0]?.text || "";
+
+  // Claude às vezes mete um ```json antes/depois apesar do prompt. Extrai.
+  let raw = text.trim();
+  if (raw.startsWith("```")) raw = raw.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+  const parsed = JSON.parse(raw);
+  if (
+    typeof parsed.resumo_consultivo !== "string" ||
+    !Array.isArray(parsed.plano_de_acao)
+  ) {
+    throw new Error("Claude retornou JSON com schema inválido");
+  }
+  return parsed;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -227,9 +300,37 @@ Deno.serve(async (req) => {
       // 2. Motor de regras
       const rulesResult = applyRules(geminiResult, profileType);
 
-      // 3. (Fase 2 — Claude premium) — placeholder; implementaremos no próximo commit
-      const claudeResult: any = null;
-      const claudeFailed = false;
+      // 3. Claude premium (gate: tipo + key disponível + flag premium do usuário)
+      let claudeResult: any = null;
+      let claudeFailed = false;
+      if (analysisType === "premium") {
+        const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
+
+        // Verifica gate de premium ativo (defesa em profundidade — front
+        // também checa, mas backend é a fonte de verdade)
+        const { data: limits } = await admin
+          .from("user_analysis_limits")
+          .select("premium_active, premium_expires_at")
+          .eq("user_id", userId)
+          .maybeSingle();
+        const premiumOk = limits?.premium_active === true &&
+          (!limits.premium_expires_at || new Date(limits.premium_expires_at) > new Date());
+
+        if (!anthropicKey) {
+          console.warn("premium pedido mas ANTHROPIC_API_KEY não configurada");
+          claudeFailed = true;
+        } else if (!premiumOk) {
+          console.warn(`premium pedido mas user ${userId} sem premium_active`);
+          claudeFailed = true;
+        } else {
+          try {
+            claudeResult = await callClaudePremium(geminiResult, rulesResult, profileType, anthropicKey);
+          } catch (claudeErr) {
+            console.warn("Claude premium falhou, degrada pra free:", claudeErr);
+            claudeFailed = true;
+          }
+        }
+      }
 
       const scores = rulesResult.weighted_scores;
       const finalResult = {
@@ -239,7 +340,9 @@ Deno.serve(async (req) => {
         touchpoints_nao_recomendados: rulesResult.not_recommended,
         observacoes_objetivas: geminiResult.observacoes_objetivas,
         nivel_confianca_geral: geminiResult.nivel_confianca_geral,
+        claude_result: claudeResult,
         claude_failed: claudeFailed,
+        analysis_type: analysisType,
       };
 
       // 4. Update analysis + insert touchpoints em lote
