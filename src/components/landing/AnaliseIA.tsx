@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown, Lock, LogIn, Share2 } from "lucide-react";
+import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown, Lock, LogIn, Share2, ExternalLink, Monitor } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -33,6 +33,26 @@ const SCORE_KEY_MAP: Record<string, string> = {
   Estética: "estetica",
   Produtividade: "produtividade",
 };
+
+// Cada tip da IA vem com category (ergonomia/iluminacao/etc) e severidade.
+// Mapa pra termo de busca + label do produto típico que resolve o problema.
+// Link aponta pra Amazon BR com tag de afiliado deskly02-20.
+const AFFILIATE_TAG = "deskly02-20";
+const PRODUCT_HINT: Record<string, { label: string; query: string; Icon: typeof Armchair }> = {
+  ergonomia: { label: "Cadeira ergonômica home office", query: "cadeira ergonomica home office", Icon: Armchair },
+  iluminacao: { label: "Luminária de mesa LED com regulagem", query: "luminaria mesa LED escritorio", Icon: Lightbulb },
+  cabos: { label: "Kit organizador de cabos", query: "organizador de cabos mesa", Icon: Cable },
+  organizacao: { label: "Organizador de mesa", query: "organizador mesa escritorio", Icon: Layout },
+  estetica: { label: "Decoração de home office", query: "decoracao home office quadros plantas", Icon: Sparkles },
+  produtividade: { label: "Monitor 24-27 polegadas Full HD", query: "monitor 24 polegadas full hd", Icon: Monitor },
+};
+
+function productHintFor(category: string) {
+  const hint = PRODUCT_HINT[category.toLowerCase()];
+  if (!hint) return null;
+  const url = `https://www.amazon.com.br/s?k=${encodeURIComponent(hint.query)}&tag=${AFFILIATE_TAG}`;
+  return { ...hint, url };
+}
 
 const fileToDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -342,14 +362,11 @@ export function AnaliseIA() {
             ref={dragRef}
             onDragOver={(e) => { e.preventDefault(); }}
             onDrop={(e) => {
-              if (!requireAuthBeforeUpload(e)) return;
+              // handleFile já cuida do path anônimo (preview borrado + CTA login).
               e.preventDefault();
               handleFile(e.dataTransfer.files?.[0]);
             }}
-            onClick={(e) => {
-              if (!requireAuthBeforeUpload(e)) return;
-              inputRef.current?.click();
-            }}
+            onClick={() => inputRef.current?.click()}
             className="group relative flex min-h-[240px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-border bg-card p-6 text-center transition-smooth hover:border-primary hover:bg-primary/5"
           >
             {preview ? (
@@ -485,24 +502,54 @@ export function AnaliseIA() {
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
-                        {freeTips.map((t, i) => (
-                          <div key={i} className={`flex gap-3 rounded-2xl border-l-4 p-3 ${
+                      <div className="space-y-3">
+                        {freeTips.map((t, i) => {
+                          const prod = productHintFor(t.category);
+                          return (
+                          <div key={i} className={`overflow-hidden rounded-2xl border-l-4 ${
                             t.severity === "alta" ? "border-coral bg-coral/10" :
                             t.severity === "media" ? "border-accent bg-accent/10" :
                             "border-primary bg-primary/10"
                           }`}>
-                            <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-foreground/10 text-xs font-bold">
-                              {i + 1}
-                            </div>
-                            <div>
-                              <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                                {t.category} · {t.severity}
+                            <div className="flex gap-3 p-3">
+                              <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-foreground/10 text-xs font-bold">
+                                {i + 1}
                               </div>
-                              <p className="mt-0.5 text-sm text-foreground">{t.text}</p>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                                  {t.category} · {t.severity}
+                                </div>
+                                <p className="mt-0.5 text-sm text-foreground">{t.text}</p>
+                              </div>
                             </div>
+                            {prod && (
+                              <a
+                                href={prod.url}
+                                target="_blank"
+                                rel="sponsored noopener noreferrer"
+                                onClick={() => track("ia_inline_product_click", "affiliate", {
+                                  category: t.category,
+                                  severity: t.severity,
+                                  store: "amazon_br",
+                                  product_query: prod.query,
+                                })}
+                                className="flex items-center justify-between gap-2 border-t border-foreground/5 bg-background/60 px-3 py-2 text-xs transition-smooth hover:bg-background"
+                              >
+                                <div className="flex min-w-0 items-center gap-2">
+                                  <prod.Icon className="h-4 w-4 flex-shrink-0 text-primary" />
+                                  <span className="truncate">
+                                    <strong className="text-foreground">{prod.label}</strong>
+                                    <span className="text-muted-foreground"> · Amazon BR</span>
+                                  </span>
+                                </div>
+                                <span className="flex flex-shrink-0 items-center gap-1 font-bold text-primary">
+                                  Ver opções <ExternalLink className="h-3 w-3" />
+                                </span>
+                              </a>
+                            )}
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
 
