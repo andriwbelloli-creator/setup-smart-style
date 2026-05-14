@@ -243,7 +243,7 @@ export function AnaliseIA() {
   const worst = [...criterios].sort((a, b) => a.score - b.score)[0];
 
   return (
-    <section id="analise-ia" className="border-y border-border/60 bg-cream py-14 md:py-20">
+    <section id="analise-ia" className="border-y border-border/60 bg-cream py-10 md:py-14">
       {limitReached && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 px-4" onClick={() => setLimitReached(false)}>
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl bg-card p-8 shadow-elegant">
@@ -312,7 +312,7 @@ export function AnaliseIA() {
               if (!requireAuthBeforeUpload(e)) return;
               inputRef.current?.click();
             }}
-            className="group relative flex min-h-[320px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-border bg-card p-6 text-center transition-smooth hover:border-primary hover:bg-primary/5"
+            className="group relative flex min-h-[240px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-border bg-card p-6 text-center transition-smooth hover:border-primary hover:bg-primary/5"
           >
             {preview ? (
               <>

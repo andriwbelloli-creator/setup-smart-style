@@ -46,7 +46,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-mesh">
-      <div className="container mx-auto grid gap-10 px-4 py-14 md:px-6 md:py-20 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:py-24">
+      <div className="container mx-auto grid gap-8 px-4 py-10 md:px-6 md:py-14 lg:grid-cols-[1.1fr_1fr] lg:gap-12 lg:py-16">
         <div className="flex flex-col justify-center animate-fade-up">
           <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary backdrop-blur">
             <span className="relative flex h-2 w-2">
@@ -64,7 +64,7 @@ export function Hero() {
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
             Envie a foto do seu home office e receba <strong className="text-foreground">nota de ergonomia, iluminação, organização</strong> + dicas com produtos reais do Brasil.
           </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="group h-14 gap-2 bg-gradient-hero px-8 text-base font-bold shadow-elegant transition-smooth hover:shadow-glow hover:scale-[1.02]">
               <Link to="/diagnostico">
                 <Upload className="h-5 w-5 transition-transform group-hover:-translate-y-0.5" />
@@ -80,7 +80,7 @@ export function Hero() {
           <p className="mt-3 text-xs text-muted-foreground">
             <strong className="text-foreground">3 análises gratuitas</strong> — sem cartão, sem pegadinha. Resultado em ~30s.
           </p>
-          <div className="mt-10 flex flex-wrap items-center gap-8 text-sm text-muted-foreground">
+          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
             <div>
               <div className="font-display text-2xl font-bold text-foreground">12k+</div>
               <div>Setups avaliados</div>
