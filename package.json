@@ -19,6 +19,7 @@
     "test:e2e": "playwright test",
     "test:e2e:smoke": "playwright test --grep @smoke",
     "test:e2e:ui": "playwright test --ui",
+    "test:browserless": "bun run tests/browserless/homeoffice-analysis-flow.test.ts",
     "test:all": "bun run test && bun run test:e2e:smoke"
   },
   "dependencies": {

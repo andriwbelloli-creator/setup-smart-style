@@ -33,3 +33,6 @@ supabase/.temp/
 *.njsproj
 *.sln
 *.sw?
+
+# Screenshots gerados pelos testes Browserless — não versionar
+tests/artifacts/
