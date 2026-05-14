@@ -17,7 +17,7 @@ import {
 } from "@/lib/marketplace";
 import { useAuth } from "@/hooks/use-auth";
 import { track, trackPageView } from "@/lib/track";
-import { Search, ShoppingBag, Plus, SlidersHorizontal } from "lucide-react";
+import { Search, ShoppingBag, Plus, SlidersHorizontal, Loader2 } from "lucide-react";
 import { EmptyState as SharedEmptyState } from "@/components/ui/empty-state";
 import { SkeletonGrid } from "@/components/ui/skeleton-card";
 

@@ -38,6 +38,10 @@ import { Route as DashboardAfiliadosRouteImport } from './routes/dashboard.afili
 import { Route as DashboardAdminRouteImport } from './routes/dashboard.admin'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as DiagnosticoResultadoIdRouteImport } from './routes/diagnostico.resultado.$id'
+import { Route as DashboardAdminMarketplaceRouteImport } from './routes/dashboard.admin.marketplace'
+import { Route as DashboardAdminHeatmapRouteImport } from './routes/dashboard.admin.heatmap'
+import { Route as DashboardAdminDsRouteImport } from './routes/dashboard.admin.ds'
 import { Route as DashboardAdminAnalyticsRouteImport } from './routes/dashboard.admin.analytics'
 
 const TermosRoute = TermosRouteImport.update({
@@ -185,6 +189,27 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/callback',
   getParentRoute: () => AuthRoute,
 } as any)
+const DiagnosticoResultadoIdRoute = DiagnosticoResultadoIdRouteImport.update({
+  id: '/resultado/$id',
+  path: '/resultado/$id',
+  getParentRoute: () => DiagnosticoRoute,
+} as any)
+const DashboardAdminMarketplaceRoute =
+  DashboardAdminMarketplaceRouteImport.update({
+    id: '/marketplace',
+    path: '/marketplace',
+    getParentRoute: () => DashboardAdminRoute,
+  } as any)
+const DashboardAdminHeatmapRoute = DashboardAdminHeatmapRouteImport.update({
+  id: '/heatmap',
+  path: '/heatmap',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
+const DashboardAdminDsRoute = DashboardAdminDsRouteImport.update({
+  id: '/ds',
+  path: '/ds',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
 const DashboardAdminAnalyticsRoute = DashboardAdminAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -199,7 +224,7 @@ export interface FileRoutesByFullPath {
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
-  '/diagnostico': typeof DiagnosticoRoute
+  '/diagnostico': typeof DiagnosticoRouteWithChildren
   '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
@@ -222,6 +247,10 @@ export interface FileRoutesByFullPath {
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace/': typeof MarketplaceIndexRoute
   '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
+  '/dashboard/admin/ds': typeof DashboardAdminDsRoute
+  '/dashboard/admin/heatmap': typeof DashboardAdminHeatmapRoute
+  '/dashboard/admin/marketplace': typeof DashboardAdminMarketplaceRoute
+  '/diagnostico/resultado/$id': typeof DiagnosticoResultadoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -231,7 +260,7 @@ export interface FileRoutesByTo {
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
-  '/diagnostico': typeof DiagnosticoRoute
+  '/diagnostico': typeof DiagnosticoRouteWithChildren
   '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
@@ -254,6 +283,10 @@ export interface FileRoutesByTo {
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace': typeof MarketplaceIndexRoute
   '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
+  '/dashboard/admin/ds': typeof DashboardAdminDsRoute
+  '/dashboard/admin/heatmap': typeof DashboardAdminHeatmapRoute
+  '/dashboard/admin/marketplace': typeof DashboardAdminMarketplaceRoute
+  '/diagnostico/resultado/$id': typeof DiagnosticoResultadoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -264,7 +297,7 @@ export interface FileRoutesById {
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
-  '/diagnostico': typeof DiagnosticoRoute
+  '/diagnostico': typeof DiagnosticoRouteWithChildren
   '/entrar': typeof EntrarRoute
   '/favoritos': typeof FavoritosRoute
   '/galeria': typeof GaleriaRoute
@@ -287,6 +320,10 @@ export interface FileRoutesById {
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace/': typeof MarketplaceIndexRoute
   '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
+  '/dashboard/admin/ds': typeof DashboardAdminDsRoute
+  '/dashboard/admin/heatmap': typeof DashboardAdminHeatmapRoute
+  '/dashboard/admin/marketplace': typeof DashboardAdminMarketplaceRoute
+  '/diagnostico/resultado/$id': typeof DiagnosticoResultadoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -321,6 +358,10 @@ export interface FileRouteTypes {
     | '/setup/$slug'
     | '/marketplace/'
     | '/dashboard/admin/analytics'
+    | '/dashboard/admin/ds'
+    | '/dashboard/admin/heatmap'
+    | '/dashboard/admin/marketplace'
+    | '/diagnostico/resultado/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -353,6 +394,10 @@ export interface FileRouteTypes {
     | '/setup/$slug'
     | '/marketplace'
     | '/dashboard/admin/analytics'
+    | '/dashboard/admin/ds'
+    | '/dashboard/admin/heatmap'
+    | '/dashboard/admin/marketplace'
+    | '/diagnostico/resultado/$id'
   id:
     | '__root__'
     | '/'
@@ -385,6 +430,10 @@ export interface FileRouteTypes {
     | '/setup/$slug'
     | '/marketplace/'
     | '/dashboard/admin/analytics'
+    | '/dashboard/admin/ds'
+    | '/dashboard/admin/heatmap'
+    | '/dashboard/admin/marketplace'
+    | '/diagnostico/resultado/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -395,7 +444,7 @@ export interface RootRouteChildren {
   CompararRoute: typeof CompararRoute
   ComunidadeRoute: typeof ComunidadeRoute
   ConsultoriaRoute: typeof ConsultoriaRoute
-  DiagnosticoRoute: typeof DiagnosticoRoute
+  DiagnosticoRoute: typeof DiagnosticoRouteWithChildren
   EntrarRoute: typeof EntrarRoute
   FavoritosRoute: typeof FavoritosRoute
   GaleriaRoute: typeof GaleriaRoute
@@ -622,6 +671,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/diagnostico/resultado/$id': {
+      id: '/diagnostico/resultado/$id'
+      path: '/resultado/$id'
+      fullPath: '/diagnostico/resultado/$id'
+      preLoaderRoute: typeof DiagnosticoResultadoIdRouteImport
+      parentRoute: typeof DiagnosticoRoute
+    }
+    '/dashboard/admin/marketplace': {
+      id: '/dashboard/admin/marketplace'
+      path: '/marketplace'
+      fullPath: '/dashboard/admin/marketplace'
+      preLoaderRoute: typeof DashboardAdminMarketplaceRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
+    '/dashboard/admin/heatmap': {
+      id: '/dashboard/admin/heatmap'
+      path: '/heatmap'
+      fullPath: '/dashboard/admin/heatmap'
+      preLoaderRoute: typeof DashboardAdminHeatmapRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
+    '/dashboard/admin/ds': {
+      id: '/dashboard/admin/ds'
+      path: '/ds'
+      fullPath: '/dashboard/admin/ds'
+      preLoaderRoute: typeof DashboardAdminDsRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
     '/dashboard/admin/analytics': {
       id: '/dashboard/admin/analytics'
       path: '/analytics'
@@ -652,12 +729,30 @@ const BlogRouteChildren: BlogRouteChildren = {
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
+interface DiagnosticoRouteChildren {
+  DiagnosticoResultadoIdRoute: typeof DiagnosticoResultadoIdRoute
+}
+
+const DiagnosticoRouteChildren: DiagnosticoRouteChildren = {
+  DiagnosticoResultadoIdRoute: DiagnosticoResultadoIdRoute,
+}
+
+const DiagnosticoRouteWithChildren = DiagnosticoRoute._addFileChildren(
+  DiagnosticoRouteChildren,
+)
+
 interface DashboardAdminRouteChildren {
   DashboardAdminAnalyticsRoute: typeof DashboardAdminAnalyticsRoute
+  DashboardAdminDsRoute: typeof DashboardAdminDsRoute
+  DashboardAdminHeatmapRoute: typeof DashboardAdminHeatmapRoute
+  DashboardAdminMarketplaceRoute: typeof DashboardAdminMarketplaceRoute
 }
 
 const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
   DashboardAdminAnalyticsRoute: DashboardAdminAnalyticsRoute,
+  DashboardAdminDsRoute: DashboardAdminDsRoute,
+  DashboardAdminHeatmapRoute: DashboardAdminHeatmapRoute,
+  DashboardAdminMarketplaceRoute: DashboardAdminMarketplaceRoute,
 }
 
 const DashboardAdminRouteWithChildren = DashboardAdminRoute._addFileChildren(
@@ -672,7 +767,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompararRoute: CompararRoute,
   ComunidadeRoute: ComunidadeRoute,
   ConsultoriaRoute: ConsultoriaRoute,
-  DiagnosticoRoute: DiagnosticoRoute,
+  DiagnosticoRoute: DiagnosticoRouteWithChildren,
   EntrarRoute: EntrarRoute,
   FavoritosRoute: FavoritosRoute,
   GaleriaRoute: GaleriaRoute,

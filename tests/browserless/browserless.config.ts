@@ -15,7 +15,7 @@ export const config = {
 
   /** Endpoint WebSocket do Browserless cloud. Self-hosted muda o host. */
   browserlessWsEndpoint: (token: string) =>
-    `wss://chrome.browserless.io/playwright?token=${token}&launch={"args":["--no-sandbox","--disable-dev-shm-usage"]}`,
+    `wss://production-sfo.browserless.io/chromium/playwright?token=${token}&launch={"args":["--no-sandbox","--disable-dev-shm-usage"]}`,
 
   /** Credenciais de teste — opcional (fluxo público funciona sem login) */
   testUser: {

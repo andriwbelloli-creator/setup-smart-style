@@ -552,7 +552,15 @@ function ProductCard({
     try {
       // Abre a aba ANTES da chamada async — alguns navegadores bloqueiam
       // window.open chamado em callback de promise (popup blocker).
-      const win = window.open("", "_blank", "noopener,noreferrer");
+      // NÃO passar "noopener" aqui: o navegador retorna null quando noopener
+      // é especificado, perdendo a referência da aba. Nulificamos win.opener
+      // manualmente abaixo pra manter o mesmo nível de isolamento.
+      const win = window.open("about:blank", "_blank");
+      if (win) win.opener = null;
+      const navigateTo = (url: string) => {
+        if (win) win.location.href = url;
+        else window.open(url, "_blank", "noopener,noreferrer");
+      };
       const { data, error } = await supabase.functions.invoke("track-product-click", {
         body: {
           product_id: product.id,
@@ -564,18 +572,10 @@ function ProductCard({
       if (error || !data?.destination_url) {
         // Fallback: usa URL que veio do backend ao montar a página (já validada lá).
         // NUNCA usa URL arbitrária do client.
-        if (win) {
-          win.location.href = product.url;
-        } else {
-          window.location.href = product.url;
-        }
+        navigateTo(product.url);
         return;
       }
-      if (win) {
-        win.location.href = data.destination_url;
-      } else {
-        window.location.href = data.destination_url;
-      }
+      navigateTo(data.destination_url);
     } catch (err) {
       console.warn("track-product-click:", err);
       toast.error("Não conseguimos abrir o produto agora. Tenta de novo.");
