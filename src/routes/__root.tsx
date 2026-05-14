@@ -60,12 +60,18 @@ export const Route = createRootRoute({
       { property: "og:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://homeofficelife.com.br" },
+      { property: "og:site_name", content: "HomeOfficeLife" },
       { property: "og:image", content: "https://homeofficelife.com.br/og-image.jpg" },
+      { property: "og:image:width", content: "1920" },
+      { property: "og:image:height", content: "1080" },
+      { property: "og:image:alt", content: "Plataforma HomeOfficeLife — diagnóstico de home office por IA com nota e upgrades" },
+      { property: "og:image:type", content: "image/jpeg" },
       { property: "og:locale", content: "pt_BR" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "HomeOfficeLife — Avalie seu home office com IA" },
       { name: "twitter:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
       { name: "twitter:image", content: "https://homeofficelife.com.br/og-image.jpg" },
+      { name: "twitter:image:alt", content: "Plataforma HomeOfficeLife — diagnóstico de home office por IA com nota e upgrades" },
       // PWA / mobile install metadata
       { name: "theme-color", content: "#0d6e6e" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
@@ -87,7 +93,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
