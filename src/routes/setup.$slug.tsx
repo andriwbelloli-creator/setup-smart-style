@@ -58,7 +58,7 @@ export const Route = createFileRoute("/setup/$slug")({
         "@type": "Organization",
         name: "HomeOfficeLife",
         url: "https://homeofficelife.com.br",
-        logo: { "@type": "ImageObject", url: "https://homeofficelife.com.br/og-image.jpg" },
+        logo: { "@type": "ImageObject", url: "https://homeofficelife.com.br/og-image-v2.png" },
       },
       ...(s.score && {
         aggregateRating: {

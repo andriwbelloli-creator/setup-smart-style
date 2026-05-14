@@ -17,7 +17,7 @@ export const Route = createFileRoute("/avalie-seu-setup")({
       { property: "og:title", content: "Sua mesa de R$ 8 ou R$ 8 mil? A IA da HomeOfficeLife te diz." },
       { property: "og:description", content: "Análise grátis. 6 critérios. Produtos da Amazon BR, ML, Kabum e Magalu." },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://homeofficelife.com.br/og-image.jpg" },
+      { property: "og:image", content: "https://homeofficelife.com.br/og-image-v2.png" },
     ],
   }),
   component: AvalieSeuSetup,
