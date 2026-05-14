@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { ListingCard } from "@/components/marketplace/ListingCard";
 import { fetchMySavedListings, type MarketplaceListing } from "@/lib/marketplace";
-import { Loader2, Bookmark, ArrowLeft } from "lucide-react";
+import { Bookmark, ArrowLeft } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { SkeletonGrid } from "@/components/ui/skeleton-card";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/marketplace/favoritos")({
@@ -63,20 +65,14 @@ function MarketplaceFavoritos() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
+          <SkeletonGrid count={6} columns="sm:grid-cols-2 xl:grid-cols-3" aspectRatio="4/3" />
         ) : listings.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center">
-            <Bookmark className="mx-auto h-10 w-10 text-muted-foreground" />
-            <h3 className="mt-4 font-display text-lg font-semibold">Nenhum favorito ainda</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Clique no ícone de bookmark nos cards do marketplace pra salvar os anúncios aqui.
-            </p>
-            <Button asChild className="mt-5 bg-gradient-hero">
-              <Link to="/marketplace">Explorar marketplace</Link>
-            </Button>
-          </div>
+          <EmptyState
+            icon={Bookmark}
+            title="Nenhum favorito ainda"
+            description="Clique no ícone de bookmark nos cards da loja pra salvar os anúncios aqui."
+            action={{ label: "Explorar loja", href: "/marketplace" }}
+          />
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {listings.map((l) => (

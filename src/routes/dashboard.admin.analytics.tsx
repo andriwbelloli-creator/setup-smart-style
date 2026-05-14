@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft, TrendingUp, BarChart3, Users, MousePointerClick } from "lucide-react";
+import { ArrowLeft, TrendingUp, BarChart3, Users, MousePointerClick } from "lucide-react";
+import { SkeletonGrid } from "@/components/ui/skeleton-card";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export const Route = createFileRoute("/dashboard/admin/analytics")({
   head: () => ({
@@ -88,8 +90,9 @@ function AdminAnalytics() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="container py-32 text-center">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+        <div className="container py-12 md:py-16">
+          <div className="skeleton mx-auto mb-6 h-8 w-48" />
+          <SkeletonGrid count={6} columns="md:grid-cols-3" aspectRatio="3/1" />
         </div>
       </div>
     );
@@ -134,17 +137,13 @@ function AdminAnalytics() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
+          <SkeletonGrid count={4} columns="md:grid-cols-2" aspectRatio="2/1" />
         ) : rows.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center">
-            <BarChart3 className="mx-auto h-10 w-10 text-muted-foreground" />
-            <h3 className="mt-4 font-display text-lg font-semibold">Sem dados ainda</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Eventos começam a aparecer assim que usuários navegarem. Aguarde algumas horas após o deploy.
-            </p>
-          </div>
+          <EmptyState
+            icon={BarChart3}
+            title="Sem dados ainda"
+            description="Eventos começam a aparecer assim que usuários navegarem. Aguarde algumas horas após o deploy."
+          />
         ) : (
           <div className="space-y-8">
             {/* Quick stats */}

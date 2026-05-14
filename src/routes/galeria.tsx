@@ -4,6 +4,7 @@ import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/CTA";
 import { SetupCard } from "@/components/setup/SetupCard";
 import { SetupCardSkeletonGrid } from "@/components/setup/SetupCardSkeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import { SETUPS, STYLES, ROLES, type Setup } from "@/data/setups";
 import { fetchPublishedSetups } from "@/lib/setups-db";
 import { supabase } from "@/integrations/supabase/client";
@@ -219,20 +220,15 @@ function Galeria() {
         {loading ? (
           <SetupCardSkeletonGrid count={9} />
         ) : sorted.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border bg-card p-12 text-center md:p-16">
-            <ImageOff className="mx-auto h-10 w-10 text-muted-foreground" />
-            <h2 className="mt-4 font-display text-xl font-bold">Nenhum setup encontrado</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Os filtros atuais não retornaram nada. Tenta soltar um pouco.
-            </p>
-            <button
-              type="button"
-              onClick={() => { setStyle("Todos"); setRole("Todos"); setBudget("Todos"); setQ(""); }}
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background transition-smooth hover:opacity-90"
-            >
-              Limpar todos os filtros
-            </button>
-          </div>
+          <EmptyState
+            icon={ImageOff}
+            title="Nenhum setup encontrado"
+            description="Os filtros atuais não retornaram nada. Tenta soltar um pouco."
+            action={{
+              label: "Limpar todos os filtros",
+              onClick: () => { setStyle("Todos"); setRole("Todos"); setBudget("Todos"); setQ(""); },
+            }}
+          />
         ) : (
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

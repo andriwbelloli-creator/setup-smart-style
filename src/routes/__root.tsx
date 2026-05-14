@@ -17,6 +17,7 @@ const CookieBanner    = lazy(() => import("@/components/CookieBanner").then((m) 
 const ExitIntentModal = lazy(() => import("@/components/ExitIntentModal").then((m) => ({ default: m.ExitIntentModal })));
 const FeedbackWidget  = lazy(() => import("@/components/FeedbackWidget").then((m) => ({ default: m.FeedbackWidget })));
 const NPSWidget       = lazy(() => import("@/components/NPSWidget").then((m) => ({ default: m.NPSWidget })));
+const OnboardingTour  = lazy(() => import("@/components/OnboardingTour").then((m) => ({ default: m.OnboardingTour })));
 import { useHeatmapTracking } from "@/hooks/use-heatmap-tracking";
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
@@ -129,6 +130,7 @@ function RootComponent() {
             <ExitIntentModal />
             <FeedbackWidget />
             <NPSWidget />
+            <OnboardingTour />
           </Suspense>
         </AuthProvider>
       </QueryClientProvider>

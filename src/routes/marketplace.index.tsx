@@ -17,7 +17,9 @@ import {
 } from "@/lib/marketplace";
 import { useAuth } from "@/hooks/use-auth";
 import { track, trackPageView } from "@/lib/track";
-import { Loader2, Search, ShoppingBag, Plus, SlidersHorizontal } from "lucide-react";
+import { Search, ShoppingBag, Plus, SlidersHorizontal } from "lucide-react";
+import { EmptyState as SharedEmptyState } from "@/components/ui/empty-state";
+import { SkeletonGrid } from "@/components/ui/skeleton-card";
 
 export const Route = createFileRoute("/marketplace/")({
   head: () => ({
@@ -322,15 +324,11 @@ function FilterPill({
 
 function EmptyState() {
   return (
-    <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center">
-      <ShoppingBag className="mx-auto h-10 w-10 text-muted-foreground" />
-      <h3 className="mt-4 font-display text-lg font-semibold">Nenhum anúncio encontrado</h3>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Ajuste os filtros ou seja o primeiro a anunciar nesta categoria.
-      </p>
-      <Button asChild className="mt-5 bg-gradient-hero">
-        <Link to="/marketplace/anunciar">Anunciar meu produto</Link>
-      </Button>
-    </div>
+    <SharedEmptyState
+      icon={ShoppingBag}
+      title="Nenhum anúncio encontrado"
+      description="Ajuste os filtros ou seja o primeiro a anunciar nesta categoria."
+      action={{ label: "Anunciar meu produto", href: "/marketplace/anunciar" }}
+    />
   );
 }
