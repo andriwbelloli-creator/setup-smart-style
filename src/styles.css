@@ -30,6 +30,12 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -67,6 +73,15 @@
 
   --destructive: oklch(0.6 0.22 27);
   --destructive-foreground: oklch(0.98 0.012 85);
+
+  /* Semantic state colors — usar pra success/warning/info messages,
+     badges, status indicators. Mantém harmonia com a paleta principal. */
+  --success: oklch(0.6 0.13 155);            /* verde tea — bom contraste sem ser neon */
+  --success-foreground: oklch(0.98 0.012 85);
+  --warning: oklch(0.72 0.15 75);            /* âmbar quente */
+  --warning-foreground: oklch(0.18 0.025 200);
+  --info: oklch(0.55 0.12 220);              /* azul-acinzentado, calmo */
+  --info-foreground: oklch(0.98 0.012 85);
 
   --border: oklch(0.9 0.015 85);
   --input: oklch(0.9 0.015 85);
@@ -144,10 +159,65 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
+
+  /* Escala tipográfica — major third (1.250) com line-heights
+     calibrados pra leitura confortável em PT-BR.
+     Pode ser sobrescrito por classes Tailwind se precisar. */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  h1 { font-size: clamp(2rem, 5vw, 3.815rem); }
+  h2 { font-size: clamp(1.75rem, 4vw, 3.052rem); }
+  h3 { font-size: clamp(1.5rem, 3vw, 2.441rem); }
+  h4 { font-size: 1.953rem; }
+  h5 { font-size: 1.563rem; }
+  h6 { font-size: 1.25rem; }
+
+  p { line-height: 1.65; }
+  small { line-height: 1.5; }
+
+  /* Focus visível em TODOS interactive elements pra acessibilidade
+     (WCAG 2.4.7). Usa o token --ring pra ficar coerente com a marca.
+     Aparece só com keyboard navigation, não com mouse. */
+  *:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Respeita prefers-reduced-motion — usuários sensíveis a movimento
+     veem o site sem animações/transições. Acessibilidade obrigatória. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Skip-to-content link — visível só com Tab. Permite usuários de
+     teclado pular o navbar e ir direto pro conteúdo. WCAG 2.4.1. */
+  .skip-to-content {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+    font-weight: 600;
+    z-index: 100;
+    border-radius: 0 0 var(--radius-md) 0;
+    transition: top 0.2s ease;
+  }
+  .skip-to-content:focus {
+    top: 0;
   }
 }
 
@@ -174,3 +244,29 @@
 }
 @utility animate-float { animation: float 6s ease-in-out infinite; }
 @utility animate-fade-up { animation: fade-up 0.8s var(--ease-smooth) both; }
+
+/* Skeleton loaders — substituir spinners por percepção de velocidade.
+   Use <div class="skeleton h-8 w-32 rounded-md" /> em vez de Loader2. */
+@keyframes skeleton-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@utility skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary) 0%,
+    var(--color-muted) 50%,
+    var(--color-secondary) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Container narrow — para conteúdo focado em leitura (artigos, forms longos).
+   Max-width ~65 caracteres por linha pra leitura confortável. */
+@utility container-prose {
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
+}
