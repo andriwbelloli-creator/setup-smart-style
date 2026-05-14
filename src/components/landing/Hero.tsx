@@ -5,6 +5,22 @@ import { useRef, useState } from "react";
 import heroImg from "@/assets/hero-setup.webp";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
 import { toast } from "sonner";
+import { useExperiment } from "@/hooks/use-experiment";
+
+// Experimento #1 — copy do CTA primário do Hero.
+// Hipótese: copy mais direto/concreto converte mais que copy ambicioso.
+// Bucket por anon_id (estável entre sessões). Eventos chegam em
+// analytics_events com event_name="experiment_exposure" / "experiment_conversion"
+// + props { experiment: "hero_cta_v1", variant, action }.
+//
+// Análise: ver lift de conversão na rota /dashboard/admin/analytics
+// depois de ~200 cliques distribuídos entre as variantes.
+const HERO_CTA_VARIANTS = ["control", "direct", "outcome"] as const;
+const HERO_CTA_COPY: Record<typeof HERO_CTA_VARIANTS[number], string> = {
+  control: "Avaliar meu setup agora — grátis",
+  direct: "Mandar foto e ver minha nota",
+  outcome: "Descobrir o que falta no meu home office",
+};
 
 // Amazon BR com filtro de categoria `i=computers` — única loja BR que
 // aceita filtro de categoria via query stable. Kabum rejeita facet query.
@@ -43,6 +59,10 @@ async function handleHeroFile(file: File) {
 export function Hero() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const { variant: ctaVariant, convert: convertCta } = useExperiment(
+    "hero_cta_v1",
+    HERO_CTA_VARIANTS,
+  );
 
   return (
     <section className="relative overflow-hidden bg-gradient-mesh">
@@ -66,9 +86,9 @@ export function Hero() {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="group h-14 gap-2 bg-gradient-hero px-8 text-base font-bold shadow-elegant transition-smooth hover:shadow-glow hover:scale-[1.02]">
-              <Link to="/diagnostico">
+              <Link to="/diagnostico" onClick={() => convertCta("clicked_primary_cta")}>
                 <Upload className="h-5 w-5 transition-transform group-hover:-translate-y-0.5" />
-                Avaliar meu setup agora — grátis
+                {HERO_CTA_COPY[ctaVariant]}
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="h-14 gap-2 border-2 px-8 text-base">
