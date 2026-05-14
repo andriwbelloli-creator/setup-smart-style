@@ -22,7 +22,7 @@ import { Loader2, Search, ShoppingBag, Plus, SlidersHorizontal } from "lucide-re
 export const Route = createFileRoute("/marketplace/")({
   head: () => ({
     meta: [
-      { title: "Marketplace de usados · HomeOfficeLife" },
+      { title: "Loja de usados · home office live" },
       {
         name: "description",
         content:

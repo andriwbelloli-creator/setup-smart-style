@@ -711,7 +711,7 @@ function SetupDetail() {
                 >
                   <div>
                     <div className="font-semibold text-foreground">Tem um equipamento igual?</div>
-                    <div className="text-xs text-muted-foreground">Anuncie no Marketplace e venda pra comunidade.</div>
+                    <div className="text-xs text-muted-foreground">Anuncie na Loja e venda pra comunidade.</div>
                   </div>
                   <span className="text-xs font-semibold text-primary">Anunciar →</span>
                 </Link>

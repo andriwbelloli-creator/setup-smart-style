@@ -19,7 +19,7 @@ const linkBase = "text-sm font-medium text-muted-foreground transition-smooth ho
 const MAIN_LINKS = [
   { to: "/diagnostico", label: "Diagnóstico IA" },
   { to: "/galeria", label: "Galeria" },
-  { to: "/marketplace", label: "Marketplace" },
+  { to: "/marketplace", label: "Loja" },
   { to: "/kits", label: "Kits" },
   { to: "/blog", label: "Blog" },
   { to: "/orcamento", label: "Orçamentos" },
@@ -106,7 +106,7 @@ export function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/marketplace/favoritos">
-                      <Bookmark className="mr-2 h-4 w-4" /> Favoritos (marketplace)
+                      <Bookmark className="mr-2 h-4 w-4" /> Favoritos (loja)
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

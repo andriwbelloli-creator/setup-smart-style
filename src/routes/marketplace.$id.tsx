@@ -55,7 +55,7 @@ import {
 export const Route = createFileRoute("/marketplace/$id")({
   head: () => ({
     meta: [
-      { title: "Anúncio · Marketplace · HomeOfficeLife" },
+      { title: "Anúncio · Loja · home office live" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -201,7 +201,7 @@ function ListingDetail() {
             Pode ter sido removido ou estar pausado pelo vendedor.
           </p>
           <Button asChild className="mt-6 bg-gradient-hero">
-            <Link to="/marketplace">Voltar ao Marketplace</Link>
+            <Link to="/marketplace">Voltar à Loja</Link>
           </Button>
         </main>
         <Footer />
@@ -221,7 +221,7 @@ function ListingDetail() {
           to="/marketplace"
           className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Voltar ao Marketplace
+          <ArrowLeft className="h-4 w-4" /> Voltar à Loja
         </Link>
 
         <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr]">

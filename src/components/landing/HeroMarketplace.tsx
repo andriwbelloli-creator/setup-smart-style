@@ -25,7 +25,7 @@ export function HeroMarketplace() {
         <div className="flex flex-col justify-center animate-fade-up">
           <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
             <ShoppingBag className="h-3.5 w-3.5 text-accent" />
-            Marketplace de equipamentos usados · Brasil
+            Loja de equipamentos usados · Brasil
           </div>
 
           <h1 className="font-display text-5xl font-bold leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">

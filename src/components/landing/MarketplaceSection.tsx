@@ -48,7 +48,7 @@ export function MarketplaceSection() {
         <div className="mb-8 flex flex-col items-end justify-between gap-4 md:flex-row">
           <div>
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
-              <ShoppingBag className="h-3 w-3" /> Marketplace · Novidade
+              <ShoppingBag className="h-3 w-3" /> Loja · Novidade
             </div>
             <h2 className="font-display text-3xl font-bold leading-tight tracking-tight md:text-4xl">
               Compre e venda{" "}

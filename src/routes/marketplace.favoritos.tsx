@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/marketplace/favoritos")({
   head: () => ({
     meta: [
-      { title: "Meus favoritos · Marketplace · HomeOfficeLife" },
+      { title: "Meus favoritos · Loja · home office live" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -48,7 +48,7 @@ function MarketplaceFavoritos() {
           to="/marketplace"
           className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Voltar ao Marketplace
+          <ArrowLeft className="h-4 w-4" /> Voltar à Loja
         </Link>
 
         <div className="mb-8 flex items-end justify-between gap-4">

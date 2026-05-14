@@ -31,7 +31,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/marketplace/anunciar")({
   head: () => ({
     meta: [
-      { title: "Anunciar produto · Marketplace · HomeOfficeLife" },
+      { title: "Anunciar produto · Loja · home office live" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -233,7 +233,7 @@ function AnunciarProduto() {
       <main className="container mx-auto px-4 py-12 md:px-6 md:py-16">
         <div className="mb-8 max-w-2xl">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-            <ShoppingBag className="h-3 w-3" /> Marketplace
+            <ShoppingBag className="h-3 w-3" /> Loja
           </div>
           <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
             Anunciar produto usado
@@ -431,7 +431,7 @@ function AnunciarProduto() {
                 <strong className="text-foreground">Confirmo que sou o dono do produto</strong>,
                 que ele está conforme descrito e autorizo a publicação. Veja a{" "}
                 <Link to="/termos" className="text-primary underline">
-                  política do Marketplace
+                  política da Loja
                 </Link>
                 .
               </span>
