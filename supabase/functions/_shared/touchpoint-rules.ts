@@ -156,6 +156,14 @@ const PROFILE_PRIORITY: Record<string, Partial<Record<ProfileType, number>>> = {
     dev: 2, designer: 1, criador: 1, consultor: 1, executivo: 1,
     advogado: 1, medico: 1, professor: 1, psicologo: 1, autonomo: 1, geral: 1,
   },
+  cadeira: {
+    dev: 2, designer: 2, advogado: 1, executivo: 1, consultor: 1,
+    professor: 1, psicologo: 1, medico: 1, criador: 0, autonomo: 1, geral: 1,
+  },
+  mesa: {
+    dev: 1, designer: 1, criador: 1, professor: 1, executivo: 1,
+    advogado: 1, medico: 1, psicologo: 1, consultor: 1, autonomo: 1, geral: 1,
+  },
 };
 
 function adjustPriority(item: string, base: Priority, profile: ProfileType): Priority {
@@ -540,6 +548,188 @@ function ruleWebcamMic(s: GeminiSignals, profile: ProfileType): AnyTouchpoint[] 
 }
 
 // ============================================================================
+// Rules ambientais/ergonomia 2 — cadeira, mesa, painel acústico, dock/hub, prateleira
+// ============================================================================
+
+function ruleCadeira(s: GeminiSignals, profile: ProfileType): AnyTouchpoint[] {
+  const e = s.elementos_detectados;
+  const v = s.sinais_visuais;
+
+  // Sem cadeira detectada — provavelmente perfil incompleto, não recomenda
+  // (foto pode ter sido cortada). Só sugere se há SINAL claro de baixa ergonomia.
+  if (!e.cadeira) {
+    if (!v.possivel_baixa_ergonomia) return [];
+  } else if (!v.possivel_baixa_ergonomia) {
+    return [{ item: "cadeira", is_recommended: false,
+      reason: "Cadeira já presente e sem sinal de problema ergonômico." }];
+  }
+
+  const priority = adjustPriority(
+    "cadeira",
+    v.possivel_baixa_ergonomia ? "high" : "medium",
+    profile,
+  );
+
+  return [{
+    item: "cadeira_ergonomica",
+    category: "ergonomia",
+    commercial_category: "cadeira_ergonomica_mesh",
+    visual_evidence: e.cadeira
+      ? "Cadeira sem suporte lombar visível / postura inadequada"
+      : "Sem cadeira ergonômica adequada no setup",
+    problem: "Cadeira sem suporte lombar provoca dor cervical/lombar em jornadas longas — principal causa de afastamento por LER/DORT.",
+    impact: "Cadeira ergonômica reduz dor crônica, aumenta concentração e estende vida útil profissional.",
+    recommendation: profile === "executivo" || profile === "advogado"
+      ? "Cadeira executiva em couro/courino com apoio cervical e ajuste lombar (Herman Miller Aeron ou DT3 Elise)."
+      : profile === "dev" || profile === "designer"
+      ? "Cadeira ergonômica mesh com 5 ajustes (altura, encosto, apoio lombar, braços, base) — investimento de 5+ anos."
+      : "Cadeira de escritório com apoio lombar ajustável e malha respirável.",
+    priority,
+    confidence: e.cadeira ? 70 : 80,
+    estimated_budget: profile === "executivo" || profile === "advogado"
+      ? "R$ 1500 a R$ 4000"
+      : "R$ 600 a R$ 2200",
+    partners: ["amazon_br", "mercado_livre", "tokstok", "madeira_madeira", "mobly"],
+    is_recommended: true,
+  }];
+}
+
+function ruleMesa(s: GeminiSignals, profile: ProfileType): AnyTouchpoint[] {
+  const e = s.elementos_detectados;
+  const v = s.sinais_visuais;
+
+  if (e.mesa) {
+    return [{ item: "mesa", is_recommended: false,
+      reason: "Mesa já presente no setup." }];
+  }
+  // Se há cadeira mas não mesa, provavelmente improviso (cama, sofá) — recomenda mesa.
+  // Senão, sem sinal claro, não sugere (foto pode ter cortado).
+  if (!e.cadeira && !v.possivel_baixa_ergonomia) return [];
+
+  const priority = adjustPriority("mesa", "high", profile);
+
+  return [{
+    item: "mesa",
+    category: "ergonomia",
+    commercial_category: "mesa_escritorio",
+    visual_evidence: "Setup improvisado sem mesa dedicada (cama, sofá, mesa de jantar)",
+    problem: "Trabalhar sem mesa dedicada gera má postura, encurtamento muscular e baixa produtividade — sinal claro de improviso.",
+    impact: "Mesa dedicada cria limite mental trabalho/descanso, melhora postura e separa contextos físicos.",
+    recommendation: profile === "dev" || profile === "designer"
+      ? "Mesa ampla 140x70cm (ou maior) com altura 72-76cm. Considere mesa regulável se sentar/ficar de pé varia."
+      : "Mesa de escritório 120x60cm em altura 72-76cm. Madeira maciça ou MDF reforçado.",
+    priority,
+    confidence: 75,
+    estimated_budget: "R$ 400 a R$ 2000",
+    partners: ["tokstok", "madeira_madeira", "mobly", "magalu"],
+    is_recommended: true,
+  }];
+}
+
+function rulePainelAcustico(s: GeminiSignals, profile: ProfileType): AnyTouchpoint[] {
+  const v = s.sinais_visuais;
+
+  // Painel acústico não está no schema do Gemini ainda — recomenda baseado em
+  // possivel_problema_acustico + perfil que faz muita chamada/gravação.
+  if (!v.possivel_problema_acustico) return [];
+  const acousticProfiles: ProfileType[] = ["professor", "psicologo", "criador", "advogado", "medico", "consultor", "executivo"];
+  if (!acousticProfiles.includes(profile)) return [];
+
+  const priority = adjustPriority("tapete", "medium", profile);
+
+  return [{
+    item: "painel_acustico",
+    category: "acustica",
+    commercial_category: "painel_acustico_decorativo",
+    visual_evidence: "Paredes nuas + piso duro detectados — eco provável em chamadas/gravações",
+    problem: "Eco prejudica clareza da voz, fadiga ouvinte e reduz qualidade percebida do conteúdo/atendimento.",
+    impact: profile === "criador" || profile === "professor"
+      ? "Painéis absorvem reverberação — áudio profissional sem precisar de pós-produção."
+      : "Reduz eco em atendimentos online, melhora discrição da conversa e qualidade percebida.",
+    recommendation: profile === "criador"
+      ? "8-12 painéis acústicos 30x30cm dispostos em padrão hexagonal atrás da câmera + tapete grande."
+      : "4-6 painéis acústicos decorativos (espuma ou fibra mineral) na parede atrás do microfone.",
+    priority,
+    confidence: 60,
+    estimated_budget: profile === "criador" ? "R$ 300 a R$ 1500" : "R$ 150 a R$ 500",
+    partners: ["amazon_br", "mercado_livre", "leroy_merlin", "shopee"],
+    is_recommended: true,
+  }];
+}
+
+function ruleDockHub(s: GeminiSignals, profile: ProfileType): AnyTouchpoint[] {
+  const e = s.elementos_detectados;
+  const v = s.sinais_visuais;
+
+  // Dock/hub faz sentido se: tem notebook + muitos cabos visíveis +
+  // não tem dock já. Sinal forte = cabos_visiveis + cabos_aparentes simultâneos.
+  if (e.dock_ou_hub) {
+    return [{ item: "dock_hub", is_recommended: false,
+      reason: "Dock/hub já presente no setup." }];
+  }
+  if (!e.notebook) return [];
+  if (!e.cabos_visiveis && !v.cabos_aparentes) return [];
+
+  const priority = adjustPriority("organizador_cabos", "medium", profile);
+
+  return [{
+    item: "dock_hub",
+    category: "produtividade",
+    commercial_category: "dock_usb_c",
+    visual_evidence: "Notebook com múltiplos cabos saindo direto (HDMI, USB, ethernet, power)",
+    problem: "Conectar/desconectar cabos avulsos várias vezes por dia desgasta as portas USB-C e aumenta poluição visual.",
+    impact: "Dock single-cable libera todas as portas com um único conector — setup mais limpo e portas duram mais.",
+    recommendation: profile === "dev" || profile === "designer"
+      ? "Dock USB-C com PD 100W, 2x HDMI, 4x USB-A, Ethernet Gigabit (CalDigit TS4, Anker 575)."
+      : "Hub USB-C 7-em-1 com HDMI 4K, 3x USB, leitor SD, PD passthrough.",
+    priority,
+    confidence: 70,
+    estimated_budget: profile === "dev" || profile === "designer"
+      ? "R$ 800 a R$ 3000 (dock thunderbolt)"
+      : "R$ 150 a R$ 400 (hub USB-C)",
+    partners: ["amazon_br", "kalunga", "mercado_livre", "magalu"],
+    is_recommended: true,
+  }];
+}
+
+function rulePrateleira(s: GeminiSignals, profile: ProfileType): AnyTouchpoint[] {
+  const e = s.elementos_detectados;
+  const v = s.sinais_visuais;
+
+  if (e.prateleira) {
+    return [{ item: "prateleira", is_recommended: false,
+      reason: "Prateleira já presente no setup." }];
+  }
+  // Prateleira é mais leve que estante — bom pra setups pequenos sem
+  // espaço pra estante grande. Recomenda se parede vazia + falta de
+  // armazenamento mas SEM espaço pra estante (apê pequeno).
+  if (e.estante) {
+    return [{ item: "prateleira", is_recommended: false,
+      reason: "Estante já provê o armazenamento necessário." }];
+  }
+  if (!v.parede_vazia && !v.falta_de_armazenamento) return [];
+
+  const priority = adjustPriority("estante", "low", profile);
+
+  return [{
+    item: "prateleira",
+    category: "armazenamento_leve",
+    commercial_category: "prateleira_parede",
+    visual_evidence: "Parede vazia / falta de armazenamento, mas sem espaço pra estante completa",
+    problem: "Sem armazenamento, mesa acumula objetos e perde área útil de trabalho.",
+    impact: "Prateleiras de parede liberam mesa, organizam itens decorativos e preenchem fundo da câmera.",
+    recommendation: profile === "criador" || profile === "designer"
+      ? "Prateleiras flutuantes em madeira clara, 2-3 unidades em altura escalonada (galeria gallery wall)."
+      : "Par de prateleiras de parede em L de aço/madeira pra livros e itens decorativos.",
+    priority,
+    confidence: 65,
+    estimated_budget: "R$ 80 a R$ 350",
+    partners: ["leroy_merlin", "madeira_madeira", "mobly", "amazon_br"],
+    is_recommended: true,
+  }];
+}
+
+// ============================================================================
 // Score derivado: usa scores do Gemini + pequenos ajustes do motor
 // ============================================================================
 
@@ -581,6 +771,12 @@ export function applyRules(signals: GeminiSignals, profile: ProfileType): RulesR
     ...ruleTapete(signals, profile),
     ...ruleQuadro(signals, profile),
     ...ruleWebcamMic(signals, profile),
+    // Touchpoints novos — cadeira, mesa, painel acústico, dock/hub, prateleira
+    ...ruleCadeira(signals, profile),
+    ...ruleMesa(signals, profile),
+    ...rulePainelAcustico(signals, profile),
+    ...ruleDockHub(signals, profile),
+    ...rulePrateleira(signals, profile),
   ];
 
   const recommended = all.filter((t): t is Touchpoint => t.is_recommended === true);
