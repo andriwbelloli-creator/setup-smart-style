@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles, LogOut, User, Crown, Bookmark, ArrowLeftRight, Menu, X } from "lucide-react";
+import { LogOut, User, Crown, Bookmark, ArrowLeftRight, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import {
@@ -57,14 +57,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-hero text-primary-foreground shadow-elegant">
-            <Sparkles className="h-4 w-4" />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-lg font-bold tracking-tight">HomeOfficeLife</span>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">br · home office</span>
-          </div>
+        <Link to="/" className="flex items-center gap-3" aria-label="home office live — início">
+          <img
+            src="/logo-home-office-live.png"
+            alt="home office live"
+            className="h-7 w-auto md:h-8"
+          />
+          <span className="hidden border-l border-border pl-3 text-[10px] font-medium uppercase tracking-widest text-muted-foreground md:inline">
+            br · home office
+          </span>
         </Link>
 
         {/* Desktop nav */}
