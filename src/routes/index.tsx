@@ -7,6 +7,12 @@ import { Galeria } from "@/components/landing/Galeria";
 import { AntesDepois } from "@/components/landing/AntesDepois";
 import { FaqSection } from "@/components/landing/FaqSection";
 import { CTA, Footer } from "@/components/landing/CTA";
+import { lazy, Suspense } from "react";
+
+// Onda 4 — nova homepage atrás de ?new=1. Lazy pra não inflar o bundle principal.
+const NewHomepageWrapper = lazy(
+  () => import("@/components/landing/__new/NewHomepageWrapper"),
+);
 
 // Ordem atual (2026-05-13, ajuste UX):
 //  1. Hero IA com drop-zone (hook de aquisição)
@@ -60,6 +66,20 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  // Feature flag: ?new=1 mostra nova homepage (Onda 4).
+  // Padrão mostra homepage legacy — prod não é afetada.
+  const showNew =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("new") === "1";
+
+  if (showNew) {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-background" />}>
+        <NewHomepageWrapper />
+      </Suspense>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

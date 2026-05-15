@@ -270,3 +270,77 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+/* ============================================================
+   Tokens adicionais do handoff — Homepage Redesign (Onda 1)
+   Adicionados sem substituir nenhum token existente.
+   ============================================================ */
+
+/* Brand palette aliases (hex, para portabilidade em CSS arbitrário) */
+:root {
+  --brand-teal-900: #0E3D3F;
+  --brand-teal-700: #155659;
+  --brand-teal-500: #2A8E8E;
+  --brand-teal-300: #6FB8B5;
+  --brand-coral-500: #F36458;
+  --brand-coral-300: #F9A89A;
+  --brand-wood-500: #B5854A;
+  --brand-wood-300: #D9B58A;
+  --brand-cream-50: #FBF8F1;
+  --brand-cream-100: #F7F4EC;
+  --brand-ink-900: #0F1F22;
+  --brand-ink-600: #54676B;
+
+  /* Type scale CSS vars (espelha a escala já em uso no @layer base) */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.563rem;
+  --text-3xl:  1.953rem;
+  --text-4xl:  2.441rem;
+  --text-5xl:  3.052rem;
+  --text-6xl:  3.815rem;
+
+  /* Spacing vars (espelham o sistema de 4px do Tailwind) */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Motion vars adicionais */
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+}
+
+/* Dark mode — complementa o bloco .dark existente */
+.dark {
+  --brand-cream-50:  #1A2C2E;
+  --brand-cream-100: #1E3335;
+  --brand-ink-900:   #F0EDE5;
+  --brand-ink-600:   #9BAAAD;
+}
+
+/* Eyebrow utility — texto de seção estilo "label" acima de títulos */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+/* Animação ping (usada no pulsing dot do Hero) */
+@keyframes ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+@utility animate-ping { animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; }
