@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown, Lock, LogIn, Share2, ExternalLink, Monitor } from "lucide-react";
+import { Upload, Activity, Lightbulb, Cable, Layout, Sparkles, Armchair, RotateCcw, Crown, Lock, LogIn, Share2, ExternalLink, Monitor, Smile, Video, Maximize2, Wallet } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -23,6 +23,12 @@ const baseCriterios: Crit[] = [
   { icon: Layout, label: "Organização", score: 8.0, color: "text-primary", tip: "Mesa limpa. Adicione um organizador de canetas." },
   { icon: Sparkles, label: "Estética", score: 9.4, color: "text-accent", tip: "Paleta coesa, ótimo equilíbrio visual." },
   { icon: Activity, label: "Produtividade", score: 7.9, color: "text-primary", tip: "Adicione segundo monitor pra +15% de eficiência." },
+  // 4 eixos novos (audit-prompt #1). Edge function ainda devolve os 6 acima;
+  // até o redeploy, esses 4 caem nos defaults abaixo.
+  { icon: Smile, label: "Conforto", score: 8.2, color: "text-primary", tip: "Apoio lombar + altura da cadeira ok pra jornada longa." },
+  { icon: Video, label: "Pro em vídeo", score: 7.5, color: "text-primary", tip: "Câmera na altura dos olhos + luz frontal seria upgrade pra calls." },
+  { icon: Maximize2, label: "Espaço", score: 8.6, color: "text-accent", tip: "Boa relação mesa/objeto. Espaço útil bem aproveitado." },
+  { icon: Wallet, label: "Custo-benefício", score: 8.4, color: "text-primary", tip: "Investimento equilibrado. Próximos R$ resolvem o maior gargalo." },
 ];
 
 const SCORE_KEY_MAP: Record<string, string> = {
@@ -32,6 +38,10 @@ const SCORE_KEY_MAP: Record<string, string> = {
   Organização: "organizacao",
   Estética: "estetica",
   Produtividade: "produtividade",
+  Conforto: "conforto",
+  "Pro em vídeo": "video_profissional",
+  Espaço: "aproveitamento_espaco",
+  "Custo-benefício": "custo_beneficio",
 };
 
 // Cada tip da IA vem com category (ergonomia/iluminacao/etc) e severidade.

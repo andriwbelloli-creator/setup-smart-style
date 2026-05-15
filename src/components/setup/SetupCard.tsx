@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Heart, MapPin, Bookmark, ArrowRight, Trash2, Flame } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Heart, MapPin, Bookmark, ArrowRight, Trash2, Flame, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { Setup } from "@/data/setups";
@@ -27,6 +27,7 @@ export function SetupCard({
   const saved = saves.has(s.id);
   const { isAdmin } = useIsAdmin();
   const [deleting, setDeleting] = useState(false);
+  const navigate = useNavigate();
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -144,8 +145,21 @@ export function SetupCard({
         <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
           <MapPin className="h-3 w-3" /> {s.city}
         </div>
+        {/* "Montar parecido" — touchpoint de conversão. Botão (não anchor)
+            pra evitar nesting <a> dentro do <Link> do card. */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate({ to: "/orcamento", search: { from: s.slug } as any });
+          }}
+          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-xs font-semibold text-primary transition-smooth hover:border-primary hover:bg-primary/10"
+        >
+          <Sparkles className="h-3.5 w-3.5" /> Quero montar parecido
+        </button>
         {featured && (
-          <div className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-hero px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth group-hover:scale-[1.02]">
+          <div className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-hero px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-elegant transition-smooth group-hover:scale-[1.02]">
             Ver setup completo <ArrowRight className="h-4 w-4" />
           </div>
         )}

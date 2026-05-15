@@ -20,6 +20,7 @@ const linkBase = "text-sm font-medium text-muted-foreground transition-smooth ho
 const MAIN_LINKS = [
   { to: "/diagnostico", label: "Diagnóstico IA" },
   { to: "/galeria", label: "Galeria" },
+  { to: "/categorias", label: "Categorias" },
   { to: "/marketplace", label: "Loja" },
   { to: "/kits", label: "Kits" },
   { to: "/blog", label: "Blog" },

@@ -2,10 +2,11 @@
 /* eslint-disable */
 
 const SETUPS = [
-  { img: "../../assets/setup-minimal.webp", title: "Apê branco minimalista", author: "Ana Pereira", role: "Designer", city: "São Paulo, SP", styles: ["Minimalista", "MacBook"], score: 9.1, budget: 4200, likes: 312, saves: 89 },
-  { img: "../../assets/setup-creator.webp", title: "Cantinho do criador",     author: "João Lima",   role: "Streamer", city: "Curitiba, PR", styles: ["Creator", "Streaming"], score: 8.4, budget: 7890, likes: 188, saves: 56 },
-  { img: "../../assets/setup-gamer.webp",   title: "Setup gamer compacto",    author: "Lucas Reis",  role: "Dev",      city: "Belo Horizonte, MG", styles: ["Gamer", "Dev"], score: 8.7, budget: 6500, likes: 244, saves: 71 },
-  { img: "../../assets/setup-compact.webp", title: "Apê pequeno funcional",   author: "Carla Souza", role: "PM",       city: "Rio de Janeiro, RJ", styles: ["Apê pequeno"], score: 7.9, budget: 2400, likes: 132, saves: 41 },
+  { img: "../../assets/hero-setup.webp",    title: "Dev teal com mesa de madeira",  author: "Rafael Costa",  role: "Dev Full Stack", city: "São Paulo, SP",        styles: ["Dev", "Minimalista"],   score: 9.5, budget: 5200, likes: 412, saves: 128 },
+  { img: "../../assets/setup-after.webp",   title: "Setup completo com webcam",     author: "Mariana Alves", role: "Designer",       city: "Porto Alegre, RS",      styles: ["Designer", "Creator"],  score: 9.2, budget: 6800, likes: 356, saves: 94 },
+  { img: "../../assets/setup-minimal.webp", title: "Apê branco minimalista",        author: "Ana Pereira",   role: "Designer",       city: "São Paulo, SP",         styles: ["Minimalista", "MacBook"], score: 9.0, budget: 4200, likes: 312, saves: 89 },
+  { img: "../../assets/setup-compact.webp", title: "Cantinho compacto com plantas",  author: "Carla Souza",   role: "PM",             city: "Rio de Janeiro, RJ",    styles: ["Apê pequeno"],         score: 8.5, budget: 2400, likes: 188, saves: 56 },
+  { img: "../../assets/setup-gamer.webp",   title: "Setup gamer dual monitor",      author: "Lucas Reis",    role: "Dev",            city: "Belo Horizonte, MG",    styles: ["Gamer", "Dev"],        score: 8.3, budget: 6500, likes: 244, saves: 71 },
 ];
 
 const FILTROS = ["Todos", "Dev", "Designer", "Minimalista", "Gamer", "Creator", "Apê pequeno", "MacBook"];
