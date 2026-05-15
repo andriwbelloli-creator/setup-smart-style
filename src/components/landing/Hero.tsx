@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { Upload, Star, ArrowRight, Zap, ExternalLink, ImageIcon } from "lucide-react";
+import { Upload, Star, ArrowRight, Zap, ExternalLink, ImageIcon, CheckCircle2 } from "lucide-react";
 import { useRef, useState } from "react";
 import heroImg from "@/assets/hero-setup.webp";
 import { decorateAffiliateUrl } from "@/lib/affiliate";
@@ -97,8 +97,24 @@ export function Hero() {
               </Link>
             </Button>
           </div>
+          {/* Trust signals — chips com check verde pra cortar fricção de cadastro */}
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            {[
+              "Sem cartão",
+              "Fotos privadas",
+              "Resultado em 30s",
+            ].map((label) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary"
+              >
+                <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                {label}
+              </span>
+            ))}
+          </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            <strong className="text-foreground">3 análises gratuitas</strong> — sem cartão, sem pegadinha. Resultado em ~30s.
+            <strong className="text-foreground">3 análises gratuitas</strong> · cancele quando quiser.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
             <div>

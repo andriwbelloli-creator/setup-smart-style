@@ -5,6 +5,7 @@ import { AnaliseIA } from "@/components/landing/AnaliseIA";
 import { MarketplaceSection } from "@/components/landing/MarketplaceSection";
 import { Galeria } from "@/components/landing/Galeria";
 import { AntesDepois } from "@/components/landing/AntesDepois";
+import { FaqSection } from "@/components/landing/FaqSection";
 import { CTA, Footer } from "@/components/landing/CTA";
 
 // Ordem atual (2026-05-13, ajuste UX):
@@ -68,6 +69,7 @@ function Index() {
         <AntesDepois />
         <Galeria />
         <MarketplaceSection />
+        <FaqSection />
         <CTA />
       </main>
       <Footer />
