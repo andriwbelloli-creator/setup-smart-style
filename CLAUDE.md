@@ -30,6 +30,8 @@ Sempre use o skill em `.claude/skills/homeofficelife-design/` para qualquer tare
 3. Copie assets de `assets/` (logo, fotos, ícones)
 4. Referência os componentes em `preview/` e `ui_kits/` como base visual
 5. **Antes de qualquer tela com diagnóstico, produtos, kits ou galeria, leia `product-rules.md`** — mapa obrigatório problema → produto
+6. **Antes de qualquer ajuste mobile (web ou PWA), leia `mobile-ux.md`** — wireframes ASCII, bottom nav, touch targets, regras P1-P4
+7. **Antes de seedar setups novos ou exemplos, consulte `setups-referencia.md`** — 30 setups curados com touchpoints corretos e produtos válidos por perfil
 
 ### Regras visuais obrigatórias:
 - Background: cream `#FBF8F1`, nunca branco puro

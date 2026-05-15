@@ -17,3 +17,5 @@ REGRAS OBRIGATÓRIAS:
 3. Touchpoints: Seguir o mapa de touchpoints em `product-rules.md` — cada fase da jornada (antes da análise, resultado, pós-resultado, galeria, wishlist, marketplace, kits) tem regras específicas de o que mostrar e o que NÃO mostrar.
 
 4. Produtos proibidos: Nunca recomendar objetos decorativos, colecionáveis, peças raras, itens artesanais ou produtos sem disponibilidade fácil no Brasil. Apenas itens funcionais, úteis e replicáveis.
+
+5. Mobile first: SEMPRE ler `mobile-ux.md` antes de criar qualquer tela. A versão mobile é a PRINCIPAL experiência. Bottom nav com 5 itens, CTAs de 52px, cards empilhados, filtros em chips, sem tabelas, sem hover — apenas press states.
