@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Modal/Dialog</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display:flex; align-items:center; justify-content:center; min-height: 220px; }
+  .scrim { position:absolute; inset:0; background: oklch(0.18 0.025 200 / 0.5); backdrop-filter: blur(4px); }
+  .dialog { position:relative; width:420px; max-width:90%; background: var(--card); border-radius: 24px; padding: 28px; box-shadow: var(--shadow-elegant); border:1px solid var(--border); z-index:1; }
+  .close { position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background: var(--card); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; color: var(--brand-ink-600); }
+  h3 { font-family: var(--font-display); font-weight:700; font-size:18px; color: var(--brand-ink-900); margin:0 0 6px; }
+  p { font-size:13px; color: var(--brand-ink-600); margin:0 0 16px; line-height:1.5; }
+  .btns { display:flex; gap:8px; justify-content: flex-end; }
+  .btn { height:36px; padding: 0 16px; border-radius: 10px; border:none; font-family:var(--font-sans); font-weight:600; font-size:13px; cursor:pointer; }
+  .btn.primary { background: var(--primary); color: white; }
+  .btn.outline { background: var(--card); color: var(--foreground); border: 1px solid var(--border); }
+</style></head>
+<body>
+  <div class="scrim"></div>
+  <div class="dialog">
+    <div class="close">✕</div>
+    <h3>Publicar seu setup?</h3>
+    <p>Seu setup ficará visível na galeria da comunidade. Você pode remover a qualquer momento.</p>
+    <div class="btns">
+      <button class="btn outline">Cancelar</button>
+      <button class="btn primary">Publicar</button>
+    </div>
+  </div>
+</body></html>

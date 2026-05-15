@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Colors · Gradients</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card { border-radius: 18px; padding: 18px; min-height: 156px; display:flex; flex-direction:column; justify-content: flex-end; gap: 4px; }
+  .lbl { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .sub { font-family: var(--font-mono); font-size: 11px; opacity: .85; }
+  .dark { color: white; }
+  .hero { background: var(--gradient-hero); }
+  .warm { background: var(--gradient-warm); }
+  .mesh { background: var(--gradient-mesh), var(--brand-cream-50); }
+</style></head>
+<body>
+  <div class="card hero dark"><div class="lbl">--gradient-hero</div><div class="sub">teal 195° → 180°</div></div>
+  <div class="card warm dark"><div class="lbl">--gradient-warm</div><div class="sub">coral → wood</div></div>
+  <div class="card mesh"><div class="lbl" style="color:var(--brand-teal-900);">--gradient-mesh</div><div class="sub" style="color:var(--brand-ink-600);">soft radial dots · backgrounds</div></div>
+</body></html>

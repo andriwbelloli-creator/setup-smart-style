@@ -20,14 +20,47 @@ This is the **HomeOfficeLife** (setup-smart-style) repo — a Brazilian platform
 | Kits | `/kits` | Curated shopping lists com links afiliados |
 | Premium | `/premium` | R$ 9,90/mês — análises ilimitadas |
 
-## Diretivas de design
+## Design System — HomeOfficeLife
 
-**Sempre que estiver criando ou ajustando UI, slides, mocks, prototypes, landing pages ou produção de visual:**
+Sempre use o skill em `.claude/skills/homeofficelife-design/` para qualquer tarefa de UI, design ou front-end.
 
-1. **Use a skill `homeofficelife-design`** em `.claude/skills/homeofficelife-design/`. Lê o `README.md` dela primeiro.
-2. Cores oficiais: teal `#0E3D3F` (primary), coral `#F36458` (accent), cream `#F7F5F0` (background neutro). Não inventar paleta.
-3. Tipografia: Space Grotesk (display) + DM Sans (body). Já carregadas via `@fontsource`.
-4. Logo: `homeoffice` + `life` em peso mais leve. Use o componente `<Logo>` em `src/components/brand/Logo.tsx`.
+### Antes de criar qualquer interface:
+1. Leia o `README.md` do skill (contexto do produto, tom de voz, visual foundations)
+2. Use os tokens de `colors_and_type.css` (cores, tipografia, espaçamento, sombras, gradientes)
+3. Copie assets de `assets/` (logo, fotos, ícones)
+4. Referência os componentes em `preview/` e `ui_kits/` como base visual
+
+### Regras visuais obrigatórias:
+- Background: cream `#FBF8F1`, nunca branco puro
+- Primary: deep teal (oklch 0.42 0.07 195)
+- Accent: coral `#F36458` — só para IA e momentos premium
+- Títulos: Space Grotesk 700, letter-spacing `-0.025em`
+- Corpo: DM Sans 400/500/600/700
+- Ícones: Lucide (stroke 2, currentColor)
+- Cards: `rounded-3xl`, border 1px, `shadow-soft`, `hover:-translate-y-1`
+- Corners generosos: base `1rem`, nunca cantos retos
+- Sombras com tinta teal, nunca preto puro
+
+### Tom de voz (PT-BR):
+- Direto, brasileiro, forma "você"
+- Verbos imperativos: "Avalie", "Descubra", "Melhore"
+- Números concretos: "3 análises grátis", "em 30 segundos", "R$ 4,90/mês"
+- Sem jargão SaaS em inglês
+- Emoji só: ✨ (IA) e 🔥 (trending)
+
+### Pricing:
+- Gratuito **R$ 0** | Premium **R$ 4,90/mês** | Pro **R$ 9,90/mês**
+- Badge: "Preço especial de lançamento"
+
+### Não fazer:
+- Não usar gradientes azul-roxo
+- Não usar emoji como ícone
+- Não usar cards com borda-esquerda colorida
+- Não inventar SVGs — usar Lucide ou placeholders
+- Não usar cinza frio — neutrals têm subtom teal
+
+### Logo
+Componente canônico: `<Logo>` em `src/components/brand/Logo.tsx`. Lockup: `homeoffice` (700) + `life` (500). Fontes Space Grotesk + DM Sans já carregadas via `@fontsource`.
 
 ## Convenções do projeto
 

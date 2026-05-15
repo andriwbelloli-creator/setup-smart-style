@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Pricing Cards</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card { border-radius: 22px; border: 1px solid var(--border); background: var(--card); padding: 20px; display:flex; flex-direction:column; box-shadow: var(--shadow-soft); position: relative; }
+  .card.pop { border-color: oklch(0.42 0.07 195 / 0.4); box-shadow: var(--shadow-elegant); transform: scale(1.02); }
+  .badge { position:absolute; top:-10px; left:50%; transform:translateX(-50%); background: var(--primary); color: white; padding: 3px 12px; border-radius: 999px; font-size:10px; font-weight:700; }
+  .name { font-family: var(--font-display); font-weight:700; font-size:18px; color: var(--brand-ink-900); }
+  .desc { font-size:12px; color: var(--brand-ink-600); margin-top:3px; }
+  .price { font-family: var(--font-display); font-weight:700; font-size:32px; color: var(--brand-ink-900); margin-top:10px; }
+  .price .per { font-size:13px; color: var(--brand-ink-600); font-weight:500; }
+  .launch { display:inline-block; background: oklch(0.72 0.18 35 / 0.12); color: var(--brand-coral-500); padding: 2px 8px; border-radius: 999px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+  .btn { margin-top:12px; height:38px; border-radius:10px; border:none; font-family:var(--font-sans); font-weight:600; font-size:13px; cursor:pointer; }
+  .btn.hero { background: var(--gradient-hero); color: white; box-shadow: var(--shadow-elegant); }
+  .btn.out { background: var(--card); color: var(--foreground); border: 2px solid var(--border); }
+  .btn.coral { background: var(--brand-coral-500); color: white; }
+  ul { list-style:none; padding:0; margin:12px 0 0; flex:1; }
+  li { font-size:12px; color: var(--brand-ink-900); padding: 4px 0; display:flex; align-items:center; gap:6px; }
+  li .dot { width:5px; height:5px; border-radius:50%; background: oklch(0.6 0.13 155); flex-shrink:0; }
+  li.off { color: var(--brand-ink-600); opacity:.45; text-decoration: line-through; }
+  li.off .dot { background: var(--border); }
+</style></head>
+<body>
+  <div class="card">
+    <div class="name">Gratuito</div>
+    <div class="desc">Sem compromisso. Sem cartão.</div>
+    <div class="price">R$ 0 <span class="per">pra sempre</span></div>
+    <button class="btn out">Começar grátis</button>
+    <ul>
+      <li><span class="dot"></span>3 análises IA</li>
+      <li><span class="dot"></span>Galeria</li>
+      <li><span class="dot"></span>Wishlist (5 itens)</li>
+      <li class="off"><span class="dot"></span>Relatório PDF</li>
+    </ul>
+  </div>
+  <div class="card pop">
+    <div class="badge">Mais popular</div>
+    <div class="name">Premium</div>
+    <div class="desc">Melhor custo-benefício.</div>
+    <div class="price">R$ 4,90 <span class="per">/mês</span></div>
+    <div class="launch">Preço de lançamento</div>
+    <button class="btn hero">Assinar Premium</button>
+    <ul>
+      <li><span class="dot"></span>Análises ilimitadas</li>
+      <li><span class="dot"></span>Sugestões por orçamento</li>
+      <li><span class="dot"></span>Comparação de setups</li>
+      <li><span class="dot"></span>Histórico de evolução</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="name">Pro</div>
+    <div class="desc">Para profissionais e criadores.</div>
+    <div class="price">R$ 9,90 <span class="per">/mês</span></div>
+    <button class="btn coral">Assinar Pro</button>
+    <ul>
+      <li><span class="dot"></span>Tudo do Premium</li>
+      <li><span class="dot"></span>Relatório PDF avançado</li>
+      <li><span class="dot"></span>Selo Pro na comunidade</li>
+      <li><span class="dot"></span>Insights p/ criadores</li>
+    </ul>
+  </div>
+</body></html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Spacing · Radii</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .cell { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+  .box { background: var(--card); border: 1px solid var(--border); aspect-ratio: 1/0.7; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--brand-ink-600); text-align: center; }
+  .nm { font-family: var(--font-display); font-weight: 700; font-size: 12px; color: var(--brand-ink-900); text-align: center; }
+</style></head>
+<body>
+  <div class="cell"><div class="box" style="border-radius: var(--radius-sm);"></div><div class="nm">sm</div><div class="lbl">12px</div></div>
+  <div class="cell"><div class="box" style="border-radius: var(--radius-md);"></div><div class="nm">md</div><div class="lbl">14px</div></div>
+  <div class="cell"><div class="box" style="border-radius: var(--radius-lg);"></div><div class="nm">lg · base</div><div class="lbl">16px</div></div>
+  <div class="cell"><div class="box" style="border-radius: var(--radius-xl);"></div><div class="nm">xl</div><div class="lbl">20px</div></div>
+  <div class="cell"><div class="box" style="border-radius: var(--radius-2xl);"></div><div class="nm">2xl</div><div class="lbl">24px</div></div>
+  <div class="cell"><div class="box" style="border-radius: var(--radius-full);"></div><div class="nm">full</div><div class="lbl">9999</div></div>
+</body></html>

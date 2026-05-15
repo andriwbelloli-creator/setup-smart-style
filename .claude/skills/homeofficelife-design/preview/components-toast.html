@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Toast / Notifications</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display:flex; flex-direction:column; gap:10px; align-items: flex-end; }
+  .toast { display:flex; align-items:center; gap:10px; padding: 12px 16px; border-radius: 14px; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-elegant); max-width: 380px; width:100%; }
+  .toast.success { border-left: 3px solid oklch(0.6 0.13 155); }
+  .toast.warning { border-left: 3px solid oklch(0.72 0.15 75); }
+  .toast.error   { border-left: 3px solid oklch(0.6 0.22 27); }
+  .toast.info    { border-left: 3px solid oklch(0.55 0.12 220); }
+  .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .msg { flex:1; font-size:13px; color: var(--brand-ink-900); line-height:1.4; }
+  .msg strong { display:block; font-size:12px; font-weight:700; margin-bottom:1px; }
+  .dismiss { width:20px; height:20px; border-radius:50%; border:none; background:transparent; font-size:12px; color: var(--brand-ink-600); cursor:pointer; flex-shrink:0; }
+</style></head>
+<body>
+  <div class="toast success">
+    <div class="dot" style="background: oklch(0.6 0.13 155);"></div>
+    <div class="msg"><strong>Setup publicado!</strong>Seu setup está visível na galeria.</div>
+    <button class="dismiss">✕</button>
+  </div>
+  <div class="toast warning">
+    <div class="dot" style="background: oklch(0.72 0.15 75);"></div>
+    <div class="msg"><strong>Limite atingido</strong>Você usou suas 3 análises grátis.</div>
+    <button class="dismiss">✕</button>
+  </div>
+  <div class="toast error">
+    <div class="dot" style="background: oklch(0.6 0.22 27);"></div>
+    <div class="msg"><strong>Erro ao enviar</strong>Imagem muito grande (máx 10MB).</div>
+    <button class="dismiss">✕</button>
+  </div>
+  <div class="toast info">
+    <div class="dot" style="background: oklch(0.55 0.12 220);"></div>
+    <div class="msg"><strong>Dica</strong>Suas fotos são usadas apenas para gerar a análise.</div>
+    <button class="dismiss">✕</button>
+  </div>
+</body></html>

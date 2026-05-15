@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Skeleton Loaders</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .sk {
+    background: linear-gradient(90deg, var(--brand-cream-100) 0%, oklch(0.92 0.012 85) 50%, var(--brand-cream-100) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+    border-radius: 10px;
+  }
+
+  .card-sk { border-radius: 22px; border:1px solid var(--border); background: var(--card); overflow:hidden; box-shadow: var(--shadow-soft); }
+  .cover-sk { aspect-ratio: 16/11; }
+  .body-sk { padding: 14px 16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .line { height:12px; }
+  .w60 { width:60%; }
+  .w80 { width:80%; }
+  .w40 { width:40%; }
+
+  .list { display:flex; flex-direction:column; gap:10px; }
+  .row-sk { display:flex; gap:12px; align-items:center; }
+  .avatar-sk { width:40px; height:40px; border-radius:50%; flex-shrink:0; }
+  .lines { flex:1; display:flex; flex-direction:column; gap:6px; }
+
+  .lbl { font-family: var(--font-mono); font-size:10px; color: var(--brand-ink-600); margin-bottom:8px; font-weight:600; }
+</style></head>
+<body>
+  <div>
+    <div class="lbl">CARD SKELETON</div>
+    <div class="card-sk">
+      <div class="cover-sk sk"></div>
+      <div class="body-sk">
+        <div class="sk line w80"></div>
+        <div class="sk line w60"></div>
+        <div class="sk line w40"></div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="lbl">LIST SKELETON</div>
+    <div class="list">
+      <div class="row-sk"><div class="avatar-sk sk"></div><div class="lines"><div class="sk line w80"></div><div class="sk line w40"></div></div></div>
+      <div class="row-sk"><div class="avatar-sk sk"></div><div class="lines"><div class="sk line w60"></div><div class="sk line w40"></div></div></div>
+      <div class="row-sk"><div class="avatar-sk sk"></div><div class="lines"><div class="sk line w80"></div><div class="sk line w60"></div></div></div>
+    </div>
+  </div>
+</body></html>

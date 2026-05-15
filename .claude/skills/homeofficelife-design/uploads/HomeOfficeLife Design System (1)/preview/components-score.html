@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Score & Nota IA</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin: 0; padding: 22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; align-items: center; }
+  .card { padding: 16px 18px; border-radius: 18px; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-soft); }
+  .eye { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-ink-600); font-weight: 700; }
+  .big { font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1; letter-spacing: -0.025em; color: var(--brand-ink-900); }
+  .big .of { font-size: 16px; color: var(--brand-ink-600); font-weight: 600; }
+  .bars { display: flex; gap: 4px; margin-top: 10px; }
+  .bars span { height: 4px; width: 18px; border-radius: 999px; background: var(--muted); }
+  .bars span.on { background: var(--primary); }
+
+  .ring { --p: 87; width: 96px; height: 96px; border-radius: 50%; background:
+    conic-gradient(var(--primary) calc(var(--p) * 1%), oklch(0.42 0.07 195 / 0.15) 0); display:flex; align-items:center; justify-content:center; margin: 0 auto;}
+  .ring .inner { width: 70%; height: 70%; border-radius: 50%; background: var(--card); display:flex; align-items:center; justify-content:center; font-family: var(--font-display); font-weight: 700; font-size: 22px; }
+
+  .meter { display:flex; flex-direction:column; gap:8px; font-size: 12px; color: var(--brand-ink-600); }
+  .meter .bar { background: var(--muted); border-radius: 999px; height: 6px; overflow: hidden; }
+  .meter .bar i { display:block; height:100%; border-radius: 999px; }
+</style></head>
+<body>
+  <div class="card">
+    <div class="eye">Nota IA</div>
+    <div class="big" style="margin-top:4px;">8.7<span class="of">/10</span></div>
+    <div class="bars"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div class="ring"><div class="inner">87<span style="font-size:12px;color:var(--brand-ink-600);">/100</span></div></div>
+    <div class="eye" style="margin-top:8px;">Score geral</div>
+  </div>
+  <div class="card">
+    <div class="eye">Análise por área</div>
+    <div class="meter" style="margin-top: 8px;">
+      <div><div style="display:flex;justify-content:space-between;"><span>Ergonomia</span><strong style="color:var(--brand-ink-900);">9.0</strong></div><div class="bar"><i style="width:90%; background:var(--success);"></i></div></div>
+      <div><div style="display:flex;justify-content:space-between;"><span>Iluminação</span><strong style="color:var(--brand-ink-900);">7.2</strong></div><div class="bar"><i style="width:72%; background:var(--warning);"></i></div></div>
+      <div><div style="display:flex;justify-content:space-between;"><span>Organização</span><strong style="color:var(--brand-ink-900);">8.4</strong></div><div class="bar"><i style="width:84%; background:var(--primary);"></i></div></div>
+    </div>
+  </div>
+</body></html>

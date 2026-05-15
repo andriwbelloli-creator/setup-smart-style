@@ -1,0 +1,15 @@
+strutura final:
+
+setup-smart-style/
+├── .claude/
+│   └── skills/
+│       └── homeofficelife-design/
+│           ├── SKILL.md          ← Claude Code detecta isso
+│           ├── README.md
+│           ├── colors_and_type.css
+│           ├── assets/
+│           ├── preview/
+│           └── ui_kits/
+├── CLAUDE.md                     ← instruções globais
+├── src/
+└── ...
