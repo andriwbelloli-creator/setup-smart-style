@@ -201,6 +201,7 @@ Either copy individual SVG paths from `lucide.dev/icons/<name>`, or load the run
 
 | Path | What |
 |---|---|
+| `product-rules.md` | Regras de recomendação de produtos, mapa problema→produto, touchpoints na jornada, paywall, pricing, trust signals. **OBRIGATÓRIO** para qualquer interface com diagnóstico/produtos/kits. |
 | `README.md` | This file. |
 | `SKILL.md` | Skill manifest — read if invoked via the design skill. |
 | `colors_and_type.css` | Single source of truth — drop-in `<link>` for any HTML artifact. |
