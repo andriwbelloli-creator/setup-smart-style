@@ -57,11 +57,29 @@ Sempre use o skill em `.claude/skills/homeofficelife-design/` para qualquer tare
 - Badge: "Preço especial de lançamento"
 
 ### Validação de setups — OBRIGATÓRIO:
-- Nunca usar imagens de um único objeto isolado como "setup"
-- Todo setup deve ter pelo menos 3 elementos funcionais combinados
-- Exemplo válido: mesa + cadeira + notebook + iluminação
-- Exemplo inválido: só uma cadeira, só um monitor, só um teclado
-- Aplicar em galeria, cards, exemplos, kits, hero, categorias
+
+**A galeria existe pra inspirar ambientes completos, NÃO pra ser vitrine de produtos.**
+
+Critério mínimo pra uma imagem aparecer na galeria, cards, exemplos, kits, hero ou categorias:
+- Ambiente de trabalho montado, com **contexto real de uso**
+- **Mínimo 3 elementos funcionais** combinados na mesma cena
+- Tem que permitir análise de ergonomia, iluminação, organização, cabos, produtividade e conforto
+
+**Excluir SEMPRE** (proibido em qualquer surface da galeria):
+- Apenas uma cadeira, mesa, monitor, notebook, luminária, teclado, mouse, suporte, webcam, microfone, prateleira ou organizador de cabos
+- Qualquer objeto decorativo ou peça de mobiliário **isolada**
+- Produto único em **fundo branco** (cara de catálogo / e-commerce)
+- Imagens que pareçam anúncio de item único
+
+**Exemplos válidos:**
+- Mesa + cadeira + notebook
+- Mesa + cadeira + monitor
+- Notebook + suporte + teclado + mouse
+- Monitor + teclado + mouse + cadeira
+- Mesa + iluminação + notebook + organização de cabos
+- Setup de videochamada com câmera + iluminação + mesa + cadeira
+
+Aplicar em: **galeria** (`/galeria`, `/categorias`), **cards** (`SetupCard`, `MarketplaceSection`), **hero** (Hero da home), **kits** (`/kits`), **categorias**, **exemplos da IA** (mockup do score panel), **previews sociais** (OG image).
 
 ### Não fazer:
 - Não usar gradientes azul-roxo
