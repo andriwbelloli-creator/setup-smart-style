@@ -2,10 +2,10 @@
 /* eslint-disable */
 
 const LISTINGS = [
-  { id: "1", img: "../../assets/setup-minimal.webp", title: "Cadeira Herman Miller Aeron seminova", category: "Cadeira", condition: "Seminovo", price: "R$ 4.500", city: "São Paulo, SP" },
-  { id: "2", img: "../../assets/setup-creator.webp", title: "Monitor LG 34WP65C Ultrawide 34\"",      category: "Monitor", condition: "Novo c/ NF", price: "R$ 2.799", city: "Curitiba, PR" },
-  { id: "3", img: "../../assets/setup-gamer.webp",   title: "Mesa de madeira maciça 140×70",           category: "Mesa",    condition: "Usado",      price: "R$ 890",   city: "Belo Horizonte, MG" },
-  { id: "4", img: "../../assets/setup-compact.webp", title: "Teclado mecânico Keychron K2 v2",          category: "Teclado", condition: "Seminovo",   price: "R$ 580",   city: "Rio de Janeiro, RJ" },
+  { id: "1", img: "../../assets/setup-after.webp",   title: "Cadeira Herman Miller Aeron seminova", category: "Cadeira", condition: "Seminovo", price: "R$ 4.500", city: "São Paulo, SP" },
+  { id: "2", img: "../../assets/hero-setup.webp",    title: "Monitor LG 34WP65C Ultrawide 34\"",    category: "Monitor", condition: "Novo c/ NF", price: "R$ 2.799", city: "Curitiba, PR" },
+  { id: "3", img: "../../assets/setup-compact.webp", title: "Mesa de madeira maciça 140×70",         category: "Mesa",    condition: "Usado",      price: "R$ 890",   city: "Belo Horizonte, MG" },
+  { id: "4", img: "../../assets/setup-minimal.webp", title: "Teclado mecânico Keychron K2 v2",       category: "Teclado", condition: "Seminovo",   price: "R$ 580",   city: "Rio de Janeiro, RJ" },
 ];
 
 const Loja = ({ onOpenListing }) => {
