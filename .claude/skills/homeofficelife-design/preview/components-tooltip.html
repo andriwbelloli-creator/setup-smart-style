@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Tooltip</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:40px 22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: flex; gap:40px; justify-content: center; }
+  .wrap { position:relative; display:inline-block; }
+  .trigger { display:inline-flex; align-items:center; gap:6px; padding: 8px 16px; border-radius:12px; border:1px solid var(--border); background: var(--card); font-size:13px; font-weight:600; color: var(--brand-ink-900); cursor:pointer; box-shadow: var(--shadow-soft); }
+  .tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background: var(--brand-ink-900); color: oklch(0.96 0.015 85); padding: 8px 14px; border-radius:10px; font-size:11px; line-height:1.4; white-space:nowrap; box-shadow: var(--shadow-elegant); }
+  .tip::after { content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color: var(--brand-ink-900); }
+
+  .tip-light { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background: var(--card); color: var(--brand-ink-900); padding: 10px 14px; border-radius:12px; font-size:11px; line-height:1.4; white-space:nowrap; box-shadow: var(--shadow-elegant); border:1px solid var(--border); }
+  .tip-light::after { content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color: var(--card); }
+  .tip-light .em { color: var(--primary); font-weight:700; }
+</style></head>
+<body>
+  <div class="wrap">
+    <div class="tip">Nota de 0 a 100 gerada pela IA</div>
+    <div class="trigger">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Nota IA: 8.7
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="tip-light">Ergonomia <span class="em">62/100</span> · Monitor baixo</div>
+    <div class="trigger">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Ergonomia
+    </div>
+  </div>
+</body></html>

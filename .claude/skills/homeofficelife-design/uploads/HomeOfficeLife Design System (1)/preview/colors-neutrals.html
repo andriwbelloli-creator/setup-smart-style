@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Colors · Neutrals</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); }
+  .row { display:grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .sw { border-radius: 14px; padding: 12px 14px; display:flex; flex-direction:column; justify-content: space-between; aspect-ratio: 1/1.05; border: 1px solid var(--border); }
+  .nm { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: -0.01em; line-height: 1.15; }
+  .hex { font-family: var(--font-mono); font-size: 11px; opacity: 0.85; }
+  .dark { color: var(--brand-cream-50); }
+  .light { color: var(--brand-teal-900); }
+</style></head>
+<body>
+  <div class="row">
+    <div class="sw light" style="background: var(--brand-cream-50);"><div class="nm">Cream 50 · bg</div><div class="hex">#FBF8F1</div></div>
+    <div class="sw light" style="background: var(--brand-cream-100);"><div class="nm">Cream 100 · surface</div><div class="hex">#F7F4EC</div></div>
+    <div class="sw light" style="background: oklch(0.9 0.015 85);"><div class="nm">Border</div><div class="hex">oklch · 0.9</div></div>
+    <div class="sw dark" style="background: var(--brand-ink-600);"><div class="nm">Ink 600 · muted</div><div class="hex">#54676B</div></div>
+    <div class="sw dark" style="background: var(--brand-ink-900);"><div class="nm">Ink 900 · fg</div><div class="hex">#0F1F22</div></div>
+  </div>
+</body></html>

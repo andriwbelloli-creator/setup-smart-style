@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Upload Flow</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .step { border-radius: 22px; border:1px solid var(--border); background: var(--card); overflow:hidden; box-shadow: var(--shadow-soft); }
+  .lbl { font-family: var(--font-mono); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color: var(--brand-ink-600); padding: 12px 16px 0; }
+
+  /* Upload zone */
+  .zone { margin:12px 16px 16px; border:2px dashed oklch(0.42 0.07 195 / 0.35); border-radius:18px; padding: 36px 24px; text-align:center; background: oklch(0.42 0.07 195 / 0.04); cursor:pointer; transition: all 300ms cubic-bezier(0.22,1,0.36,1); }
+  .zone:hover { border-color: var(--primary); background: oklch(0.42 0.07 195 / 0.08); }
+  .zone .bubble { display:inline-flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:50%; background: oklch(0.42 0.07 195 / 0.12); margin-bottom:10px; }
+  .zone h3 { font-family: var(--font-display); font-weight:700; font-size:17px; color: var(--brand-ink-900); margin:0 0 4px; }
+  .zone p { font-size:12px; color: var(--brand-ink-600); margin:0 0 12px; }
+  .zone .formats { font-size:11px; color: var(--brand-ink-600); }
+  .zone .formats strong { color: var(--brand-ink-900); }
+  .zone .btn { display:inline-flex; align-items:center; gap:6px; height:38px; padding: 0 20px; border-radius:12px; border:none; background: var(--gradient-hero); color:white; font-family: var(--font-sans); font-weight:700; font-size:13px; cursor:pointer; box-shadow: var(--shadow-elegant); margin-top:10px; }
+
+  /* Trust signals */
+  .trust { display:flex; gap:10px; flex-wrap:wrap; padding: 0 16px 14px; }
+  .trust span { display:inline-flex; align-items:center; gap:4px; font-size:10px; color: var(--brand-ink-600); }
+  .trust .check { color: oklch(0.6 0.13 155); font-weight:800; }
+
+  /* Confirm step */
+  .confirm { padding: 16px; }
+  .preview { border-radius:14px; overflow:hidden; position:relative; aspect-ratio: 16/11; background: #ddd; }
+  .preview img { width:100%; height:100%; object-fit:cover; display:block; }
+  .preview .badge { position:absolute; top:8px; right:8px; background:white/95; backdrop-filter: blur(6px); padding:4px 10px; border-radius:999px; font-size:10px; font-weight:700; color: oklch(0.6 0.13 155); }
+  .actions { display:flex; gap:8px; margin-top:12px; }
+  .btn-sm { height:34px; padding: 0 14px; border-radius:10px; border:none; font-family: var(--font-sans); font-weight:600; font-size:12px; cursor:pointer; flex:1; }
+  .btn-sm.primary { background: var(--primary); color:white; }
+  .btn-sm.ghost { background: transparent; color: var(--brand-ink-600); border: 1px solid var(--border); }
+</style></head>
+<body>
+  <div class="step">
+    <div class="lbl">1 · Upload</div>
+    <div class="zone">
+      <div class="bubble">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <h3>Envie a foto do seu home office</h3>
+      <p>A IA vai analisar ergonomia, iluminação, organização, conforto e produtividade.</p>
+      <button class="btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Escolher foto
+      </button>
+      <div class="formats"><strong>JPG, PNG, WebP</strong> · até 10MB</div>
+    </div>
+    <div class="trust">
+      <span><span class="check">✓</span> Suas fotos não são publicadas</span>
+      <span><span class="check">✓</span> Você controla suas imagens</span>
+      <span><span class="check">✓</span> Sem cartão no gratuito</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="lbl">2 · Confirmar</div>
+    <div class="confirm">
+      <div class="preview">
+        <img src="../assets/hero-setup.webp" alt=""/>
+        <div class="badge">✓ Imagem válida</div>
+      </div>
+      <div class="actions">
+        <button class="btn-sm ghost">Trocar foto</button>
+        <button class="btn-sm primary">Analisar meu setup</button>
+      </div>
+    </div>
+  </div>
+</body></html>

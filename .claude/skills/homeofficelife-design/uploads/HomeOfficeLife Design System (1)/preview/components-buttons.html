@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Buttons</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin: 0; padding: 22px; background: var(--brand-cream-50); font-family: var(--font-sans); }
+  .row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .row:last-child { margin-bottom: 0; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--brand-ink-600); width: 86px; flex-shrink: 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 36px; padding: 0 16px; border-radius: var(--radius-md);
+    font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+    border: 1px solid transparent; cursor: pointer; transition: var(--transition-base);
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn.lg { height: 44px; padding: 0 24px; font-size: 15px; font-weight: 700; border-radius: 10px; }
+  .btn-default     { background: var(--primary); color: var(--primary-foreground); box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .btn-hero        { background: var(--gradient-hero); color: var(--primary-foreground); box-shadow: var(--shadow-elegant); }
+  .btn-coral       { background: var(--brand-coral-500); color: white; box-shadow: var(--shadow-coral); }
+  .btn-secondary   { background: var(--secondary); color: var(--secondary-foreground); }
+  .btn-outline     { background: var(--card); color: var(--foreground); border-color: var(--border); }
+  .btn-ghost       { background: transparent; color: var(--foreground); }
+  .btn-destructive { background: var(--destructive); color: var(--destructive-foreground); }
+  .btn-link        { background: transparent; color: var(--primary); padding: 0; text-decoration: underline; text-underline-offset: 4px; }
+  .icon { width: 14px; height: 14px; stroke-width: 2; }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; }
+</style></head>
+<body>
+  <div class="row">
+    <div class="lbl">primary</div>
+    <button class="btn btn-default">Avaliar setup</button>
+    <button class="btn btn-default"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Upload</button>
+    <button class="btn btn-hero lg"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Mandar foto · grátis</button>
+  </div>
+  <div class="row">
+    <div class="lbl">accent</div>
+    <button class="btn btn-coral">Assinar Premium</button>
+    <button class="btn btn-secondary">Postar setup</button>
+    <button class="btn btn-outline">Explorar galeria</button>
+    <button class="btn btn-ghost">Entrar</button>
+    <a class="btn btn-link" href="#">Saiba mais →</a>
+  </div>
+  <div class="row">
+    <div class="lbl">states</div>
+    <button class="btn btn-default">Normal</button>
+    <button class="btn btn-default" style="background: oklch(0.36 0.06 195);">Hover</button>
+    <button class="btn btn-default" style="opacity: .5; cursor: not-allowed;">Disabled</button>
+    <button class="btn btn-destructive">Excluir</button>
+  </div>
+</body></html>

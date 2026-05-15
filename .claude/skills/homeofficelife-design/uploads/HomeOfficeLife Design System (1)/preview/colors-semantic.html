@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Colors · Semantic</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); }
+  .row { display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .sw { border-radius: 14px; padding: 14px; display:flex; flex-direction:column; gap: 10px; aspect-ratio: 1/1.05; }
+  .nm { font-family: var(--font-display); font-weight: 700; font-size: 14px; line-height: 1.15; }
+  .hex { font-family: var(--font-mono); font-size: 11px; opacity: 0.85; }
+  .pill { align-self:flex-start; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(255,255,255,.85); color: var(--brand-ink-900); }
+  .dark { color: var(--brand-cream-50); }
+  .light { color: var(--brand-teal-900); }
+</style></head>
+<body>
+  <div class="row">
+    <div class="sw dark"      style="background: var(--success);"><div class="pill">✓ Sucesso</div><div class="nm">Success</div><div class="hex">oklch(.6 .13 155)</div></div>
+    <div class="sw light"     style="background: var(--warning);"><div class="pill">⚠ Atenção</div><div class="nm">Warning</div><div class="hex">oklch(.72 .15 75)</div></div>
+    <div class="sw dark"      style="background: var(--info);"><div class="pill">ℹ Info</div><div class="nm">Info</div><div class="hex">oklch(.55 .12 220)</div></div>
+    <div class="sw dark"      style="background: var(--destructive);"><div class="pill">✕ Erro</div><div class="nm">Destructive</div><div class="hex">oklch(.6 .22 27)</div></div>
+  </div>
+</body></html>

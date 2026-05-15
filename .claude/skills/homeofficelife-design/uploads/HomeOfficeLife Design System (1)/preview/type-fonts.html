@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Type · Fonts</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px 26px; background: var(--brand-cream-50); display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .specimen { display: flex; flex-direction: column; gap: 4px; }
+  .big { font-size: 56px; line-height: 1; letter-spacing: -0.025em; color: var(--brand-ink-900); }
+  .label { font-family: var(--font-mono); font-size: 11px; color: var(--brand-ink-600); }
+  .row { display: flex; gap: 14px; align-items: baseline; font-size: 14px; color: var(--brand-ink-900); }
+  .row b { font-weight: 700; } .row em { font-style: normal; opacity: .55; }
+  .a { font-family: var(--font-display); }
+  .b { font-family: var(--font-sans); }
+</style></head>
+<body>
+  <div class="specimen">
+    <div class="big a">Aa<span style="color:var(--brand-coral-500);">.</span></div>
+    <div class="label">Space Grotesk · display</div>
+    <div class="row a"><b>Aa</b><b>Bb</b><b>Gg</b><em>400</em><em>500</em><em>600</em><b>700</b></div>
+  </div>
+  <div class="specimen">
+    <div class="big b">Aa<span style="color:var(--brand-coral-500);">.</span></div>
+    <div class="label">DM Sans · body / ui</div>
+    <div class="row b"><b>Aa</b><b>Bb</b><b>Gg</b><em>400</em><em>500</em><em>600</em><b>700</b></div>
+  </div>
+</body></html>
