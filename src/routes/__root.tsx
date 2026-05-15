@@ -9,6 +9,7 @@ import { HoneypotLink } from "@/components/HoneypotLink";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { MetaPixel } from "@/components/MetaPixel";
 import { PWAInstall } from "@/components/PWAInstall";
+import { MobileBottomNav } from "@/components/landing/MobileBottomNav";
 import { queryClient } from "@/lib/query-client";
 
 // Componentes não-críticos pra paint inicial: lazy + Suspense vazio
@@ -129,6 +130,7 @@ function RootComponent() {
           <MetaPixel />
           <PWAInstall />
           <Outlet />
+          <MobileBottomNav />
           <Toaster />
           <HoneypotLink />
           <Suspense fallback={null}>
