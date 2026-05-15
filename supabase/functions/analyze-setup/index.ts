@@ -45,13 +45,13 @@ async function checkRateLimit(userId: string): Promise<{ allowed: boolean; remai
   return { allowed: total < RATE_LIMIT_PER_HOUR, remaining: Math.max(0, RATE_LIMIT_PER_HOUR - total) };
 }
 
-const SYSTEM_PROMPT = `Você é um especialista brasileiro em ergonomia, iluminação e estética de home offices. Avalie a foto enviada por critérios objetivos. Seja direto, técnico e prático. Use linguagem do dia a dia. Foque em melhorias acessíveis no Brasil (Amazon BR, Mercado Livre, Kabum, Magalu).`;
+const SYSTEM_PROMPT = `Você é um especialista brasileiro em ergonomia, iluminação, conforto, produtividade e estética de home offices. Avalie a foto por 10 critérios objetivos: ergonomia, iluminação, gestão de cabos, organização visual, estética, produtividade, conforto, profissionalismo em vídeo (calls/lives), aproveitamento de espaço e custo-benefício. Seja direto, técnico e prático. Use linguagem do dia a dia. Foque em melhorias acessíveis no Brasil (Amazon BR, Mercado Livre, Kabum, Magalu, Tok&Stok).`;
 
 const TOOL = {
   type: "function",
   function: {
     name: "rate_setup",
-    description: "Devolve a avaliação completa do home office em JSON.",
+    description: "Devolve a avaliação completa do home office em JSON com 10 critérios.",
     parameters: {
       type: "object",
       properties: {
@@ -64,18 +64,31 @@ const TOOL = {
             organizacao: { type: "number" },
             estetica: { type: "number" },
             produtividade: { type: "number" },
+            conforto: { type: "number", description: "Apoio lombar, altura cadeira, conforto pra jornada longa." },
+            video_profissional: { type: "number", description: "Profissionalismo em calls/lives — fundo, câmera, áudio, luz frontal." },
+            aproveitamento_espaco: { type: "number", description: "Quanto do espaço disponível está bem usado, sem desperdício." },
+            custo_beneficio: { type: "number", description: "Equilíbrio entre o que foi investido e a qualidade do setup." },
           },
-          required: ["ergonomia", "iluminacao", "cabos", "organizacao", "estetica", "produtividade"],
+          required: [
+            "ergonomia", "iluminacao", "cabos", "organizacao", "estetica", "produtividade",
+            "conforto", "video_profissional", "aproveitamento_espaco", "custo_beneficio",
+          ],
           additionalProperties: false,
         },
         tips: {
           type: "array",
           minItems: 3,
-          maxItems: 6,
+          maxItems: 10,
           items: {
             type: "object",
             properties: {
-              category: { type: "string", enum: ["ergonomia", "iluminacao", "cabos", "organizacao", "estetica", "produtividade"] },
+              category: {
+                type: "string",
+                enum: [
+                  "ergonomia", "iluminacao", "cabos", "organizacao", "estetica", "produtividade",
+                  "conforto", "video_profissional", "aproveitamento_espaco", "custo_beneficio",
+                ],
+              },
               severity: { type: "string", enum: ["baixa", "media", "alta"] },
               text: { type: "string", description: "Sugestão prática em 1-2 frases, com produto e faixa de preço em R$ quando aplicável." },
             },

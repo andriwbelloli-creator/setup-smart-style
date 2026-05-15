@@ -25,6 +25,7 @@ import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as ConsultoriaRouteImport } from './routes/consultoria'
 import { Route as ComunidadeRouteImport } from './routes/comunidade'
 import { Route as CompararRouteImport } from './routes/comparar'
+import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AvalieSeuSetupRouteImport } from './routes/avalie-seu-setup'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -124,6 +125,11 @@ const CompararRoute = CompararRouteImport.update({
   path: '/comparar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CategoriasRoute = CategoriasRouteImport.update({
+  id: '/categorias',
+  path: '/categorias',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/avalie-seu-setup': typeof AvalieSeuSetupRoute
   '/blog': typeof BlogRouteWithChildren
+  '/categorias': typeof CategoriasRoute
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
@@ -257,6 +264,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/avalie-seu-setup': typeof AvalieSeuSetupRoute
   '/blog': typeof BlogRouteWithChildren
+  '/categorias': typeof CategoriasRoute
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
@@ -294,6 +302,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/avalie-seu-setup': typeof AvalieSeuSetupRoute
   '/blog': typeof BlogRouteWithChildren
+  '/categorias': typeof CategoriasRoute
   '/comparar': typeof CompararRoute
   '/comunidade': typeof ComunidadeRoute
   '/consultoria': typeof ConsultoriaRoute
@@ -332,6 +341,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/avalie-seu-setup'
     | '/blog'
+    | '/categorias'
     | '/comparar'
     | '/comunidade'
     | '/consultoria'
@@ -368,6 +378,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/avalie-seu-setup'
     | '/blog'
+    | '/categorias'
     | '/comparar'
     | '/comunidade'
     | '/consultoria'
@@ -404,6 +415,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/avalie-seu-setup'
     | '/blog'
+    | '/categorias'
     | '/comparar'
     | '/comunidade'
     | '/consultoria'
@@ -441,6 +453,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   AvalieSeuSetupRoute: typeof AvalieSeuSetupRoute
   BlogRoute: typeof BlogRouteWithChildren
+  CategoriasRoute: typeof CategoriasRoute
   CompararRoute: typeof CompararRoute
   ComunidadeRoute: typeof ComunidadeRoute
   ConsultoriaRoute: typeof ConsultoriaRoute
@@ -578,6 +591,13 @@ declare module '@tanstack/react-router' {
       path: '/comparar'
       fullPath: '/comparar'
       preLoaderRoute: typeof CompararRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorias': {
+      id: '/categorias'
+      path: '/categorias'
+      fullPath: '/categorias'
+      preLoaderRoute: typeof CategoriasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -764,6 +784,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   AvalieSeuSetupRoute: AvalieSeuSetupRoute,
   BlogRoute: BlogRouteWithChildren,
+  CategoriasRoute: CategoriasRoute,
   CompararRoute: CompararRoute,
   ComunidadeRoute: ComunidadeRoute,
   ConsultoriaRoute: ConsultoriaRoute,
