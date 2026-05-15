@@ -102,9 +102,20 @@ const MAGALU_CHANNEL = "magazinedesklylife";
  * O servidor (start.js) resolve a affiliate_url no DB e faz 302.
  * Mantém o DOM sem URLs de Amazon/ML/Kabum expostas — dificulta scraping
  * cego de strings e troca de tags de afiliado por terceiros.
+ *
+ * Aceita string (productId) pra retrocompat, ou objeto produto com
+ * fallback pra affiliateUrl direta quando setup é file-only (sem DB).
  */
-export function affiliateHref(productId: string): string {
-  return `/r/${productId}`;
+export function affiliateHref(
+  input: string | { id: string; affiliateUrl?: string },
+): string {
+  if (typeof input === "string") return `/r/${input}`;
+  // Produto curado em file (id >= 27, sem seed no DB) traz URL direta —
+  // perde o cloaking mas garante que click funciona end-to-end.
+  if (input.affiliateUrl && input.affiliateUrl !== "#" && input.affiliateUrl !== "") {
+    return input.affiliateUrl;
+  }
+  return `/r/${input.id}`;
 }
 
 export function decorateAffiliateUrl(url: string, store: Store): string {

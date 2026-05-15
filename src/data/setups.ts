@@ -393,6 +393,80 @@ export const SETUPS: Setup[] = [
       { id: "p56", category: "Notebook", name: "Suporte vertical MacBook compacto", brand: "OMOTON", price: 99, store: "Amazon BR", rating: 4.6, affiliateUrl: "#", x: 30, y: 50 },
     ],
   },
+
+  // ────────── Wave 1 (setups curados file-only, sem seed no DB) ──────────
+  // affiliateUrl é URL real → affiliateHref usa direto em vez do redirect
+  // /r/<id>. Cloaking se perde mas click funciona end-to-end.
+  {
+    id: "27", slug: "dev-junior-kitnet", title: "Kitnet do Junior",
+    author: "@deskly.curadoria", authorRole: "Dev", city: "São Paulo, SP",
+    image: compact, score: 7.4, likes: 0, saves: 0,
+    styles: ["Dev", "Setup barato", "Apê pequeno"], budget: 1800,
+    description: "Primeiro setup pra quem está começando na dev. Foco em ergonomia básica + monitor 24'' decente, sem furar orçamento. Funciona em mesa de 100cm e cabe em kitnet.",
+    products: [
+      { id: "p57", category: "Monitor", name: "Samsung F24T35 24\" IPS 75Hz", brand: "Samsung", price: 749, store: "Amazon BR", rating: 4.6, affiliateUrl: "https://www.amazon.com.br/s?k=samsung+monitor+24+F24T35&tag=deskly02-20", x: 50, y: 32 },
+      { id: "p58", category: "Periféricos", name: "Suporte notebook ergonômico", brand: "BoaSorte", price: 99, store: "Amazon BR", rating: 4.5, affiliateUrl: "https://www.amazon.com.br/s?k=suporte+notebook+ergonomico+aluminio&tag=deskly02-20", x: 30, y: 62 },
+      { id: "p59", category: "Periféricos", name: "Combo teclado e mouse MK270", brand: "Logitech", price: 179, store: "Amazon BR", rating: 4.6, affiliateUrl: "https://www.amazon.com.br/s?k=logitech+MK270&tag=deskly02-20", x: 55, y: 72 },
+      { id: "p60", category: "Periféricos", name: "Headset HyperX Cloud Stinger", brand: "HyperX", price: 299, store: "Amazon BR", rating: 4.7, affiliateUrl: "https://www.amazon.com.br/s?k=hyperx+cloud+stinger&tag=deskly02-20", x: 78, y: 72 },
+      { id: "p61", category: "Decoração", name: "Canaleta adesiva organizadora de cabos", brand: "Multilaser", price: 35, store: "Mercado Livre", rating: 4.3, affiliateUrl: "https://lista.mercadolivre.com.br/canaleta-organizadora-cabos-adesiva", x: 18, y: 88 },
+    ],
+  },
+  {
+    id: "28", slug: "designer-iniciante", title: "Designer Iniciante",
+    author: "@deskly.curadoria", authorRole: "Designer", city: "Rio de Janeiro, RJ",
+    image: minimal, score: 7.6, likes: 0, saves: 0,
+    styles: ["Designer", "Minimalista", "Setup barato"], budget: 2200,
+    description: "Setup pra estudante de design ou primeiro emprego. Tablet básico pra entrar no digital, monitor IPS color-accurate de entrada, paleta neutra pra não competir com o trabalho.",
+    products: [
+      { id: "p62", category: "Monitor", name: "Monitor 24\" IPS Full HD AOC", brand: "AOC", price: 899, store: "Kabum", rating: 4.6, affiliateUrl: "https://www.kabum.com.br/busca/monitor-24-aoc-ips", x: 50, y: 33 },
+      { id: "p63", category: "Periféricos", name: "Wacom Intuos Small CTL-4100", brand: "Wacom", price: 599, store: "Amazon BR", rating: 4.7, affiliateUrl: "https://www.amazon.com.br/s?k=wacom+intuos+small+CTL-4100&tag=deskly02-20", x: 35, y: 70 },
+      { id: "p64", category: "Iluminação", name: "Luminária LED Taschibra ajustável", brand: "Taschibra", price: 89, store: "Magalu", rating: 4.4, affiliateUrl: "https://www.magazinevoce.com.br/magazinedesklylife/busca/luminaria+led+mesa+taschibra/", x: 78, y: 28 },
+      { id: "p65", category: "Periféricos", name: "Mousepad XXL 90x40cm", brand: "Redragon", price: 79, store: "Amazon BR", rating: 4.6, affiliateUrl: "https://www.amazon.com.br/s?k=mousepad+xxl+90x40&tag=deskly02-20", x: 55, y: 75 },
+      { id: "p66", category: "Decoração", name: "Vaso suculenta com pratinho", brand: "Plantei", price: 45, store: "Mercado Livre", rating: 4.5, affiliateUrl: "https://lista.mercadolivre.com.br/vaso-suculenta-decoracao-mesa", x: 22, y: 38 },
+    ],
+  },
+  {
+    id: "29", slug: "professor-idiomas-caseiro", title: "Professor de Idiomas Caseiro",
+    author: "@deskly.curadoria", authorRole: "Remoto", city: "Curitiba, PR",
+    image: creator, score: 7.8, likes: 0, saves: 0,
+    styles: ["Produtivo", "Setup barato"], budget: 1600,
+    description: "Aulas online de inglês/espanhol direto do home office. Áudio cristalino, webcam HD e luz frontal pra alunos te verem bem em qualquer horário. Parede neutra pra não distrair.",
+    products: [
+      { id: "p67", category: "Periféricos", name: "Webcam Logitech C270 HD", brand: "Logitech", price: 239, store: "Amazon BR", rating: 4.6, affiliateUrl: "https://www.amazon.com.br/s?k=webcam+logitech+c270&tag=deskly02-20", x: 50, y: 18 },
+      { id: "p68", category: "Periféricos", name: "Microfone Fifine K669 USB", brand: "Fifine", price: 269, store: "Amazon BR", rating: 4.7, affiliateUrl: "https://www.amazon.com.br/s?k=microfone+fifine+k669&tag=deskly02-20", x: 50, y: 55 },
+      { id: "p69", category: "Iluminação", name: "Ring Light 10\" com tripé", brand: "Tudo Importado", price: 159, store: "Mercado Livre", rating: 4.5, affiliateUrl: "https://lista.mercadolivre.com.br/ring-light-10-polegadas-tripe", x: 78, y: 25 },
+      { id: "p70", category: "Decoração", name: "Planta jiboia em vaso 15cm", brand: "Plantei", price: 39, store: "Mercado Livre", rating: 4.6, affiliateUrl: "https://lista.mercadolivre.com.br/planta-jiboia-vaso-15", x: 20, y: 50 },
+      { id: "p71", category: "Iluminação", name: "Lâmpada LED 9W luz neutra", brand: "Philips", price: 24, store: "Magalu", rating: 4.7, affiliateUrl: "https://www.magazinevoce.com.br/magazinedesklylife/busca/lampada+led+9w+philips/", x: 35, y: 12 },
+    ],
+  },
+  {
+    id: "30", slug: "live-solo-iniciante", title: "Live Solo Iniciante",
+    author: "@deskly.curadoria", authorRole: "Creator", city: "Recife, PE",
+    image: creator, score: 7.5, likes: 0, saves: 0,
+    styles: ["Creator", "Setup barato"], budget: 1900,
+    description: "Primeira live, primeiro stream. Webcam HD pra cara, microfone que não pega ar-condicionado, ring light grande pra cortar sombra. Cabe em mesa de 90cm.",
+    products: [
+      { id: "p72", category: "Periféricos", name: "Webcam Logitech C920 HD Pro", brand: "Logitech", price: 599, store: "Amazon BR", rating: 4.8, affiliateUrl: "https://www.amazon.com.br/s?k=logitech+c920+hd+pro&tag=deskly02-20", x: 50, y: 18 },
+      { id: "p73", category: "Periféricos", name: "Microfone HyperX SoloCast USB", brand: "HyperX", price: 449, store: "Amazon BR", rating: 4.7, affiliateUrl: "https://www.amazon.com.br/s?k=hyperx+solocast&tag=deskly02-20", x: 32, y: 55 },
+      { id: "p74", category: "Iluminação", name: "Ring Light 12\" com tripé articulado", brand: "Travor", price: 219, store: "Amazon BR", rating: 4.6, affiliateUrl: "https://www.amazon.com.br/s?k=ring+light+12+polegadas+tripe&tag=deskly02-20", x: 78, y: 22 },
+      { id: "p75", category: "Periféricos", name: "Mousepad XXL RGB Redragon", brand: "Redragon", price: 149, store: "Amazon BR", rating: 4.7, affiliateUrl: "https://www.amazon.com.br/s?k=mousepad+xxl+rgb+redragon&tag=deskly02-20", x: 50, y: 78 },
+      { id: "p76", category: "Mesa", name: "Mesa pequena MadeiraMadeira 100x50", brand: "MadeiraMadeira", price: 459, store: "Magalu", rating: 4.4, affiliateUrl: "https://www.magazinevoce.com.br/magazinedesklylife/busca/mesa+pequena+100x50/", x: 50, y: 90 },
+    ],
+  },
+  {
+    id: "31", slug: "freela-cafeteria-caseira", title: "Freela Cafeteria-Caseira",
+    author: "@deskly.curadoria", authorRole: "Remoto", city: "Florianópolis, SC",
+    image: compact, score: 7.7, likes: 0, saves: 0,
+    styles: ["Apê pequeno", "Minimalista", "Setup barato"], budget: 1700,
+    description: "Setup de freelancer que troca de cafeteria pra casa toda semana. Monitor portátil pra desempacotar em qualquer mesa, suporte de notebook dobrável, fone bluetooth pra trabalhar no barulho.",
+    products: [
+      { id: "p77", category: "Monitor", name: "ASUS ZenScreen MB16ACE 15.6\" portátil", brand: "ASUS", price: 1290, store: "Kabum", rating: 4.6, affiliateUrl: "https://www.kabum.com.br/busca/asus+zenscreen+mb16ace", x: 55, y: 30 },
+      { id: "p78", category: "Periféricos", name: "Suporte notebook dobrável compacto", brand: "BoaSorte", price: 79, store: "Amazon BR", rating: 4.4, affiliateUrl: "https://www.amazon.com.br/s?k=suporte+notebook+dobravel+portatil&tag=deskly02-20", x: 32, y: 62 },
+      { id: "p79", category: "Iluminação", name: "Luminária LED recarregável USB", brand: "Multilaser", price: 89, store: "Magalu", rating: 4.3, affiliateUrl: "https://www.magazinevoce.com.br/magazinedesklylife/busca/luminaria+led+recarregavel+usb/", x: 78, y: 28 },
+      { id: "p80", category: "Periféricos", name: "Headset Bluetooth Edifier W820NB", brand: "Edifier", price: 599, store: "Amazon BR", rating: 4.7, affiliateUrl: "https://www.amazon.com.br/s?k=edifier+w820nb&tag=deskly02-20", x: 22, y: 65 },
+      { id: "p81", category: "Decoração", name: "Caderno de couro A5 com elástico", brand: "Cicero", price: 78, store: "Amazon BR", rating: 4.6, affiliateUrl: "https://www.amazon.com.br/s?k=caderno+couro+a5+cicero&tag=deskly02-20", x: 50, y: 78 },
+    ],
+  },
 ];
 
 export const findSetup = (slug: string) => SETUPS.find((s) => s.slug === slug);
