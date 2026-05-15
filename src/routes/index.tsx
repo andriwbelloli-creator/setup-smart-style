@@ -45,10 +45,10 @@ const websiteSchema = {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HomeOfficeLife — Avalie seu home office com IA · Brasil" },
-      { name: "description", content: "Plataforma brasileira para montar, avaliar e melhorar seu home office com IA, loja de usados, kits curados e inspiração da comunidade." },
-      { property: "og:title", content: "HomeOfficeLife — Avalie seu home office com IA" },
-      { property: "og:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
+      { title: "HomeOfficeLife — Transforme seu home office com IA · Brasil" },
+      { name: "description", content: "Envie uma foto do seu espaço e receba ideias decoradas, diagnóstico inteligente e produtos por orçamento para montar um home office mais bonito, confortável e produtivo." },
+      { property: "og:title", content: "HomeOfficeLife — Transforme seu home office com IA" },
+      { property: "og:description", content: "Envie uma foto do seu espaço e receba ideias decoradas + diagnóstico + produtos pra montar um home office melhor." },
       { property: "og:type", content: "website" },
     ],
     scripts: [

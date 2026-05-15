@@ -17,8 +17,8 @@ import { useExperiment } from "@/hooks/use-experiment";
 // depois de ~200 cliques distribuídos entre as variantes.
 const HERO_CTA_VARIANTS = ["control", "direct", "outcome"] as const;
 const HERO_CTA_COPY: Record<typeof HERO_CTA_VARIANTS[number], string> = {
-  control: "Avaliar meu setup agora — grátis",
-  direct: "Mandar foto e ver minha nota",
+  control: "Gerar ideias para meu home office",
+  direct: "Enviar foto e transformar meu espaço",
   outcome: "Descobrir o que falta no meu home office",
 };
 
@@ -74,15 +74,15 @@ export function Hero() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
             <Zap className="h-3.5 w-3.5" />
-            IA brasileira · Diagnóstico em 30 segundos
+            Decoração, ergonomia e produtos · IA brasileira em 30s
           </div>
           <h1 className="font-display text-5xl font-bold leading-[1.02] tracking-tight text-foreground md:text-6xl lg:text-7xl">
-            Descubra a{" "}
-            <span className="bg-gradient-warm bg-clip-text text-transparent">nota do seu setup</span>{" "}
-            e como melhorá-lo com IA.
+            Transforme seu{" "}
+            <span className="bg-gradient-warm bg-clip-text text-transparent">home office</span>{" "}
+            com IA.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-            Envie a foto do seu home office e receba <strong className="text-foreground">nota de ergonomia, iluminação, organização</strong> + dicas com produtos reais do Brasil.
+            Envie a foto do seu espaço e receba <strong className="text-foreground">ideias decoradas, diagnóstico inteligente</strong> e sugestões de produtos pra montar um ambiente mais bonito, confortável e produtivo.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="group h-14 gap-2 bg-gradient-hero px-8 text-base font-bold shadow-elegant transition-smooth hover:shadow-glow hover:scale-[1.02]">
@@ -93,7 +93,7 @@ export function Hero() {
             </Button>
             <Button asChild size="lg" variant="outline" className="h-14 gap-2 border-2 px-8 text-base">
               <Link to="/galeria">
-                Explorar galeria <ArrowRight className="h-4 w-4" />
+                Ver exemplos de transformações <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
