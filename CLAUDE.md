@@ -29,6 +29,7 @@ Sempre use o skill em `.claude/skills/homeofficelife-design/` para qualquer tare
 2. Use os tokens de `colors_and_type.css` (cores, tipografia, espaçamento, sombras, gradientes)
 3. Copie assets de `assets/` (logo, fotos, ícones)
 4. Referência os componentes em `preview/` e `ui_kits/` como base visual
+5. **Antes de qualquer tela com diagnóstico, produtos, kits ou galeria, leia `product-rules.md`** — mapa obrigatório problema → produto
 
 ### Regras visuais obrigatórias:
 - Background: cream `#FBF8F1`, nunca branco puro
@@ -40,6 +41,7 @@ Sempre use o skill em `.claude/skills/homeofficelife-design/` para qualquer tare
 - Cards: `rounded-3xl`, border 1px, `shadow-soft`, `hover:-translate-y-1`
 - Corners generosos: base `1rem`, nunca cantos retos
 - Sombras com tinta teal, nunca preto puro
+- Dark mode: ativar com `class="dark"` no html/body
 
 ### Tom de voz (PT-BR):
 - Direto, brasileiro, forma "você"
@@ -52,12 +54,20 @@ Sempre use o skill em `.claude/skills/homeofficelife-design/` para qualquer tare
 - Gratuito **R$ 0** | Premium **R$ 4,90/mês** | Pro **R$ 9,90/mês**
 - Badge: "Preço especial de lançamento"
 
+### Validação de setups — OBRIGATÓRIO:
+- Nunca usar imagens de um único objeto isolado como "setup"
+- Todo setup deve ter pelo menos 3 elementos funcionais combinados
+- Exemplo válido: mesa + cadeira + notebook + iluminação
+- Exemplo inválido: só uma cadeira, só um monitor, só um teclado
+- Aplicar em galeria, cards, exemplos, kits, hero, categorias
+
 ### Não fazer:
 - Não usar gradientes azul-roxo
 - Não usar emoji como ícone
 - Não usar cards com borda-esquerda colorida
 - Não inventar SVGs — usar Lucide ou placeholders
 - Não usar cinza frio — neutrals têm subtom teal
+- Não recomendar produto sem problema detectado pela IA (vide `product-rules.md`)
 
 ### Logo
 Componente canônico: `<Logo>` em `src/components/brand/Logo.tsx`. Lockup: `homeoffice` (700) + `life` (500). Fontes Space Grotesk + DM Sans já carregadas via `@fontsource`.
