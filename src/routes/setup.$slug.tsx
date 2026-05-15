@@ -401,7 +401,7 @@ function SetupDetail() {
                   return (
                   <a
                     key={p.id}
-                    href={affiliateHref(p.id)}
+                    href={affiliateHref(p)}
                     target="_blank"
                     rel="sponsored noopener noreferrer"
                     onClick={(e) => {
@@ -697,7 +697,7 @@ function SetupDetail() {
                           </div>
                         </button>
                         <a
-                          href={affiliateHref(p.id)}
+                          href={affiliateHref(p)}
                           target="_blank"
                           rel="sponsored noopener noreferrer"
                           onClick={() => trackAffiliateClick({ productId: p.id, setupId: setup.id, store: normalizeStore(p.store) })}
@@ -790,7 +790,7 @@ function SetupDetail() {
               <div className="mt-4 flex gap-2">
                 <Button asChild className="flex-1 gap-2 bg-gradient-hero">
                   <a
-                    href={affiliateHref(active.id)}
+                    href={affiliateHref(active)}
                     target="_blank"
                     rel="sponsored noopener noreferrer"
                     onClick={() =>
