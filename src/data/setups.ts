@@ -1,6 +1,5 @@
 import minimal from "@/assets/setup-minimal.webp";
 import gamer from "@/assets/setup-gamer.webp";
-import creator from "@/assets/setup-creator.webp";
 import compact from "@/assets/setup-compact.webp";
 import hero from "@/assets/hero-setup.webp";
 import after from "@/assets/after.webp";
@@ -122,7 +121,7 @@ export const SETUPS: Setup[] = [
     author: "@joao.cria",
     authorRole: "Creator",
     city: "Rio de Janeiro, RJ",
-    image: creator,
+    image: after,
     score: 8.9,
     likes: 1560,
     saves: 740,
@@ -209,7 +208,7 @@ export const SETUPS: Setup[] = [
   {
     id: "10", slug: "professor-aulas-online", title: "Studio Aulas Online",
     author: "@prof.lucas", authorRole: "Remoto", city: "Belo Horizonte, MG",
-    image: creator, score: 8.8, likes: 1120, saves: 680,
+    image: minimal, score: 8.8, likes: 1120, saves: 680,
     styles: ["Creator", "Produtivo"], budget: 6500,
     description: "Setup pra dar aula online: dual monitor pra ver slides + alunos, mic USB direcional, ring light frontal e segunda câmera pra mostrar quadro.",
     products: [
@@ -275,7 +274,7 @@ export const SETUPS: Setup[] = [
   {
     id: "16", slug: "podcaster-pro", title: "Podcaster Pro",
     author: "@thiago.cast", authorRole: "Creator", city: "São Paulo, SP",
-    image: creator, score: 9.1, likes: 1890, saves: 980,
+    image: after, score: 9.1, likes: 1890, saves: 980,
     styles: ["Creator"], budget: 8900,
     description: "Estúdio podcast caseiro: mic shotgun em braço, painéis acústicos hexagonais, mesa de mixagem básica. Áudio é 70% do conteúdo.",
     products: [
@@ -308,7 +307,7 @@ export const SETUPS: Setup[] = [
   {
     id: "19", slug: "tiktoker-vertical", title: "TikToker Vertical",
     author: "@duda.tiktok", authorRole: "Creator", city: "Rio de Janeiro, RJ",
-    image: creator, score: 8.2, likes: 2100, saves: 890,
+    image: compact, score: 8.2, likes: 2100, saves: 890,
     styles: ["Creator", "Setup barato"], budget: 1900,
     description: "Setup vertical pra TikTok/Reels: tripé de chão + ring light + smartphone com gimbal. Fundo decorado com adesivo de parede e LED RGB.",
     products: [
@@ -428,7 +427,7 @@ export const SETUPS: Setup[] = [
   {
     id: "29", slug: "professor-idiomas-caseiro", title: "Professor de Idiomas Caseiro",
     author: "@deskly.curadoria", authorRole: "Remoto", city: "Curitiba, PR",
-    image: creator, score: 7.8, likes: 0, saves: 0,
+    image: minimal, score: 7.8, likes: 0, saves: 0,
     styles: ["Produtivo", "Setup barato"], budget: 1600,
     description: "Aulas online de inglês/espanhol direto do home office. Áudio cristalino, webcam HD e luz frontal pra alunos te verem bem em qualquer horário. Parede neutra pra não distrair.",
     products: [
@@ -442,7 +441,7 @@ export const SETUPS: Setup[] = [
   {
     id: "30", slug: "live-solo-iniciante", title: "Live Solo Iniciante",
     author: "@deskly.curadoria", authorRole: "Creator", city: "Recife, PE",
-    image: creator, score: 7.5, likes: 0, saves: 0,
+    image: compact, score: 7.5, likes: 0, saves: 0,
     styles: ["Creator", "Setup barato"], budget: 1900,
     description: "Primeira live, primeiro stream. Webcam HD pra cara, microfone que não pega ar-condicionado, ring light grande pra cortar sombra. Cabe em mesa de 90cm.",
     products: [
