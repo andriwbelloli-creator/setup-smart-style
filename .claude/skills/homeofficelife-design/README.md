@@ -66,6 +66,31 @@ Everything is **Portuguese (BR)** — copy is in *você* form, never *vocês* / 
 
 ---
 
+## Setup validation rules — OBRIGATÓRIO
+
+**Excluir setups com apenas um único objeto.** Não considerar como "setup" imagens, cards ou recomendações que mostrem apenas um item isolado.
+
+**Exemplos de imagens INVÁLIDAS (não usar):**
+- Apenas uma cadeira, mesa, monitor, notebook, luminária, teclado, suporte, objeto decorativo, prateleira ou produto em fundo branco.
+
+**Um setup válido deve conter pelo menos 3 elementos funcionais combinados, ex.:**
+- Mesa + cadeira + notebook
+- Notebook + suporte + teclado + mouse
+- Monitor + teclado + mouse + cadeira
+- Mesa + iluminação + notebook + organização de cabos
+- Setup de videochamada com câmera + iluminação + mesa + cadeira
+
+**Critério mínimo:**
+- O setup precisa mostrar **contexto de uso real** — um espaço de trabalho montado.
+- O setup precisa ter **combinação de itens**, não apenas produto isolado.
+- O setup precisa permitir **análise de ergonomia, iluminação, organização, produtividade e conforto**.
+
+**Aplicar essa regra em:** galeria, recomendações visuais, categorias, kits, exemplos, cards de setup, hero imagery, e qualquer outro contexto onde um "setup" é representado visualmente.
+
+**Priorizar** imagens de setups completos, reais, montados e comparáveis, com múltiplos elementos funcionais.
+
+---
+
 ## Visual foundations
 
 ### Vibe in one line
