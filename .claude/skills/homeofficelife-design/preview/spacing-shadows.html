@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Spacing · Shadows</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:30px 22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .box { width: 100%; aspect-ratio: 1/0.7; border-radius: var(--radius-xl); background: var(--card); border: 1px solid var(--border); }
+  .nm { font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--brand-ink-900); }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--brand-ink-600); text-align: center; line-height: 1.4; }
+</style></head>
+<body>
+  <div class="cell"><div class="box" style="box-shadow: var(--shadow-soft);"></div><div class="nm">soft</div><div class="lbl">cards · default</div></div>
+  <div class="cell"><div class="box" style="box-shadow: var(--shadow-elegant);"></div><div class="nm">elegant</div><div class="lbl">hover · hero CTAs</div></div>
+  <div class="cell"><div class="box" style="box-shadow: var(--shadow-glow);"></div><div class="nm">glow</div><div class="lbl">primary hover · drag-over</div></div>
+  <div class="cell"><div class="box" style="box-shadow: var(--shadow-coral);"></div><div class="nm">coral</div><div class="lbl">premium CTA halo</div></div>
+</body></html>

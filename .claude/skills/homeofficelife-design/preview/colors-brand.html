@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Colors · Brand</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); }
+  .row { display:grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .sw { border-radius: 14px; padding: 12px 14px; display:flex; flex-direction:column; justify-content: space-between; aspect-ratio: 1/1.05; }
+  .nm { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: -0.01em; line-height: 1.15; }
+  .hex { font-family: var(--font-mono); font-size: 11px; opacity: 0.85; }
+  .dark { color: var(--brand-cream-50); }
+  .light { color: var(--brand-teal-900); }
+</style></head>
+<body>
+  <div class="row">
+    <div class="sw dark" style="background: var(--brand-teal-900);"><div class="nm">Teal 900</div><div class="hex">#0E3D3F</div></div>
+    <div class="sw dark" style="background: var(--brand-teal-700);"><div class="nm">Teal 700</div><div class="hex">#155659</div></div>
+    <div class="sw dark" style="background: var(--brand-teal-500);"><div class="nm">Teal&nbsp;500 · primary</div><div class="hex">#2A8E8E</div></div>
+    <div class="sw light" style="background: var(--brand-coral-500);"><div class="nm">Coral · accent</div><div class="hex">#F36458</div></div>
+    <div class="sw light" style="background: var(--brand-wood-500);"><div class="nm">Wood</div><div class="hex">#B5854A</div></div>
+  </div>
+</body></html>

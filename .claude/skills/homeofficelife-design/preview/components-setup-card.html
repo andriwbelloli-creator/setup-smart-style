@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Setup Card</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin: 0; padding: 18px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .card { overflow: hidden; border-radius: 22px; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-soft); }
+  .cover { position: relative; aspect-ratio: 16/11; background: #ccc; overflow: hidden; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display:block; }
+  .body { padding: 14px 16px 16px; }
+  .title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--brand-ink-900); margin: 0 0 2px; letter-spacing: -0.01em; }
+  .sub { font-size: 12px; color: var(--brand-ink-600); }
+  .top-pills { position:absolute; top:10px; left:10px; display:flex; gap:6px; flex-wrap: wrap; }
+  .top-right { position:absolute; top:10px; right:10px; }
+  .bot-right { position:absolute; bottom:10px; right:10px; }
+  .glass { background: rgba(255,255,255,.92); backdrop-filter: blur(8px); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; color: var(--brand-ink-900); }
+  .score { background: rgba(15,31,34,.9); color: white; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .price { background: rgba(255,255,255,.96); color: var(--brand-ink-900); padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+  .wm { position: absolute; bottom: 8px; left: 10px; font-size: 9px; color: rgba(255,255,255,.85); letter-spacing: .12em; text-transform: uppercase; font-weight: 700; mix-blend-mode: difference; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+</style></head>
+<body>
+  <div class="card">
+    <div class="cover">
+      <img src="../assets/setup-minimal.webp" alt=""/>
+      <div class="top-pills"><span class="glass">Minimalista</span><span class="glass">MacBook</span></div>
+      <div class="top-right"><span class="score">★ 9.1</span></div>
+      <div class="bot-right"><span class="price">R$ 4.200</span></div>
+      <div class="wm">homeofficelife.com.br</div>
+    </div>
+    <div class="body">
+      <div class="title">Apê branco minimalista</div>
+      <div class="sub">Ana Pereira · Designer · São Paulo, SP</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="cover">
+      <img src="../assets/setup-creator.webp" alt=""/>
+      <div class="top-pills"><span class="glass">Creator</span><span class="glass">Streaming</span></div>
+      <div class="top-right"><span class="score">★ 8.4</span></div>
+      <div class="bot-right"><span class="price">R$ 7.890</span></div>
+      <div class="wm">homeofficelife.com.br</div>
+    </div>
+    <div class="body">
+      <div class="title">Cantinho do criador de conteúdo</div>
+      <div class="sub">João Lima · Streamer · Curitiba, PR</div>
+    </div>
+  </div>
+</body></html>
