@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Budget Tiers</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .card { border-radius: 18px; border: 1px solid var(--border); background: var(--card); padding: 16px; box-shadow: var(--shadow-soft); }
+  .price { font-family: var(--font-display); font-weight:700; font-size:17px; color: var(--brand-ink-900); margin-bottom: 10px; }
+  ul { list-style:none; padding:0; margin:0; }
+  li { font-size:12px; color: var(--brand-ink-900); padding: 3px 0; display:flex; align-items:center; gap:6px; }
+  li::before { content:""; width:5px; height:5px; border-radius:50%; background: oklch(0.6 0.13 155); flex-shrink:0; }
+  .btn { margin-top:10px; width:100%; height:30px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); font-family:var(--font-sans); font-size:11px; font-weight:600; color: var(--primary); cursor:pointer; }
+</style></head>
+<body>
+  <div class="card">
+    <div class="price">Até R$ 50</div>
+    <ul><li>Organizador cabos velcro</li><li>Apoio de pulso</li></ul>
+    <button class="btn">Ver produtos →</button>
+  </div>
+  <div class="card">
+    <div class="price">Até R$ 100</div>
+    <ul><li>Apoio lombar avulso</li><li>Luminária grampo LED</li></ul>
+    <button class="btn">Ver produtos →</button>
+  </div>
+  <div class="card">
+    <div class="price">Até R$ 300</div>
+    <ul><li>Suporte monitor</li><li>Mouse ergonômico</li><li>Luminária articulada</li></ul>
+    <button class="btn">Ver produtos →</button>
+  </div>
+  <div class="card">
+    <div class="price">Até R$ 700</div>
+    <ul><li>Cadeira c/ apoio lombar</li><li>Braço articulado</li><li>Teclado externo</li></ul>
+    <button class="btn">Ver produtos →</button>
+  </div>
+</body></html>

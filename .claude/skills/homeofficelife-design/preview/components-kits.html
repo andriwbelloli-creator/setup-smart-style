@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Kit Cards</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card { border-radius: 20px; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow-soft); overflow:hidden; display:flex; flex-direction:column; }
+  .band { height:3px; }
+  .inner { padding: 16px; flex:1; display:flex; flex-direction:column; }
+  .top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .name { font-family: var(--font-display); font-weight:700; font-size:14px; color: var(--brand-ink-900); line-height: 1.25; }
+  .impact { padding: 2px 8px; border-radius: 999px; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; flex-shrink:0; }
+  .desc { font-size:11px; color: var(--brand-ink-600); margin-top:6px; line-height:1.45; }
+  ul { list-style:none; padding:0; margin:8px 0 0; flex:1; }
+  li { font-size:11px; color: var(--brand-ink-900); padding:2px 0; display:flex; align-items:center; gap:5px; }
+  li::before { content:"✓"; color: oklch(0.6 0.13 155); font-weight:800; font-size:10px; }
+  .price { font-family: var(--font-display); font-weight:700; font-size:16px; color: var(--brand-ink-900); margin-top:10px; }
+</style></head>
+<body>
+  <div class="card">
+    <div class="band" style="background:var(--primary);"></div>
+    <div class="inner">
+      <div class="top">
+        <div class="name">Kit Home Office Básico</div>
+        <span class="impact" style="background: oklch(0.42 0.07 195 / 0.15); color: var(--primary);">Alto</span>
+      </div>
+      <div class="desc">Postura, iluminação e organização gastando pouco.</div>
+      <ul><li>Suporte notebook</li><li>Mouse externo</li><li>Organizador cabos</li><li>Luminária mesa</li></ul>
+      <div class="price">~R$ 250</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="band" style="background:var(--brand-coral-500);"></div>
+    <div class="inner">
+      <div class="top">
+        <div class="name">Kit Criador de Conteúdo</div>
+        <span class="impact" style="background: oklch(0.72 0.18 35 / 0.15); color: var(--brand-coral-500);">Alto</span>
+      </div>
+      <div class="desc">Cenário, iluminação e áudio prontos para gravar.</div>
+      <ul><li>Key light LED</li><li>Mic condensador</li><li>Webcam 4K</li><li>Braço articulado</li></ul>
+      <div class="price">~R$ 1.500</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="band" style="background:oklch(0.55 0.12 80);"></div>
+    <div class="inner">
+      <div class="top">
+        <div class="name">Kit Apê Pequeno</div>
+        <span class="impact" style="background: oklch(0.55 0.12 80 / 0.15); color: oklch(0.45 0.1 80);">Alto</span>
+      </div>
+      <div class="desc">Maximize cada centímetro do seu espaço.</div>
+      <ul><li>Mesa dobrável</li><li>Suporte parede monitor</li><li>Organizador vertical</li><li>Luminária grampo</li></ul>
+      <div class="price">~R$ 500</div>
+    </div>
+  </div>
+</body></html>

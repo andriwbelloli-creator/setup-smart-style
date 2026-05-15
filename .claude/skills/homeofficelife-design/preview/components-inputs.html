@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Inputs</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin: 0; padding: 22px; background: var(--brand-cream-50); font-family: var(--font-sans); color: var(--brand-ink-900); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label { font-size: 12px; font-weight: 600; color: var(--brand-ink-900); }
+  .input, .select, .ta {
+    height: 38px; padding: 0 12px; border-radius: var(--radius-md);
+    border: 1px solid var(--input); background: transparent;
+    font-family: var(--font-sans); font-size: 14px; color: var(--brand-ink-900);
+    transition: var(--transition-base); box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .input.focus { border-color: var(--ring); outline: 2px solid oklch(0.42 0.07 195 / 0.25); outline-offset: 0; }
+  .ta { height: 64px; padding: 8px 12px; }
+  .help { font-size: 11px; color: var(--brand-ink-600); }
+  .err  { font-size: 11px; color: var(--destructive); font-weight: 500; }
+  .input.bad { border-color: var(--destructive); }
+  .toggle {
+    width: 36px; height: 20px; border-radius: 999px; background: var(--primary);
+    position: relative; cursor: pointer;
+  }
+  .toggle::after { content:""; position:absolute; top:2px; right:2px; width:16px; height:16px; border-radius:50%; background:white; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .check { width: 18px; height: 18px; border: 2px solid var(--primary); border-radius: 4px; display: inline-flex; align-items:center; justify-content:center; background: var(--primary); color: white; font-size: 12px; font-weight: 800;}
+  .row { display:flex; gap: 10px; align-items: center; }
+</style></head>
+<body>
+  <div class="field">
+    <label>Seu e-mail</label>
+    <input class="input" value="ana@homeoffice.life"/>
+    <div class="help">Vamos enviar a nota do diagnóstico.</div>
+  </div>
+  <div class="field">
+    <label>CEP</label>
+    <input class="input bad" value="0000"/>
+    <div class="err">CEP precisa de 8 dígitos</div>
+  </div>
+  <div class="field">
+    <label>Sobre seu setup</label>
+    <textarea class="ta">Mesa de madeira, monitor LG ultrawide, parede turquesa.</textarea>
+  </div>
+  <div class="field">
+    <label>Preferências</label>
+    <div class="row"><div class="toggle"></div><span style="font-size:13px;">Receber newsletter</span></div>
+    <div class="row"><div class="check">✓</div><span style="font-size:13px;">Aceito os termos</span></div>
+  </div>
+</body></html>

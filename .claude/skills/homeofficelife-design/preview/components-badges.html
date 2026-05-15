@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Badges & Pills</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin: 0; padding: 22px; background: var(--brand-cream-50); font-family: var(--font-sans); }
+  .row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .row:last-child { margin-bottom: 0; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--brand-ink-600); width: 78px; flex-shrink: 0; }
+
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; }
+  .b-primary { background: var(--primary); color: var(--primary-foreground); }
+  .b-secondary { background: var(--secondary); color: var(--secondary-foreground); }
+  .b-outline { background: var(--card); color: var(--foreground); border: 1px solid var(--border); }
+  .b-destructive { background: var(--destructive); color: var(--destructive-foreground); }
+
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; }
+  .p-eyebrow { background: oklch(0.42 0.07 195 / 0.12); color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid oklch(0.42 0.07 195 / 0.3); font-size: 11px; }
+  .p-accent  { background: oklch(0.72 0.15 45 / 0.18); color: var(--accent-foreground); text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; }
+  .p-coral   { background: var(--brand-coral-500); color: white; }
+  .p-overlay { background: rgba(15,31,34,.9); color: white; }
+  .p-glass   { background: rgba(255,255,255,.92); color: var(--brand-ink-900); backdrop-filter: blur(8px); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); position: relative; }
+  .dot::after { content:""; position:absolute; inset:0; border-radius:50%; background: var(--primary); opacity:.55; animation: pulse 1.6s infinite; }
+  @keyframes pulse { from{transform:scale(1);opacity:.55} to{transform:scale(2.5);opacity:0} }
+</style></head>
+<body>
+  <div class="row">
+    <div class="lbl">eyebrow</div>
+    <span class="pill p-eyebrow"><span class="dot"></span>⚡ IA brasileira · 30s</span>
+    <span class="pill p-accent">Comunidade BR</span>
+    <span class="pill p-coral">🔥 12 cliques</span>
+  </div>
+  <div class="row">
+    <div class="lbl">badge</div>
+    <span class="badge b-primary">Premium</span>
+    <span class="badge b-secondary">Dev</span>
+    <span class="badge b-outline">Minimalista</span>
+    <span class="badge b-destructive">Sem estoque</span>
+  </div>
+  <div class="row">
+    <div class="lbl">overlay</div>
+    <span class="pill p-glass">★ 8.7</span>
+    <span class="pill p-glass">Seminovo</span>
+    <span class="pill p-overlay">R$ 2.799</span>
+    <span class="pill p-overlay" style="text-transform:uppercase; letter-spacing:.1em; font-size:10px;">Vendido</span>
+  </div>
+</body></html>

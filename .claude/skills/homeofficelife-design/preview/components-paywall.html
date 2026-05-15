@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><title>Components · Paywall</title>
+<link rel="stylesheet" href="../colors_and_type.css"/>
+<style>
+  body { margin:0; padding:22px; background: var(--brand-cream-50); font-family: var(--font-sans); }
+  .wall { border-radius: 22px; border: 2px dashed oklch(0.42 0.07 195 / 0.3); background: oklch(0.42 0.07 195 / 0.05); padding: 28px; text-align: center; }
+  .icon { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; margin-bottom:8px; }
+  h3 { font-family: var(--font-display); font-size: 20px; font-weight:700; color: var(--brand-ink-900); margin:0; }
+  p { font-size:13px; color: var(--brand-ink-600); margin:8px auto 0; max-width: 380px; }
+  .row { margin-top:16px; display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap: wrap; }
+  .btn-hero { height:42px; padding: 0 24px; border-radius: 12px; border:none; background: var(--gradient-hero); color: white; font-family:var(--font-sans); font-weight:700; font-size:14px; cursor:pointer; box-shadow: var(--shadow-elegant); display:inline-flex; align-items:center; gap:8px; }
+  .link { font-size:13px; font-weight:600; color: var(--primary); text-decoration: underline; text-underline-offset:4px; cursor:pointer; }
+  .fine { font-size:11px; color: var(--brand-ink-600); margin-top:8px; }
+</style></head>
+<body>
+  <div class="wall">
+    <div class="icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+    </div>
+    <h3>Desbloqueie a análise completa</h3>
+    <p>Veja todas as 10 categorias, sugestões por orçamento, lista de produtos e plano de ação priorizado.</p>
+    <div class="row">
+      <button class="btn-hero">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+        Desbloquear por R$ 4,90/mês
+      </button>
+      <span class="link">Ver prévia grátis →</span>
+    </div>
+    <div class="fine">Cancele quando quiser · Sem fidelidade</div>
+  </div>
+</body></html>
