@@ -44,6 +44,7 @@ import { Route as DashboardAdminMarketplaceRouteImport } from './routes/dashboar
 import { Route as DashboardAdminHeatmapRouteImport } from './routes/dashboard.admin.heatmap'
 import { Route as DashboardAdminDsRouteImport } from './routes/dashboard.admin.ds'
 import { Route as DashboardAdminAnalyticsRouteImport } from './routes/dashboard.admin.analytics'
+import { Route as DashboardAdminAfiliadosRouteImport } from './routes/dashboard.admin.afiliados'
 
 const TermosRoute = TermosRouteImport.update({
   id: '/termos',
@@ -221,6 +222,11 @@ const DashboardAdminAnalyticsRoute = DashboardAdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => DashboardAdminRoute,
 } as any)
+const DashboardAdminAfiliadosRoute = DashboardAdminAfiliadosRouteImport.update({
+  id: '/afiliados',
+  path: '/afiliados',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/marketplace/favoritos': typeof MarketplaceFavoritosRoute
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace/': typeof MarketplaceIndexRoute
+  '/dashboard/admin/afiliados': typeof DashboardAdminAfiliadosRoute
   '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
   '/dashboard/admin/ds': typeof DashboardAdminDsRoute
   '/dashboard/admin/heatmap': typeof DashboardAdminHeatmapRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/marketplace/favoritos': typeof MarketplaceFavoritosRoute
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace': typeof MarketplaceIndexRoute
+  '/dashboard/admin/afiliados': typeof DashboardAdminAfiliadosRoute
   '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
   '/dashboard/admin/ds': typeof DashboardAdminDsRoute
   '/dashboard/admin/heatmap': typeof DashboardAdminHeatmapRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/marketplace/favoritos': typeof MarketplaceFavoritosRoute
   '/setup/$slug': typeof SetupSlugRoute
   '/marketplace/': typeof MarketplaceIndexRoute
+  '/dashboard/admin/afiliados': typeof DashboardAdminAfiliadosRoute
   '/dashboard/admin/analytics': typeof DashboardAdminAnalyticsRoute
   '/dashboard/admin/ds': typeof DashboardAdminDsRoute
   '/dashboard/admin/heatmap': typeof DashboardAdminHeatmapRoute
@@ -367,6 +376,7 @@ export interface FileRouteTypes {
     | '/marketplace/favoritos'
     | '/setup/$slug'
     | '/marketplace/'
+    | '/dashboard/admin/afiliados'
     | '/dashboard/admin/analytics'
     | '/dashboard/admin/ds'
     | '/dashboard/admin/heatmap'
@@ -404,6 +414,7 @@ export interface FileRouteTypes {
     | '/marketplace/favoritos'
     | '/setup/$slug'
     | '/marketplace'
+    | '/dashboard/admin/afiliados'
     | '/dashboard/admin/analytics'
     | '/dashboard/admin/ds'
     | '/dashboard/admin/heatmap'
@@ -441,6 +452,7 @@ export interface FileRouteTypes {
     | '/marketplace/favoritos'
     | '/setup/$slug'
     | '/marketplace/'
+    | '/dashboard/admin/afiliados'
     | '/dashboard/admin/analytics'
     | '/dashboard/admin/ds'
     | '/dashboard/admin/heatmap'
@@ -726,6 +738,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminAnalyticsRouteImport
       parentRoute: typeof DashboardAdminRoute
     }
+    '/dashboard/admin/afiliados': {
+      id: '/dashboard/admin/afiliados'
+      path: '/afiliados'
+      fullPath: '/dashboard/admin/afiliados'
+      preLoaderRoute: typeof DashboardAdminAfiliadosRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
   }
 }
 
@@ -762,6 +781,7 @@ const DiagnosticoRouteWithChildren = DiagnosticoRoute._addFileChildren(
 )
 
 interface DashboardAdminRouteChildren {
+  DashboardAdminAfiliadosRoute: typeof DashboardAdminAfiliadosRoute
   DashboardAdminAnalyticsRoute: typeof DashboardAdminAnalyticsRoute
   DashboardAdminDsRoute: typeof DashboardAdminDsRoute
   DashboardAdminHeatmapRoute: typeof DashboardAdminHeatmapRoute
@@ -769,6 +789,7 @@ interface DashboardAdminRouteChildren {
 }
 
 const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
+  DashboardAdminAfiliadosRoute: DashboardAdminAfiliadosRoute,
   DashboardAdminAnalyticsRoute: DashboardAdminAnalyticsRoute,
   DashboardAdminDsRoute: DashboardAdminDsRoute,
   DashboardAdminHeatmapRoute: DashboardAdminHeatmapRoute,
