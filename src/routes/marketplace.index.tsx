@@ -131,7 +131,7 @@ function MarketplaceIndex() {
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-              <ShoppingBag className="h-3 w-3" /> Marketplace
+              <ShoppingBag className="h-3 w-3" /> Loja
             </div>
             <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
               Equipamentos usados, taxas justas

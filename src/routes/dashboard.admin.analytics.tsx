@@ -41,7 +41,7 @@ const SERVICE_LABEL: Record<(typeof SERVICES)[number], string> = {
   inspiration: "Inspiração",
   ia: "Avaliação IA",
   affiliate: "Afiliados",
-  marketplace: "Marketplace",
+  marketplace: "Loja",
 };
 const SERVICE_COLOR: Record<(typeof SERVICES)[number], string> = {
   inspiration: "bg-blue-500",
@@ -247,7 +247,7 @@ function AdminAnalytics() {
 
             {/* Funil Marketplace */}
             <section className="rounded-3xl border border-border bg-card p-6 shadow-soft">
-              <h2 className="font-display text-lg font-bold">Funil — Marketplace</h2>
+              <h2 className="font-display text-lg font-bold">Funil — Loja</h2>
               <Funnel
                 steps={[
                   { label: "/marketplace view", count: stats.mpFunnel.listView },

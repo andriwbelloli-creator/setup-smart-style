@@ -45,7 +45,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "HomeOfficeLife — Avalie seu home office com IA · Brasil" },
-      { name: "description", content: "Plataforma brasileira para montar, avaliar e melhorar seu home office com IA, marketplace de usados, kits curados e inspiração da comunidade." },
+      { name: "description", content: "Plataforma brasileira para montar, avaliar e melhorar seu home office com IA, loja de usados, kits curados e inspiração da comunidade." },
       { property: "og:title", content: "HomeOfficeLife — Avalie seu home office com IA" },
       { property: "og:description", content: "Envie a foto do seu setup e receba nota de IA + sugestões de upgrades com preço de Brasil." },
       { property: "og:type", content: "website" },

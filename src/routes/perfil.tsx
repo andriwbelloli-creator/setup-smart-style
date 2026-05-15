@@ -274,8 +274,8 @@ function Perfil() {
             <div className="rounded-3xl border border-dashed border-border bg-card p-16 text-center">
               <Send className="mx-auto h-10 w-10 text-muted-foreground" />
               <h3 className="mt-4 font-display text-lg font-semibold">Nenhuma proposta enviada</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Encontrou algo interessante no Marketplace? Faça uma oferta.</p>
-              <Button asChild className="mt-5 bg-gradient-hero"><Link to="/marketplace">Explorar marketplace</Link></Button>
+              <p className="mt-1 text-sm text-muted-foreground">Encontrou algo interessante na Loja? Faça uma oferta.</p>
+              <Button asChild className="mt-5 bg-gradient-hero"><Link to="/marketplace">Explorar Loja</Link></Button>
             </div>
           ) : (
             <div className="space-y-3 max-w-3xl">

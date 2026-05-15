@@ -146,7 +146,7 @@ function EmptyState() {
       <ShoppingBag className="mx-auto h-10 w-10 text-muted-foreground" />
       <h3 className="mt-3 font-display text-base font-bold">Seja o primeiro a anunciar</h3>
       <p className="mt-1 text-xs text-muted-foreground">
-        Tem cadeira, monitor ou teclado parado? Comece o marketplace.
+        Tem cadeira, monitor ou teclado parado? Anuncie na Loja.
       </p>
       <Button asChild size="sm" className="mt-4 gap-2 bg-gradient-hero">
         <Link to="/marketplace/anunciar">
