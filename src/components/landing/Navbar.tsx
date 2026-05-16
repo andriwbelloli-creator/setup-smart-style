@@ -59,11 +59,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/85 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-85" aria-label="homeoffice.life — início">
+        <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-85" aria-label="homeoffice.life — início">
           {/* Mobile: só o ícone (h + sparkle) pra economizar espaço */}
           <Logo size={32} variant="icon" className="md:hidden" />
           {/* Desktop: lockup completo */}
           <Logo size={28} variant="full" className="hidden md:block" />
+          {/* Context badge — só em desktop */}
+          <span className="hidden border-l border-border pl-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground xl:inline-block">
+            BR · Setup IA
+          </span>
         </Link>
 
         {/* Desktop nav */}
