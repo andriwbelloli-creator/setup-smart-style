@@ -1,18 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="HomeOfficeLife">
   <title>HomeOfficeLife</title>
-  <!-- background tile: rounded square in teal (brand primary) -->
+
+  <!-- Background tile: rounded square in teal (brand primary) -->
   <rect width="64" height="64" rx="14" fill="#0E3D3F"/>
 
-  <!-- "h" mark in cream, geometric grotesque proportions -->
-  <!-- left vertical (full height) -->
-  <rect x="18" y="14" width="5.5" height="36" rx="0.5" fill="#F7F5F0"/>
-  <!-- horizontal bar at mid -->
-  <rect x="18" y="29" width="22" height="5.5" rx="0.5" fill="#F7F5F0"/>
-  <!-- right vertical (lower half) -->
-  <rect x="34.5" y="29" width="5.5" height="21" rx="0.5" fill="#F7F5F0"/>
+  <!-- House silhouette in cream — roof + walls envelope the "h" -->
+  <!-- Roof (triangle) -->
+  <path d="M 32 12 L 50 26 L 50 30 L 14 30 L 14 26 Z" fill="#F7F5F0"/>
 
-  <!-- coral 4-point star — single decorative pulse -->
-  <g transform="translate(46 17)">
-    <path d="M0 -7 L2.4 -2.4 L7 0 L2.4 2.4 L0 7 L-2.4 2.4 L-7 0 L-2.4 -2.4 Z" fill="#F36458"/>
-  </g>
+  <!-- Chimney (subtle, coral accent for AI personality) -->
+  <rect x="42" y="14" width="4" height="8" rx="0.8" fill="#F36458"/>
+
+  <!-- "h" letterform inside the house body -->
+  <!-- Left vertical (full body height) -->
+  <rect x="20" y="32" width="5" height="20" rx="0.5" fill="#F7F5F0"/>
+  <!-- Horizontal connector (mid) -->
+  <rect x="20" y="39" width="19" height="5" rx="0.5" fill="#F7F5F0"/>
+  <!-- Right vertical (lower half) -->
+  <rect x="34" y="39" width="5" height="13" rx="0.5" fill="#F7F5F0"/>
 </svg>
