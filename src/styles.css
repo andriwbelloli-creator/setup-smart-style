@@ -49,8 +49,8 @@
 :root {
   --radius: 1rem;
 
-  /* Cream / wood inspired light palette */
-  --background: oklch(0.98 0.012 85);
+  /* Pure white background (override do brand cream a pedido do user) */
+  --background: oklch(1 0 0);
   --foreground: oklch(0.18 0.025 200);
 
   --card: oklch(1 0 0);
