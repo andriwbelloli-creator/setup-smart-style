@@ -4,18 +4,10 @@
   <!-- Background tile: rounded square in teal (brand primary) -->
   <rect width="64" height="64" rx="14" fill="#0E3D3F"/>
 
-  <!-- House silhouette in cream — roof + walls envelope the "h" -->
-  <!-- Roof (triangle) -->
-  <path d="M 32 12 L 50 26 L 50 30 L 14 30 L 14 26 Z" fill="#F7F5F0"/>
+  <!-- House silhouette in cream — outlined, scales clean to 16px -->
+  <path d="M 14 30 L 32 14 L 50 30 L 50 50 L 14 50 Z"
+        fill="none" stroke="#F7F5F0" stroke-width="4" stroke-linejoin="round"/>
 
-  <!-- Chimney (subtle, coral accent for AI personality) -->
-  <rect x="42" y="14" width="4" height="8" rx="0.8" fill="#F36458"/>
-
-  <!-- "h" letterform inside the house body -->
-  <!-- Left vertical (full body height) -->
-  <rect x="20" y="32" width="5" height="20" rx="0.5" fill="#F7F5F0"/>
-  <!-- Horizontal connector (mid) -->
-  <rect x="20" y="39" width="19" height="5" rx="0.5" fill="#F7F5F0"/>
-  <!-- Right vertical (lower half) -->
-  <rect x="34" y="39" width="5" height="13" rx="0.5" fill="#F7F5F0"/>
+  <!-- Coral accent dot — the "AI spark" marker -->
+  <circle cx="46" cy="20" r="3.5" fill="#F36458"/>
 </svg>
