@@ -66,12 +66,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  // Onda 5 — nova homepage é o padrão. ?legacy=1 mostra a versão anterior.
-  const showLegacy =
+  // Default: design original (HomeOfficeLife pre-redesign). ?new=1 mostra a nova homepage com carrossel.
+  const showNew =
     typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).get("legacy") === "1";
+    new URLSearchParams(window.location.search).get("new") === "1";
 
-  if (showLegacy) {
+  if (!showNew) {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
