@@ -80,7 +80,7 @@ const Hero = ({ onUpload, onExplore }: HeroProps) => {
               "group relative block cursor-pointer overflow-hidden rounded-[28px] bg-[var(--card)] shadow-[var(--shadow-elegant)] transition-all duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] " +
               (dragOver ? "border-4 border-[var(--primary)] scale-[1.02] shadow-[var(--shadow-glow)]" : "border-2 border-[var(--border)] hover:border-[var(--primary)]/50")
             }>
-            <img src="assets/hero-setup.webp" alt="Setup home office" className="block aspect-[16/11] h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105"/>
+            <img src="/__new/hero-setup.webp" alt="Setup home office" className="block aspect-[16/11] h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105"/>
             <div className={
               "absolute inset-0 flex flex-col items-center justify-center gap-3 backdrop-blur-[2px] transition-opacity duration-300 " +
               (dragOver ? "bg-[var(--primary)]/70 opacity-100" : "bg-[var(--foreground)]/55 opacity-0 group-hover:opacity-100")

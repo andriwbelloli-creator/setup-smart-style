@@ -10,8 +10,8 @@ const TRANSFORMATIONS = [
     investment: "R$ 1.200",
     score: { before: 5.2, after: 8.7 },
     improvements: ["+ Organização de cabos", "+ Suporte para notebook", "+ Luminária de mesa", "+ Planta"],
-    before: "assets/setup-before.webp",
-    after: "assets/setup-after.webp",
+    before: "/__new/setup-before.webp",
+    after: "/__new/setup-after.webp",
   },
   {
     label: "Apê pequeno",
@@ -19,8 +19,8 @@ const TRANSFORMATIONS = [
     investment: "R$ 800",
     score: { before: 4.8, after: 8.3 },
     improvements: ["+ Mesa compacta", "+ Iluminação", "+ Reorganização", "+ Decoração discreta"],
-    before: "assets/setup-compact.webp",
-    after: "assets/setup-minimal.webp",
+    before: "/__new/setup-compact.webp",
+    after: "/__new/setup-minimal.webp",
   },
 ];
 

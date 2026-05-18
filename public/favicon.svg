@@ -1,18 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="HomeOfficeLife">
   <title>HomeOfficeLife</title>
-  <!-- background tile: rounded square in teal (brand primary) -->
+
+  <!-- Background tile: rounded square in teal (brand primary) -->
   <rect width="64" height="64" rx="14" fill="#0E3D3F"/>
 
-  <!-- "h" mark in cream, geometric grotesque proportions -->
-  <!-- left vertical (full height) -->
-  <rect x="18" y="14" width="5.5" height="36" rx="0.5" fill="#F7F5F0"/>
-  <!-- horizontal bar at mid -->
-  <rect x="18" y="29" width="22" height="5.5" rx="0.5" fill="#F7F5F0"/>
-  <!-- right vertical (lower half) -->
-  <rect x="34.5" y="29" width="5.5" height="21" rx="0.5" fill="#F7F5F0"/>
+  <!-- House silhouette in cream — outlined, scales clean to 16px -->
+  <path d="M 14 30 L 32 14 L 50 30 L 50 50 L 14 50 Z"
+        fill="none" stroke="#F7F5F0" stroke-width="4" stroke-linejoin="round"/>
 
-  <!-- coral 4-point star — single decorative pulse -->
-  <g transform="translate(46 17)">
-    <path d="M0 -7 L2.4 -2.4 L7 0 L2.4 2.4 L0 7 L-2.4 2.4 L-7 0 L-2.4 -2.4 Z" fill="#F36458"/>
-  </g>
+  <!-- Coral accent dot — the "AI spark" marker -->
+  <circle cx="46" cy="20" r="3.5" fill="#F36458"/>
 </svg>
