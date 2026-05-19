@@ -8,7 +8,7 @@ const STEPS = [
     n: "01",
     icon: "Camera",
     title: "Envie uma foto",
-    desc: "Pode ser do seu home office, setup, escritório ou canto de trabalho. Funciona com qualquer ângulo.",
+    desc: "Pode ser do seu escritório, consultório, home office ou canto de trabalho. Funciona com qualquer ângulo.",
     accent: "var(--primary)",
   },
   {
@@ -47,7 +47,7 @@ const ComoFunciona = ({ onStart }: ComoFuncionaProps) => {
           <Pill tone="eyebrow" className="mb-4 !text-[10px]"><I.Zap size={11}/> Como funciona</Pill>
           <h2 style={{ fontFamily: "var(--font-display)" }}
               className="text-[28px] sm:text-[40px] font-bold leading-tight tracking-[-0.025em] text-[var(--foreground)]">
-            Do upload ao seu home office{" "}
+            Do upload ao seu office{" "}
             <span style={{ backgroundImage: "var(--gradient-warm)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
               em 4 passos
             </span>

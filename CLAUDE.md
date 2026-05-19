@@ -1,8 +1,8 @@
-# HomeOfficeLife — Project Guide for Claude Code
+# Office Planner — Project Guide for Claude Code
 
-This is the **HomeOfficeLife** (setup-smart-style) repo — a Brazilian platform that helps remote workers set up, evaluate, and improve their home office.
+This is the **Office Planner** (setup-smart-style) repo — a Brazilian AI platform to transform and plan escritórios, consultórios, home offices, and any professional workspace.
 
-- **Domain:** `homeofficelife.com.br`
+- **Domain:** `officeplanner.com.br`
 - **Stack:** TanStack Start (React 19) + Vite + Bun + Supabase (project ref `icwgkbvwehkjmkuiecuj`)
 - **Runtime:** `bun` at `~/.bun/bin/bun` — no npm/node
 - **Dev:** `bun dev` on port 8080

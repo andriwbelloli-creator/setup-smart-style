@@ -25,12 +25,12 @@ const NewHomepageWrapper = lazy(
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "HomeOfficeLife",
-  alternateName: "HomeOfficeLife BR",
-  url: "https://homeofficelife.com.br",
-  logo: "https://homeofficelife.com.br/favicon.svg",
+  name: "Office Planner",
+  alternateName: "Office Planner BR",
+  url: "https://officeplanner.com.br",
+  logo: "https://officeplanner.com.br/favicon.svg",
   description:
-    "Plataforma brasileira para montar, avaliar e melhorar setups de home office com IA, marketplace de usados e produtos curados.",
+    "Plataforma brasileira de IA para transformar e planejar escritórios, consultórios, home offices e ambientes profissionais.",
   areaServed: "BR",
   sameAs: [] as string[],
 };
@@ -38,12 +38,12 @@ const orgSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  url: "https://homeofficelife.com.br",
-  name: "HomeOfficeLife",
+  url: "https://officeplanner.com.br",
+  name: "Office Planner",
   inLanguage: "pt-BR",
   potentialAction: {
     "@type": "SearchAction",
-    target: "https://homeofficelife.com.br/galeria?q={search_term_string}",
+    target: "https://officeplanner.com.br/galeria?q={search_term_string}",
     "query-input": "required name=search_term_string",
   },
 };
@@ -51,10 +51,10 @@ const websiteSchema = {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "HomeOfficeLife — Transforme seu home office com IA · Brasil" },
-      { name: "description", content: "Envie uma foto do seu espaço e receba ideias decoradas, diagnóstico inteligente e produtos por orçamento para montar um home office mais bonito, confortável e produtivo." },
-      { property: "og:title", content: "HomeOfficeLife — Transforme seu home office com IA" },
-      { property: "og:description", content: "Envie uma foto do seu espaço e receba ideias decoradas + diagnóstico + produtos pra montar um home office melhor." },
+      { title: "Office Planner — Planeje seu office com IA · Brasil" },
+      { name: "description", content: "Envie uma foto do seu espaço e receba ideias decoradas com IA para escritórios, consultórios, home offices e ambientes profissionais. Diagnóstico inteligente e produtos curados." },
+      { property: "og:title", content: "Office Planner — Planeje seu office com IA" },
+      { property: "og:description", content: "Transforme escritórios, consultórios e home offices com IA. Envie uma foto e receba ideias decoradas, diagnóstico e produtos pra montar seu ambiente." },
       { property: "og:type", content: "website" },
     ],
     scripts: [

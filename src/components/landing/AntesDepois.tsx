@@ -44,16 +44,16 @@ export function AntesDepois() {
               <ArrowLeftRight className="h-3 w-3" /> Antes & Depois
             </div>
             <h2 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
-              Da bagunça ao{" "}
-              <span className="bg-gradient-warm bg-clip-text text-transparent">setup dos sonhos</span>
+              Do ambiente ao{" "}
+              <span className="bg-gradient-warm bg-clip-text text-transparent">office dos sonhos</span>
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Arraste o controle e veja transformações reais da comunidade. As mais virais ganham destaque na home toda semana.
+              Arraste o controle e veja transformações reais de escritórios, consultórios e home offices.
             </p>
             <div className="mt-8 grid grid-cols-3 gap-4">
               <div className="rounded-2xl bg-card p-4 shadow-soft">
                 <div className="font-display text-2xl font-bold text-primary">{stats?.total ?? "—"}</div>
-                <div className="text-xs text-muted-foreground">Setups na galeria</div>
+                <div className="text-xs text-muted-foreground">Ambientes na galeria</div>
               </div>
               <div className="rounded-2xl bg-card p-4 shadow-soft">
                 <div className="font-display text-2xl font-bold text-accent">6 lojas</div>

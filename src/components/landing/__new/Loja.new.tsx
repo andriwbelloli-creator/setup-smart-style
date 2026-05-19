@@ -28,7 +28,7 @@ const Loja = () => {
           <div>
             <Pill tone="eyebrow" className="mb-3 !text-[10px]"><I.Shopping size={11}/> Loja · Novidade</Pill>
             <h2 style={{ fontFamily:"var(--font-display)" }} className="text-[28px] sm:text-[34px] font-bold leading-tight tracking-[-0.025em] text-[var(--foreground)]">
-              Compre e venda <span style={{ backgroundImage:"var(--gradient-warm)", WebkitBackgroundClip:"text", backgroundClip:"text", color:"transparent" }}>home office</span> entre pessoas
+              Compre e venda <span style={{ backgroundImage:"var(--gradient-warm)", WebkitBackgroundClip:"text", backgroundClip:"text", color:"transparent" }}>equipamentos de office</span> entre pessoas
             </h2>
             <p className="mt-2 max-w-xl text-sm text-[var(--muted-foreground)]">Monitor, cadeira, teclado, mesa — direto com quem usou. Sem taxa.</p>
             <div className="mt-3 flex flex-wrap gap-2">

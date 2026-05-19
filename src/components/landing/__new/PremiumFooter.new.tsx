@@ -13,7 +13,7 @@ export const PremiumCTA = () => {
           <div className="relative mx-auto max-w-2xl">
             <I.Crown size={36} className="mx-auto mb-3 text-[var(--brand-coral-500)]"/>
             <h2 style={{ fontFamily:"var(--font-display)" }} className="text-[26px] sm:text-[34px] font-bold leading-tight tracking-[-0.02em]">
-              Faça mais do seu home office com Premium
+              Faça mais do seu office com Premium
             </h2>
             <p className="mt-3 text-base text-white/85 md:text-lg">
               Análises ilimitadas, plano de ação detalhado e lista de compras priorizada.
