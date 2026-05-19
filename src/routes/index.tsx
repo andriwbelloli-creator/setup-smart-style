@@ -66,32 +66,32 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  // Layout original é o padrão. ?new=1 mostra a versão experimental.
-  const showNew =
+  // Nova homepage é o padrão. ?legacy=1 mostra a versão anterior.
+  const showLegacy =
     typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).get("new") === "1";
+    new URLSearchParams(window.location.search).get("legacy") === "1";
 
-  if (showNew) {
+  if (showLegacy) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-background" />}>
-        <NewHomepageWrapper />
-      </Suspense>
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main id="main-content">
+          <Hero />
+          <AnaliseIA />
+          <AntesDepois />
+          <Galeria />
+          <MarketplaceSection />
+          <FaqSection />
+          <CTA />
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main id="main-content">
-        <Hero />
-        <AnaliseIA />
-        <AntesDepois />
-        <Galeria />
-        <MarketplaceSection />
-        <FaqSection />
-        <CTA />
-      </main>
-      <Footer />
-    </div>
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <NewHomepageWrapper />
+    </Suspense>
   );
 }
