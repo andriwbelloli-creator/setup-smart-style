@@ -66,32 +66,32 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  // Onda 5 — nova homepage é o padrão. ?legacy=1 mostra a versão anterior.
-  const showLegacy =
+  // Layout original é o padrão. ?new=1 mostra a versão experimental.
+  const showNew =
     typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).get("legacy") === "1";
+    new URLSearchParams(window.location.search).get("new") === "1";
 
-  if (showLegacy) {
+  if (showNew) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        <main id="main-content">
-          <Hero />
-          <AnaliseIA />
-          <AntesDepois />
-          <Galeria />
-          <MarketplaceSection />
-          <FaqSection />
-          <CTA />
-        </main>
-        <Footer />
-      </div>
+      <Suspense fallback={<div className="min-h-screen bg-background" />}>
+        <NewHomepageWrapper />
+      </Suspense>
     );
   }
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-background" />}>
-      <NewHomepageWrapper />
-    </Suspense>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main id="main-content">
+        <Hero />
+        <AnaliseIA />
+        <AntesDepois />
+        <Galeria />
+        <MarketplaceSection />
+        <FaqSection />
+        <CTA />
+      </main>
+      <Footer />
+    </div>
   );
 }
