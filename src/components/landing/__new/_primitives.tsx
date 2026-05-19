@@ -18,16 +18,25 @@ export interface LogoProps {
   tone?: "brand" | "white";
 }
 export const Logo = ({ size = 28, variant = "full", tone = "brand" }: LogoProps) => {
-  const primary = tone === "white" ? "#FFFFFF" : "#0E3D3F";
-  const accent  = tone === "white" ? "#FFFFFF" : "#F36458";
-  const width = variant === "full" ? size * 4.6 : size;
+  const inkColor   = tone === "white" ? "#FFFFFF" : "#0F1F22";
+  const mutedColor = tone === "white" ? "rgba(255,255,255,0.55)" : "#54676B";
+  const totalW = variant === "full" ? size + size * 3.6 : size;
   return (
-    <svg width={width} height={size} viewBox={variant === "full" ? "0 0 184 40" : "0 0 40 40"} fill="none" role="img" aria-label="homeoffice.life">
-      <path d="M9 7v25h5.5V21c0-3 1.8-5 4.5-5s4.5 2 4.5 5v11H29V20c0-5.5-3.6-9.2-8.8-9.2-2.4 0-4.5.9-5.7 2.4V7H9z" fill={primary}/>
-      <path d="M32 4.5l1.1 3.4 3.4 1.1-3.4 1.1L32 13.5l-1.1-3.4-3.4-1.1 3.4-1.1L32 4.5z" fill={accent}/>
+    <svg width={totalW} height={size} viewBox={variant === "full" ? `0 0 ${40 + 40 * 3.6} 40` : "0 0 40 40"} fill="none" role="img" aria-label="Office Planner">
+      {/* Squircle */}
+      <rect width="40" height="40" rx="9" fill="#0F1F22"/>
+      {/* Porta: frame */}
+      <rect x="9" y="8" width="17" height="24" rx="1.5" stroke="white" strokeWidth="1.8" fill="none"/>
+      {/* Painel âmbar */}
+      <rect x="20" y="8" width="6" height="24" rx="1" fill="#F5A623" opacity="0.92"/>
+      {/* Divisória */}
+      <line x1="20" y1="8" x2="20" y2="32" stroke="white" strokeWidth="1.4"/>
+      {/* Maçaneta coral */}
+      <circle cx="17.2" cy="20.5" r="1.4" fill="#F36458"/>
       {variant === "full" && (
-        <text x="50" y="28" fontFamily='"Space Grotesk", system-ui, sans-serif' fontWeight="700" fontSize="20" fill={primary} letterSpacing="-0.02em">
-          homeoffice<tspan fontWeight="500">life</tspan>
+        <text x="48" y="26.5" fontFamily='"Space Grotesk", system-ui, sans-serif' fontSize="18" letterSpacing="-0.025em" fill={inkColor}>
+          <tspan fontWeight="700">Office</tspan>
+          <tspan fontWeight="500" fill={mutedColor}> Planner</tspan>
         </text>
       )}
     </svg>

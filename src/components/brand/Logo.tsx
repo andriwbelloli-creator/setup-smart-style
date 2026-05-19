@@ -1,30 +1,21 @@
-// Logo da marca homeoffice.life — SVG inline, horizontal lockup.
+// Logo canônico — Office Planner
 //
-// PROPÓSITO DA MARCA:
-//   - "h" minúsculo: humano, acessível, brasileiro (Lat Lab style)
-//   - Sparkle coral: insight da IA (não decorativo — é o produto)
-//   - Wordmark sans condensado: tecnológico mas caloroso
+// Conceito: Porta Aberta (logo 08)
+//   - Squircle escuro: profissionalismo, solidez
+//   - Porta branca entreaberta: entrada no espaço
+//   - Painel âmbar à direita: luz, transformação, IA
+//   - Maçaneta coral: elemento de identidade da marca
 //
-// PORQUÊ SVG (não PNG):
-//   1. Escala perfeito de 16px (favicon) a 200px (hero) sem perda
-//   2. Cores usam CSS variables — se mudar paleta, logo acompanha
-//   3. ~1KB no bundle vs ~80KB PNG
-//   4. Single source pra rich logos, monocromáticos, favicons
-//
-// COMO USAR:
-//   <Logo size={32} />        — só ícone (32px)
-//   <Logo size={32} variant="full" />     — ícone + wordmark
-//   <Logo size={32} variant="full" tone="white" />  — versão pra fundo escuro
+// USO:
+//   <Logo size={32} />                          — ícone (squircle)
+//   <Logo size={32} variant="full" />           — ícone + wordmark
+//   <Logo size={32} variant="full" tone="white" /> — sobre fundo escuro
 
 type Props = {
-  /** Altura em px. Wordmark escala proporcional. */
   size?: number;
-  /** "icon" = só o h, "full" = h + wordmark */
   variant?: "icon" | "full";
-  /** "brand" usa cores da marca, "white" inverte pra fundo escuro */
   tone?: "brand" | "white";
   className?: string;
-  /** Texto pro aria-label e <title> do SVG */
   label?: string;
 };
 
@@ -33,52 +24,59 @@ export function Logo({
   variant = "full",
   tone = "brand",
   className,
-  label = "homeofficelife — home office avaliado por IA",
+  label = "Office Planner — planeje seu office com IA",
 }: Props) {
-  // Cores: brand usa CSS vars (acompanha tema/dark mode). White hardcoded.
-  const primary = tone === "white" ? "#FFFFFF" : "var(--color-primary)";
-  const accent = tone === "white" ? "#FFFFFF" : "var(--color-accent)";
+  const inkColor   = tone === "white" ? "#FFFFFF" : "#0F1F22";
+  const mutedColor = tone === "white" ? "rgba(255,255,255,0.55)" : "#54676B";
 
-  // Proporções: ícone é quadrado size×size. Wordmark adiciona ~3.6× a largura.
-  const width = variant === "full" ? size * 4.6 : size;
+  // Ícone: squircle escuro + porta branca + painel âmbar
+  // viewBox 40×40 para o ícone isolado; full adiciona wordmark à direita
+  const iconW = size;
+  const totalW = variant === "full" ? size + size * 3.6 : size;
 
   return (
     <svg
       role="img"
       aria-label={label}
-      width={width}
-      height={size}
-      viewBox={variant === "full" ? "0 0 184 40" : "0 0 40 40"}
+      width={totalW}
+      height={iconW}
+      viewBox={variant === "full" ? `0 0 ${40 + 40 * 3.6} 40` : "0 0 40 40"}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
       <title>{label}</title>
 
-      {/* "h" — sem serif, peso médio. Path otimizado pra parecer corpo arredondado. */}
-      <path
-        d="M9 7v25h5.5V21c0-3 1.8-5 4.5-5s4.5 2 4.5 5v11H29V20c0-5.5-3.6-9.2-8.8-9.2-2.4 0-4.5.9-5.7 2.4V7H9z"
-        fill={primary}
-      />
+      {/* ── Squircle background ── */}
+      <rect width="40" height="40" rx="9" fill="#0F1F22" />
 
-      {/* Sparkle (4 pontas) — coral. Posicionado no topo-direito do h. */}
-      <path
-        d="M32 4.5l1.1 3.4 3.4 1.1-3.4 1.1L32 13.5l-1.1-3.4-3.4-1.1 3.4-1.1L32 4.5z"
-        fill={accent}
-      />
+      {/* ── Porta: frame exterior (branco) ── */}
+      <rect x="9" y="8" width="17" height="24" rx="1.5"
+            stroke="white" strokeWidth="1.8" fill="none" />
 
-      {/* Wordmark — só se variant=full */}
+      {/* ── Painel âmbar (folha direita aberta — luz entrando) ── */}
+      <rect x="20" y="8" width="6" height="24" rx="1"
+            fill="#F5A623" opacity="0.92" />
+
+      {/* ── Divisória (linha da dobradiça) ── */}
+      <line x1="20" y1="8" x2="20" y2="32"
+            stroke="white" strokeWidth="1.4" />
+
+      {/* ── Maçaneta (coral — elemento de identidade) ── */}
+      <circle cx="17.2" cy="20.5" r="1.4" fill="#F36458" />
+
+      {/* ── Wordmark: "Office Planner" — só se variant=full ── */}
       {variant === "full" && (
         <text
-          x={50}
-          y={28}
+          x="48"
+          y="26.5"
           fontFamily='"Space Grotesk", "DM Sans", system-ui, sans-serif'
-          fontWeight={700}
-          fontSize={20}
-          fill={primary}
-          letterSpacing="-0.02em"
+          fontSize="18"
+          letterSpacing="-0.025em"
+          fill={inkColor}
         >
-          homeoffice<tspan fontWeight={500}>life</tspan>
+          <tspan fontWeight="700">Office</tspan>
+          <tspan fontWeight="500" fill={mutedColor}> Planner</tspan>
         </text>
       )}
     </svg>
