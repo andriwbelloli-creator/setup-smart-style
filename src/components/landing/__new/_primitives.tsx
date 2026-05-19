@@ -18,25 +18,27 @@ export interface LogoProps {
   tone?: "brand" | "white";
 }
 export const Logo = ({ size = 28, variant = "full", tone = "brand" }: LogoProps) => {
+  const doorColor  = tone === "white" ? "#FFFFFF" : "#2A8E8E";
+  const panelOp    = tone === "white" ? "0.25" : "0.18";
   const inkColor   = tone === "white" ? "#FFFFFF" : "#0F1F22";
   const mutedColor = tone === "white" ? "rgba(255,255,255,0.55)" : "#54676B";
-  const totalW = variant === "full" ? size + size * 3.6 : size;
+  const gap = Math.round(size * 0.28);
+  const fontSize = Math.round(size * 0.55);
+  const totalW = variant === "full" ? size + gap + Math.round(fontSize * 8.2) : size;
   return (
-    <svg width={totalW} height={size} viewBox={variant === "full" ? `0 0 ${40 + 40 * 3.6} 40` : "0 0 40 40"} fill="none" role="img" aria-label="Office Planner">
-      {/* Squircle */}
-      <rect width="40" height="40" rx="9" fill="#0F1F22"/>
-      {/* Porta: frame */}
-      <rect x="9" y="8" width="17" height="24" rx="1.5" stroke="white" strokeWidth="1.8" fill="none"/>
-      {/* Painel âmbar */}
-      <rect x="20" y="8" width="6" height="24" rx="1" fill="#F5A623" opacity="0.92"/>
-      {/* Divisória */}
-      <line x1="20" y1="8" x2="20" y2="32" stroke="white" strokeWidth="1.4"/>
-      {/* Maçaneta coral */}
-      <circle cx="17.2" cy="20.5" r="1.4" fill="#F36458"/>
+    <svg width={totalW} height={size} viewBox={`0 0 ${totalW} ${size}`} fill="none" role="img" aria-label="Office Planner">
+      {/* Porta aberta (viewBox 36×36) */}
+      <svg width={size} height={size} viewBox="0 0 36 36" fill="none">
+        <rect x="5" y="4" width="20" height="28" rx="2" stroke={doorColor} strokeWidth="2.5" fill="none"/>
+        <path d="M25 6 L31 8.5 L31 30 L25 32 Z" fill={doorColor} opacity={panelOp}/>
+        <path d="M25 6 L31 8.5 L31 30 L25 32 Z" stroke={doorColor} strokeWidth="1.8" strokeLinejoin="round" fill="none"/>
+        <line x1="25" y1="6" x2="25" y2="32" stroke={doorColor} strokeWidth="2.2"/>
+        <circle cx="22.5" cy="19" r="1.5" fill="#F36458"/>
+      </svg>
       {variant === "full" && (
-        <text x="48" y="26.5" fontFamily='"Space Grotesk", system-ui, sans-serif' fontSize="18" letterSpacing="-0.025em" fill={inkColor}>
+        <text x={size + gap} y={Math.round(size * 0.68)} fontFamily='"Space Grotesk", system-ui, sans-serif' fontSize={fontSize} letterSpacing="-0.02em" fill={inkColor}>
           <tspan fontWeight="700">Office</tspan>
-          <tspan fontWeight="500" fill={mutedColor}> Planner</tspan>
+          <tspan fontWeight="400" fill={mutedColor}> Planner</tspan>
         </text>
       )}
     </svg>
