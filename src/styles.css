@@ -49,83 +49,80 @@
 :root {
   --radius: 1rem;
 
-  /* Pure white background (override do brand cream a pedido do user) */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.18 0.025 200);
+  --foreground: oklch(0.17 0.02 250);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.025 200);
+  --card-foreground: oklch(0.17 0.02 250);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.025 200);
+  --popover-foreground: oklch(0.17 0.02 250);
 
-  /* Deep teal — primary brand (#0E3D3F) */
-  --primary: oklch(0.30 0.045 195);
-  --primary-foreground: oklch(0.98 0.012 85);
+  /* Blue — primary brand */
+  --primary: oklch(0.50 0.185 255);
+  --primary-foreground: oklch(0.98 0.003 255);
 
-  --secondary: oklch(0.94 0.02 85);
-  --secondary-foreground: oklch(0.22 0.03 200);
+  --secondary: oklch(0.96 0.004 247);
+  --secondary-foreground: oklch(0.20 0.025 250);
 
-  --muted: oklch(0.95 0.015 85);
-  --muted-foreground: oklch(0.54 0.020 195);
+  --muted: oklch(0.96 0.004 247);
+  --muted-foreground: oklch(0.52 0.022 250);
 
-  /* Coral (#F36458) — accent state */
-  --accent: oklch(0.65 0.18 22);
-  --accent-foreground: oklch(0.18 0.025 200);
+  --accent: oklch(0.96 0.004 247);
+  --accent-foreground: oklch(0.20 0.025 250);
 
   --destructive: oklch(0.6 0.22 27);
-  --destructive-foreground: oklch(0.98 0.012 85);
+  --destructive-foreground: oklch(0.98 0.003 255);
 
-  /* Semantic state colors — usar pra success/warning/info messages,
-     badges, status indicators. Mantém harmonia com a paleta principal. */
-  --success: oklch(0.6 0.13 155);            /* verde tea — bom contraste sem ser neon */
-  --success-foreground: oklch(0.98 0.012 85);
-  --warning: oklch(0.72 0.15 75);            /* âmbar quente */
-  --warning-foreground: oklch(0.18 0.025 200);
-  --info: oklch(0.55 0.12 220);              /* azul-acinzentado, calmo */
-  --info-foreground: oklch(0.98 0.012 85);
+  /* Semantic state colors */
+  --success: oklch(0.55 0.15 145);
+  --success-foreground: oklch(0.98 0.003 255);
+  --warning: oklch(0.65 0.16 75);
+  --warning-foreground: oklch(0.17 0.02 250);
+  --info: oklch(0.50 0.185 255);
+  --info-foreground: oklch(0.98 0.003 255);
 
-  --border: oklch(0.9 0.015 85);
-  --input: oklch(0.9 0.015 85);
-  --ring: oklch(0.30 0.045 195);
+  --border: oklch(0.90 0.004 247);
+  --input: oklch(0.90 0.004 247);
+  --ring: oklch(0.50 0.185 255);
 
   /* Custom tokens */
   --wood: oklch(0.62 0.09 55);
-  --wood-foreground: oklch(0.98 0.012 85);
-  --coral: oklch(0.65 0.18 22);
-  --coral-foreground: oklch(0.98 0.012 85);
-  --cream: oklch(0.96 0.018 85);
+  --wood-foreground: oklch(0.98 0.003 255);
+  --coral: oklch(0.60 0.20 27);
+  --coral-foreground: oklch(0.98 0.003 255);
+  --cream: oklch(0.98 0.002 247);
 
   /* Gradients */
-  --gradient-hero: linear-gradient(135deg, oklch(0.24 0.04 195) 0%, oklch(0.30 0.045 195) 50%, oklch(0.42 0.06 195) 100%);
-  --gradient-warm: linear-gradient(90deg, oklch(0.72 0.16 43) 0%, oklch(0.65 0.18 22) 100%);
-  --gradient-mesh: radial-gradient(at 20% 20%, oklch(0.30 0.045 195 / 0.10) 0%, transparent 50%),
-                   radial-gradient(at 80% 0%, oklch(0.65 0.18 22 / 0.12) 0%, transparent 50%),
-                   radial-gradient(at 80% 100%, oklch(0.62 0.09 55 / 0.08) 0%, transparent 50%);
+  --gradient-hero: linear-gradient(135deg, oklch(0.30 0.12 255) 0%, oklch(0.50 0.185 255) 100%);
+  --gradient-warm: linear-gradient(90deg, oklch(0.60 0.18 255) 0%, oklch(0.45 0.18 270) 100%);
+  --gradient-mesh: radial-gradient(at 20% 20%, oklch(0.50 0.185 255 / 0.10) 0%, transparent 50%),
+                   radial-gradient(at 80% 0%, oklch(0.50 0.185 255 / 0.08) 0%, transparent 50%),
+                   radial-gradient(at 80% 100%, oklch(0.50 0.185 255 / 0.05) 0%, transparent 50%);
 
   /* Shadows */
-  --shadow-soft: 0 1px 2px oklch(0.18 0.025 200 / 0.04), 0 8px 28px oklch(0.18 0.025 200 / 0.08);
-  --shadow-elegant: 0 2px 4px oklch(0.18 0.025 200 / 0.04), 0 20px 60px oklch(0.18 0.025 200 / 0.18);
-  --shadow-glow: 0 16px 48px -12px oklch(0.65 0.18 22 / 0.40);
-  --shadow-coral: 0 10px 30px -10px oklch(0.65 0.18 22 / 0.4);
+  --shadow-soft: 0 1px 2px oklch(0.17 0.02 250 / 0.04), 0 8px 28px oklch(0.17 0.02 250 / 0.08);
+  --shadow-elegant: 0 2px 4px oklch(0.17 0.02 250 / 0.04), 0 20px 60px oklch(0.17 0.02 250 / 0.18);
+  --shadow-glow: 0 16px 48px -12px oklch(0.50 0.185 255 / 0.35);
+  --shadow-coral: 0 10px 30px -10px oklch(0.50 0.185 255 / 0.3);
 
   /* Transitions */
   --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
   --transition-base: all 300ms var(--ease-smooth);
 
-  --sidebar: oklch(0.98 0.012 85);
-  --sidebar-foreground: oklch(0.18 0.025 200);
-  --sidebar-primary: oklch(0.30 0.045 195);
-  --sidebar-primary-foreground: oklch(0.98 0.012 85);
-  --sidebar-accent: oklch(0.94 0.02 85);
-  --sidebar-accent-foreground: oklch(0.22 0.03 200);
-  --sidebar-border: oklch(0.9 0.015 85);
-  --sidebar-ring: oklch(0.30 0.045 195);
+  --sidebar: oklch(0.98 0.002 247);
+  --sidebar-foreground: oklch(0.17 0.02 250);
+  --sidebar-primary: oklch(0.50 0.185 255);
+  --sidebar-primary-foreground: oklch(0.98 0.003 255);
+  --sidebar-accent: oklch(0.96 0.004 247);
+  --sidebar-accent-foreground: oklch(0.20 0.025 250);
+  --sidebar-border: oklch(0.90 0.004 247);
+  --sidebar-ring: oklch(0.50 0.185 255);
 
-  --chart-1: oklch(0.30 0.045 195);
-  --chart-2: oklch(0.65 0.18 22);
-  --chart-3: oklch(0.62 0.09 55);
-  --chart-4: oklch(0.55 0.09 180);
-  --chart-5: oklch(0.45 0.06 220);
+  --chart-1: oklch(0.50 0.185 255);
+  --chart-2: oklch(0.60 0.18 220);
+  --chart-3: oklch(0.55 0.15 280);
+  --chart-4: oklch(0.65 0.14 200);
+  --chart-5: oklch(0.45 0.12 240);
 }
 
 .dark {
@@ -279,18 +276,18 @@
 
 /* Brand palette aliases (hex, para portabilidade em CSS arbitrário) */
 :root {
-  --brand-teal-900: #0E3D3F;
-  --brand-teal-700: #155659;
-  --brand-teal-500: #2A8E8E;
-  --brand-teal-300: #6FB8B5;
+  --brand-teal-900: #1E3A5F;
+  --brand-teal-700: #1D4ED8;
+  --brand-teal-500: #3B82F6;
+  --brand-teal-300: #93C5FD;
   --brand-coral-500: #F36458;
   --brand-coral-300: #F9A89A;
   --brand-wood-500: #B5854A;
   --brand-wood-300: #D9B58A;
-  --brand-cream-50: #FBF8F1;
-  --brand-cream-100: #F7F4EC;
-  --brand-ink-900: #0F1F22;
-  --brand-ink-600: #54676B;
+  --brand-cream-50: #F8FAFC;
+  --brand-cream-100: #F1F5F9;
+  --brand-ink-900: #0F172A;
+  --brand-ink-600: #475569;
 
   /* Type scale CSS vars (espelha a escala já em uso no @layer base) */
   --text-xs:   0.75rem;

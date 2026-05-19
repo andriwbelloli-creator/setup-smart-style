@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Office Planner">
   <title>Office Planner</title>
-  <rect width="64" height="64" rx="14" fill="#0F1F22"/>
+  <rect width="64" height="64" rx="14" fill="#1E3A5F"/>
   <!-- Porta: frame exterior -->
   <rect x="13" y="11" width="27" height="42" rx="2.5" stroke="white" stroke-width="2.8" fill="none"/>
-  <!-- Painel âmbar (folha aberta) -->
-  <rect x="31" y="11" width="9" height="42" rx="1.5" fill="#F5A623" opacity="0.92"/>
+  <!-- Painel azul (folha aberta) -->
+  <rect x="31" y="11" width="9" height="42" rx="1.5" fill="#93C5FD" opacity="0.90"/>
   <!-- Divisória -->
   <line x1="31" y1="11" x2="31" y2="53" stroke="white" stroke-width="2.2"/>
-  <!-- Maçaneta coral -->
-  <circle cx="26.5" cy="33" r="2.5" fill="#F36458"/>
+  <!-- Maçaneta azul -->
+  <circle cx="26.5" cy="33" r="2.5" fill="#60A5FA"/>
 </svg>
