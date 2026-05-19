@@ -1,12 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Office Planner">
   <title>Office Planner</title>
-  <rect width="64" height="64" rx="14" fill="#0F1F22"/>
-  <!-- Porta: frame exterior -->
-  <rect x="13" y="11" width="27" height="42" rx="2.5" stroke="white" stroke-width="2.8" fill="none"/>
-  <!-- Painel âmbar (folha aberta) -->
-  <rect x="31" y="11" width="9" height="42" rx="1.5" fill="#F5A623" opacity="0.92"/>
-  <!-- Divisória -->
-  <line x1="31" y1="11" x2="31" y2="53" stroke="white" stroke-width="2.2"/>
+  <!-- Fundo teal escuro -->
+  <rect width="64" height="64" rx="14" fill="#0E3D3F"/>
+  <!-- Frame da porta (teal claro) -->
+  <rect x="9" y="7" width="35" height="50" rx="3.5" stroke="#6FB8B5" stroke-width="4.5" fill="none"/>
+  <!-- Folha aberta em perspectiva -->
+  <path d="M44 10 L56 15 L56 54 L44 57 Z" fill="#6FB8B5" opacity="0.22"/>
+  <path d="M44 10 L56 15 L56 54 L44 57 Z" stroke="#6FB8B5" stroke-width="3.2" stroke-linejoin="round" fill="none"/>
+  <!-- Linha divisória -->
+  <line x1="44" y1="10" x2="44" y2="57" stroke="#6FB8B5" stroke-width="4"/>
   <!-- Maçaneta coral -->
-  <circle cx="26.5" cy="33" r="2.5" fill="#F36458"/>
+  <circle cx="39" cy="34" r="3" fill="#F36458"/>
 </svg>
