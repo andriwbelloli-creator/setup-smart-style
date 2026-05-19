@@ -13,7 +13,7 @@ export function CTA() {
           <div className="relative mx-auto max-w-2xl">
             <Crown className="mx-auto mb-4 h-10 w-10 text-accent" />
             <h2 className="font-display text-3xl font-bold leading-tight md:text-4xl">
-              Faça mais do seu home office com Premium
+              Faça mais do seu office com Premium
             </h2>
             <p className="mt-3 text-base text-primary-foreground/85 md:text-lg">
               Análises ilimitadas, plano de ação detalhado e lista de compras priorizada.
@@ -59,15 +59,15 @@ export function Footer() {
           <NewsletterCapture
             source="footer"
             variant="card"
-            title="3 setups + 1 dica de upgrade, toda semana."
+            title="3 projetos + 1 dica de ambiente, toda semana."
             subtitle="Curadoria editorial. Sem spam. Cancela em 1 clique."
           />
         </div>
         <div className="flex flex-col items-start justify-between gap-6 border-t border-border pt-8 md:flex-row md:items-center">
           <div>
-            <div className="font-display text-xl font-bold">HomeOfficeLife</div>
+            <div className="font-display text-xl font-bold">Office Planner</div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Feito no Brasil pra quem trabalha de casa. © 2026
+              Feito no Brasil para ambientes profissionais. © 2026
             </p>
           </div>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">

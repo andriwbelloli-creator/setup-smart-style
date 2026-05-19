@@ -13,8 +13,8 @@ const FAQS: { q: string; a: string }[] = [
     a: "Não. Sua foto é processada pela IA e descartada logo após a análise — não fica em galeria pública. Você decide depois se quer publicar.",
   },
   {
-    q: "Como a IA analisa o setup?",
-    a: "Avaliamos 6 critérios: ergonomia, iluminação, organização de cabos, organização visual, estética e produtividade. Cada nota tem sugestão prática.",
+    q: "Como a IA analisa meu ambiente?",
+    a: "Avaliamos 6 critérios: ergonomia, iluminação, organização de cabos, organização visual, estética e produtividade. Cada nota vem com sugestão prática.",
   },
   {
     q: "Funciona no celular?",

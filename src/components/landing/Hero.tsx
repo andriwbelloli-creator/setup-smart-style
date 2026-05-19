@@ -17,9 +17,9 @@ import { useExperiment } from "@/hooks/use-experiment";
 // depois de ~200 cliques distribuídos entre as variantes.
 const HERO_CTA_VARIANTS = ["control", "direct", "outcome"] as const;
 const HERO_CTA_COPY: Record<typeof HERO_CTA_VARIANTS[number], string> = {
-  control: "Gerar ideias para meu home office",
+  control: "Criar projeto para meu office",
   direct: "Enviar foto e transformar meu espaço",
-  outcome: "Descobrir o que falta no meu home office",
+  outcome: "Descobrir o que falta no meu espaço",
 };
 
 // Amazon BR com filtro de categoria `i=computers` — única loja BR que
@@ -74,15 +74,15 @@ export function Hero() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
             <Zap className="h-3.5 w-3.5" />
-            Decoração, ergonomia e produtos · IA brasileira em 30s
+            Escritórios, consultórios e home offices · IA brasileira em 30s
           </div>
           <h1 className="font-display text-5xl font-bold leading-[1.02] tracking-tight text-foreground md:text-6xl lg:text-7xl">
-            Transforme seu{" "}
-            <span className="bg-gradient-warm bg-clip-text text-transparent">home office</span>{" "}
+            Planeje seu{" "}
+            <span className="bg-gradient-warm bg-clip-text text-transparent">office</span>{" "}
             com IA.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-            Envie a foto do seu espaço e receba <strong className="text-foreground">ideias decoradas, diagnóstico inteligente</strong> e sugestões de produtos pra montar um ambiente mais bonito, confortável e produtivo.
+            Envie a foto do seu espaço e receba <strong className="text-foreground">ideias decoradas, diagnóstico inteligente</strong> e sugestões de produtos pra montar um escritório, consultório ou home office mais produtivo.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="lg" className="group h-14 gap-2 bg-gradient-hero px-8 text-base font-bold shadow-elegant transition-smooth hover:shadow-glow hover:scale-[1.02]">
@@ -163,7 +163,7 @@ export function Hero() {
             />
             <img
               src={heroImg}
-              alt="Setup home office com mesa de madeira, monitor ultrawide e parede turquesa"
+              alt="Escritório com mesa de madeira, monitor ultrawide e parede turquesa"
               width={1600}
               height={1100}
               loading="eager"

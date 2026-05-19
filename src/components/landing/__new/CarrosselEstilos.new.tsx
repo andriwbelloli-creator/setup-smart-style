@@ -51,7 +51,7 @@ const STYLE_CARDS = [
     badge: "Visual profissional",
     investimento: "premium",
     investLabel: "R$ 8k+",
-    cta: "Gerar home office premium",
+    cta: "Gerar office premium",
     img: "/__new/setup-after.webp",
     palette: ["#0E3D3F", "#54676B", "#D9B58A", "#FBF8F1"],
     elements: ["Marcenaria", "Cadeira de design", "Iluminação indireta", "Obras de arte"],
@@ -714,14 +714,14 @@ const CarrosselEstilos = ({ adminCards, state = "ready", onCardClick }: Carrosse
             fontSize: "clamp(26px, 4vw, 40px)", lineHeight: 1.08,
             letterSpacing: "-0.025em", color: "var(--foreground)", margin: 0,
           }}>
-            Veja ideias de home office para{" "}
+            Veja ideias de office para{" "}
             <span style={{
               backgroundImage: "var(--gradient-warm)",
               WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent",
             }}>todos os estilos e orçamentos</span>
           </h2>
           <p style={{ marginTop: 12, fontSize: 16, color: "var(--muted-foreground)", lineHeight: 1.55 }}>
-            De um simples reposicionamento sem gastar nada até projetos sofisticados — gere versões decoradas do seu home office com IA.
+            De um simples reposicionamento sem gastar nada até projetos sofisticados — gere versões decoradas do seu office com IA.
           </p>
         </div>
 
@@ -898,7 +898,7 @@ const CarrosselEstilos = ({ adminCards, state = "ready", onCardClick }: Carrosse
                   onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => e.currentTarget.style.transform = "scale(1.03)"}
                   onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => e.currentTarget.style.transform = "scale(1)"}
                 >
-                  <I.Camera size={20}/> Gerar meu home office com IA
+                  <I.Camera size={20}/> Gerar meu office com IA
                 </button>
                 <button
                   onClick={() => { scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" }); setInvestFilter("todos"); }}

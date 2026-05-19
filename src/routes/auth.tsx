@@ -14,8 +14,8 @@ import { Sparkles } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar · HomeOfficeLife" },
-      { name: "description", content: "Crie sua conta no HomeOfficeLife e poste seu setup brasileiro." },
+      { title: "Entrar · Office Planner" },
+      { name: "description", content: "Crie sua conta no Office Planner e planeje ambientes profissionais com IA." },
     ],
   }),
   component: AuthPage,
@@ -162,8 +162,8 @@ function AuthPage() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="font-display text-2xl font-bold">Entre no HomeOfficeLife</h1>
-              <p className="text-xs text-muted-foreground">Comunidade brasileira de home offices</p>
+              <h1 className="font-display text-2xl font-bold">Entre no Office Planner</h1>
+              <p className="text-xs text-muted-foreground">Plataforma de IA para ambientes profissionais</p>
             </div>
           </div>
 

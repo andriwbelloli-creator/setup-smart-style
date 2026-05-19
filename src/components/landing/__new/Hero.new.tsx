@@ -26,7 +26,7 @@ const Hero = ({ onUpload, onExplore }: HeroProps) => {
 
           <h1 style={{ fontFamily: "var(--font-display)" }}
               className="text-[36px] sm:text-[48px] lg:text-[58px] font-bold tracking-[-0.025em] leading-[1.02] text-[var(--foreground)]">
-            Transforme seu home office com{" "}
+            Planeje seu office com{" "}
             <span style={{ backgroundImage: "var(--gradient-warm)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
               ideias geradas por IA
             </span>
@@ -40,7 +40,7 @@ const Hero = ({ onUpload, onExplore }: HeroProps) => {
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button variant="hero" size="xl" onClick={onUpload}>
-              <I.Camera size={18}/> Gerar ideias para meu home office
+              <I.Camera size={18}/> Criar projeto para meu office
             </Button>
             <Button variant="outline" size="xl" onClick={onExplore}>
               Ver exemplos <I.ArrowRight size={16}/>
@@ -48,7 +48,7 @@ const Hero = ({ onUpload, onExplore }: HeroProps) => {
           </div>
 
           <p className="mt-3 text-xs text-[var(--muted-foreground)]">
-            Funciona para home office, setup, escritório pequeno ou canto de trabalho. <strong className="text-[var(--foreground)]">Sem cartão.</strong>
+            Funciona para escritório, consultório, home office ou qualquer ambiente de trabalho. <strong className="text-[var(--foreground)]">Sem cartão.</strong>
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-6 text-sm text-[var(--muted-foreground)]">
@@ -80,7 +80,7 @@ const Hero = ({ onUpload, onExplore }: HeroProps) => {
               "group relative block cursor-pointer overflow-hidden rounded-[28px] bg-[var(--card)] shadow-[var(--shadow-elegant)] transition-all duration-300 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] " +
               (dragOver ? "border-4 border-[var(--primary)] scale-[1.02] shadow-[var(--shadow-glow)]" : "border-2 border-[var(--border)] hover:border-[var(--primary)]/50")
             }>
-            <img src="/__new/hero-setup.webp" alt="Setup home office" className="block aspect-[16/11] h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105"/>
+            <img src="/__new/hero-setup.webp" alt="Escritório planejado com IA" className="block aspect-[16/11] h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105"/>
             <div className={
               "absolute inset-0 flex flex-col items-center justify-center gap-3 backdrop-blur-[2px] transition-opacity duration-300 " +
               (dragOver ? "bg-[var(--primary)]/70 opacity-100" : "bg-[var(--foreground)]/55 opacity-0 group-hover:opacity-100")
