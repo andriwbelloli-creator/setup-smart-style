@@ -24,15 +24,15 @@ export const Logo = ({ size = 28, variant = "full", tone = "brand" }: LogoProps)
   return (
     <svg width={totalW} height={size} viewBox={variant === "full" ? `0 0 ${40 + 40 * 3.6} 40` : "0 0 40 40"} fill="none" role="img" aria-label="Office Planner">
       {/* Squircle */}
-      <rect width="40" height="40" rx="9" fill="#0F1F22"/>
+      <rect width="40" height="40" rx="9" fill="#1E3A5F"/>
       {/* Porta: frame */}
       <rect x="9" y="8" width="17" height="24" rx="1.5" stroke="white" strokeWidth="1.8" fill="none"/>
-      {/* Painel âmbar */}
-      <rect x="20" y="8" width="6" height="24" rx="1" fill="#F5A623" opacity="0.92"/>
+      {/* Painel azul */}
+      <rect x="20" y="8" width="6" height="24" rx="1" fill="#93C5FD" opacity="0.90"/>
       {/* Divisória */}
       <line x1="20" y1="8" x2="20" y2="32" stroke="white" strokeWidth="1.4"/>
-      {/* Maçaneta coral */}
-      <circle cx="17.2" cy="20.5" r="1.4" fill="#F36458"/>
+      {/* Maçaneta azul */}
+      <circle cx="17.2" cy="20.5" r="1.4" fill="#60A5FA"/>
       {variant === "full" && (
         <text x="48" y="26.5" fontFamily='"Space Grotesk", system-ui, sans-serif' fontSize="18" letterSpacing="-0.025em" fill={inkColor}>
           <tspan fontWeight="700">Office</tspan>

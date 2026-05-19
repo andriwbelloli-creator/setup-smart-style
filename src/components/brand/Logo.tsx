@@ -48,22 +48,22 @@ export function Logo({
       <title>{label}</title>
 
       {/* ── Squircle background ── */}
-      <rect width="40" height="40" rx="9" fill="#0F1F22" />
+      <rect width="40" height="40" rx="9" fill="#1E3A5F" />
 
       {/* ── Porta: frame exterior (branco) ── */}
       <rect x="9" y="8" width="17" height="24" rx="1.5"
             stroke="white" strokeWidth="1.8" fill="none" />
 
-      {/* ── Painel âmbar (folha direita aberta — luz entrando) ── */}
+      {/* ── Painel azul (folha direita aberta — luz entrando) ── */}
       <rect x="20" y="8" width="6" height="24" rx="1"
-            fill="#F5A623" opacity="0.92" />
+            fill="#93C5FD" opacity="0.90" />
 
       {/* ── Divisória (linha da dobradiça) ── */}
       <line x1="20" y1="8" x2="20" y2="32"
             stroke="white" strokeWidth="1.4" />
 
-      {/* ── Maçaneta (coral — elemento de identidade) ── */}
-      <circle cx="17.2" cy="20.5" r="1.4" fill="#F36458" />
+      {/* ── Maçaneta (azul claro — elemento de identidade) ── */}
+      <circle cx="17.2" cy="20.5" r="1.4" fill="#60A5FA" />
 
       {/* ── Wordmark: "Office Planner" — só se variant=full ── */}
       {variant === "full" && (
