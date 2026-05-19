@@ -1,14 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Office Planner">
   <title>Office Planner</title>
-  <!-- Fundo teal escuro -->
-  <rect width="64" height="64" rx="14" fill="#0E3D3F"/>
-  <!-- Frame da porta (teal claro) -->
-  <rect x="9" y="7" width="35" height="50" rx="3.5" stroke="#6FB8B5" stroke-width="4.5" fill="none"/>
-  <!-- Folha aberta em perspectiva -->
-  <path d="M44 10 L56 15 L56 54 L44 57 Z" fill="#6FB8B5" opacity="0.22"/>
-  <path d="M44 10 L56 15 L56 54 L44 57 Z" stroke="#6FB8B5" stroke-width="3.2" stroke-linejoin="round" fill="none"/>
-  <!-- Linha divisória -->
-  <line x1="44" y1="10" x2="44" y2="57" stroke="#6FB8B5" stroke-width="4"/>
-  <!-- Maçaneta coral -->
-  <circle cx="39" cy="34" r="3" fill="#F36458"/>
+  <rect width="64" height="64" rx="14" fill="#2563EB"/>
+  <text x="32" y="43" text-anchor="middle"
+    font-family="'Space Grotesk', system-ui, sans-serif"
+    font-size="28" font-weight="700" letter-spacing="-1" fill="white">OP</text>
 </svg>
